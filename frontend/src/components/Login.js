@@ -43,7 +43,7 @@ const Login = ({ history }) => {
                 </label>
                 <button type="submit">Log in</button>
             </form>
-            <Link to="/Register">Register</Link>
+            <Link to="/register">Register</Link>
         </div>
     );
 };
