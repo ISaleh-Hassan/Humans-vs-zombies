@@ -5,12 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.tables.UserAccount;
 import experis.humansvszombies.hvz.repositories.UserAccountRepository;
@@ -22,6 +17,7 @@ public class UserAccountController {
     @Autowired
     UserAccountRepository userAccountRepository;
 
+    @CrossOrigin
     @GetMapping("/api/fetch/useraccount/all")
     public ResponseEntity<ArrayList<UserAccount>> getAllUsers() {
         ArrayList<UserAccount> users = (ArrayList<UserAccount>)userAccountRepository.findAll();
@@ -29,6 +25,7 @@ public class UserAccountController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping("/api/create/useraccount")
     public ResponseEntity<UserAccount> addUserAccount(@RequestBody UserAccount newUserAccount) {
             HttpStatus response = HttpStatus.CREATED;
