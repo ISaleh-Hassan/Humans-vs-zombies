@@ -8,6 +8,10 @@ import { AuthProvider } from "./utils/Auth";
 import PrivateRoute from "./utils/PrivateRoute";
 import NotFound from "./components/NotFound";
 import CurrentGames from "./components/CurrentGames";
+import Admin from "./components/Admin";
+import Game from "./components/Game";
+import PlayerState from "./components/PlayerState";
+import MissionMarker from "./components/MissionMarker";
 
 const App = () => {
   return (
@@ -18,6 +22,10 @@ const App = () => {
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <PrivateRoute exact path="/currentgames" component={CurrentGames} />
+          <PrivateRoute exact path="/admin" component={Admin} />
+          <PrivateRoute exact path="/game" component={Game} />
+          <PrivateRoute exact path="/playerstate" component={PlayerState} />
+          <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
           <Route path="/*" component={NotFound} />
         </Switch>
       </Router>
