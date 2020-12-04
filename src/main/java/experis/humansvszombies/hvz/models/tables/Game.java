@@ -1,5 +1,6 @@
 package experis.humansvszombies.hvz.models.tables;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -14,7 +15,8 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import experis.humansvszombies.hvz.models.datastructures.Position;
+import org.springframework.data.geo.Point;
+
 import experis.humansvszombies.hvz.models.enums.GameState;
 
 @Entity
@@ -35,22 +37,19 @@ public class Game {
     private GameState gameState;
 
     @Column(name="nw_point")
-    private Position nwPoint;
+    private Point nwPoint;      // Can be set with: new Point(x, y);
     
     @Column(name="se_point")
-    private Position sePoint;
+    private Point sePoint;      // Can be set with: new Point(x, y);
 
     @Column(name="start_time")
-    private String startTime;
+    private Timestamp startTime;// Can be set with: Timestamp.valueOf("yyyy-mm-dd hh:mm:ss");
 
     @Column(name="end_time")
-    private String endTime;
+    private Timestamp endTime;  // Can be set with: Timestamp.valueOf("yyyy-mm-dd hh:mm:ss");
 
     @Column(name="max_number_players")
     private int maxNumberOfPlayers;
-
-    @Column(name="rules")
-    private Collection<String> rules = new ArrayList<String>();
 
     @Column(name="description")
     private String description;
@@ -77,11 +76,14 @@ public class Game {
     private Collection<SquadCheckin> squadCheckins = new ArrayList<SquadCheckin>();
 
     public Game() {
-
     }
 
-    public Game(String name, GameState gameState, Position nw, Position se, 
-        String startTime, String endTime, int numPlayers, String description) {
+    public Game(Integer gameId) {
+        this.gameId = gameId;
+    }
+
+    public Game (String name, GameState gameState, Point nw, Point se,
+        Timestamp startTime, Timestamp endTime, int numPlayers, String description){
             this.name = name;
             this.gameState = gameState;
             this.nwPoint = nw;
@@ -90,11 +92,6 @@ public class Game {
             this.endTime = endTime;
             this.maxNumberOfPlayers = numPlayers;
             this.description = description;
-            this.fillOutRules();
-    }
-
-    public Game(Integer gameId) {
-        this.gameId = gameId;
     }
 
     public Integer getGameId() {
@@ -121,35 +118,35 @@ public class Game {
         this.gameState = gameState;
     }
 
-    public Position getNwPoint() {
+    public Point getNwPoint() {
         return nwPoint;
     }
 
-    public void setNwPoint(Position nwPoint) {
+    public void setNwPoint(Point nwPoint) {
         this.nwPoint = nwPoint;
     }
 
-    public Position getSePoint() {
+    public Point getSePoint() {
         return sePoint;
     }
 
-    public void setSePoint(Position sePoint) {
+    public void setSePoint(Point sePoint) {
         this.sePoint = sePoint;
     }
 
-    public String getStartTime() {
+    public Timestamp getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Timestamp startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Timestamp getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Timestamp endTime) {
         this.endTime = endTime;
     }
 
@@ -161,27 +158,11 @@ public class Game {
         this.maxNumberOfPlayers = maxNumberOfPlayers;
     }
 
-    public Collection<String> getRules() {
-        return rules;
-    }
-
-    public void setRules(Collection<String> rules) {
-        this.rules = rules;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    private void fillOutRules() {
-        this.rules.add("1. This is rule number 1.");
-        this.rules.add("2. This is rule number 2.");
-        this.rules.add("3. This is rule number 3.");
-        this.rules.add("4. This is rule number 4.");
-        this.rules.add("5. This is rule number 5.");
-    }
+    } 
 }
