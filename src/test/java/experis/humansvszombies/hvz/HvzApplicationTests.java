@@ -2,6 +2,8 @@ package experis.humansvszombies.hvz;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import experis.humansvszombies.hvz.models.tables.enums.Faction;
+import experis.humansvszombies.hvz.models.tables.enums.UserType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ import experis.humansvszombies.hvz.models.tables.Squad;
 import experis.humansvszombies.hvz.models.tables.SquadCheckin;
 import experis.humansvszombies.hvz.models.tables.SquadMember;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
+
+import java.util.ArrayList;
 
 @SpringBootTest
 class HvzApplicationTests {
@@ -167,6 +171,99 @@ class HvzApplicationTests {
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		// ResponseEntity<String> response2 = gc.deleteGame(gameId);
 		// assertEquals(HttpStatus.OK, response2.getStatusCode());
+	}
+
+	@Test
+	void getAllUsers() {
+		ResponseEntity<ArrayList<UserAccount>> response = uac.getAllUsers();
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
+
+	@Test
+	void getUserById() {
+		int id = createTestUserAccount();
+		ResponseEntity<UserAccount> response = uac.getUserById(id);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
+
+	@Test
+	void createUser() {
+		ResponseEntity<UserAccount> response = uac.addUserAccount(new UserAccount("Test","Person", UserType.PLAYER,"TestUsername" ,"TestPassword","test@test.test"));
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		assertEquals("Test", response.getBody().getFirstName());
+		assertEquals("Person", response.getBody().getLastName());
+		assertEquals("TestUsername", response.getBody().getUsername());
+		assertEquals("TestPassword", response.getBody().getPassword());
+		uac.deleteUserAccount(response.getBody().getUserAccountId());
+	}
+
+	@Test
+	void updateUser() {
+		int id = createTestUserAccount();
+		ResponseEntity<UserAccount> response = uac.updateUser(new UserAccount("Updated firstName","updated lastName", UserType.ADMINSTRATOR,"TestUsername" ,"TestPassword","test@test.test"), id);
+		assertEquals("Updated firstName", response.getBody().getFirstName());
+		assertEquals("updated lastName", response.getBody().getLastName());
+		assertEquals("TestUsername", response.getBody().getUsername());
+		assertEquals("TestPassword", response.getBody().getPassword());
+		uac.deleteUserAccount(id);
+	}
+
+	@Test
+	void deleteUser() {
+		int id = createTestUserAccount();
+		ResponseEntity<UserAccount> response1 = uac.getUserById(id);
+		assertEquals(HttpStatus.OK, response1.getStatusCode());
+		ResponseEntity<String> response2 = uac.deleteUserAccount(id);
+		assertEquals(HttpStatus.OK, response2.getStatusCode());
+		response1 = uac.getUserById(id);
+		assertEquals(HttpStatus.NOT_FOUND, response1.getStatusCode());
+	}
+
+	@Test
+	void getAllPlayer() {
+		ResponseEntity<ArrayList<Player>> response = pc.getAllPlayers();
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
+
+	@Test
+	void getPlayerById() {
+		int userId = createTestUserAccount();
+		int gameId = createTestGame();
+		int id = createTestPlayer(gameId,userId);
+		ResponseEntity<UserAccount> response = uac.getUserById(id);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
+
+	@Test
+	void createPlayer() {
+		int userId = createTestUserAccount();
+		int gameId = createTestGame();
+		ResponseEntity<Player> response = pc.addPlayer(new Player(Faction.HUMAN,true,false,"XXDDXXE-4"),userId,gameId);
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		pc.deletePlayer(response.getBody().getPlayerId());
+	}
+
+	@Test
+	void updatePlayer() {
+		int userId = createTestUserAccount();
+		int id = createTestPlayer(gameId,userId);
+
+		ResponseEntity<Player> response = pc.updatePlayer((new Player(Faction.HUMAN,true,false,"XXDDXXE-4")), userId);
+		pc.deletePlayer(id);
+	}
+
+	@Test
+	void deletePlayer() {
+		int userId = createTestUserAccount();
+		int gameId = createTestGame();
+		int id = createTestPlayer(gameId,userId);
+
+		ResponseEntity<Player> response1 = pc.getPlayerById(id);
+		assertEquals(HttpStatus.OK, response1.getStatusCode());
+		ResponseEntity<String> response2 = pc.deletePlayer(id);
+		assertEquals(HttpStatus.OK, response2.getStatusCode());
+		response1 = pc.getPlayerById(id);
+		assertEquals(HttpStatus.NOT_FOUND, response1.getStatusCode());
 	}
 
 	int createTestGame() {

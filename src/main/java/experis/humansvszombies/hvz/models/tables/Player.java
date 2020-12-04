@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import experis.humansvszombies.hvz.models.tables.enums.Faction;
 
 @Entity
 @JsonIdentityInfo(
@@ -27,6 +28,18 @@ public class Player {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="player_id")
     private Integer playerId;
+
+    @Column(name= "faction")
+    private Faction faction;
+
+    @Column(name= "is_alive")
+    private boolean isAlive;
+
+    @Column(name= "is_patient_zero")
+    private boolean isPatientZero;
+
+    @Column(name= "bite_code")
+    private String biteCode;
 
     @ManyToOne
     private UserAccount userAccount;
@@ -50,6 +63,14 @@ public class Player {
 
     }
 
+    public Player(Faction faction, boolean isAlive, boolean isPatientZero, String biteCode) {
+        this.faction = faction;
+        this.isAlive = isAlive;
+        this.isPatientZero = isPatientZero;
+        this.biteCode = biteCode;
+    }
+
+    //METHODS
     public Player(Integer playerId) {
         this.playerId = playerId;
     }
@@ -58,7 +79,6 @@ public class Player {
         this.game = game;
     }
 
-    //METHODS
     public Integer getPlayerId() {
         return playerId;
     }
@@ -83,4 +103,67 @@ public class Player {
         this.game = game;
     }
 
+    public Faction getFaction() {
+        return faction;
+    }
+
+    public void setFaction(Faction faction) {
+        this.faction = faction;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
+    public boolean isPatientZero() {
+        return isPatientZero;
+    }
+
+    public void setPatientZero(boolean patientZero) {
+        isPatientZero = patientZero;
+    }
+
+    public SquadMember getSquadMember() {
+        return squadMember;
+    }
+
+    public void setSquadMember(SquadMember squadMember) {
+        this.squadMember = squadMember;
+    }
+
+    public Collection<ChatMessage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Collection<ChatMessage> messages) {
+        this.messages = messages;
+    }
+
+    public Collection<Kill> getKills() {
+        return kills;
+    }
+
+    public void setKills(Collection<Kill> kills) {
+        this.kills = kills;
+    }
+
+    public Collection<Kill> getKiller() {
+        return killer;
+    }
+
+    public void setKiller(Collection<Kill> killer) {
+        this.killer = killer;
+    }
+
+    public String getBiteCode() {
+        return biteCode;
+    }
+
+    public void setBiteCode(String biteCode) {
+        this.biteCode = biteCode;
+    }
 }
