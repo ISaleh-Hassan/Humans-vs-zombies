@@ -5,6 +5,8 @@ import { storeUserDB } from "../utils/dbstorage";
 import firebaseConfig from "../utils/firebase";
 import { storeUser } from "../utils/localstorage";
 import Form from 'react-bootstrap/Form'
+import Header from "./Header";
+import './Components.css';
 
 const Register = ({ history }) => {
     const handleRegister = useCallback(async event => {
@@ -25,47 +27,53 @@ const Register = ({ history }) => {
         } catch (error) {
             alert(error);
         }
-    }, [history]);
+    }, [history])
+    
+    const onCancel = () => {
+        console.log("You tried to cancel!")
+    };
 
     return (
-        <div>
-            <h1>Register</h1>
-            <Form onSubmit={handleRegister}>
-                <Form.Group controlId="formFirstName">
-                    <Form.Label>First Name</Form.Label>
-                    <Form.Control name="firstname" type="text" placeholder="First Name" />
-                </Form.Group>
+        <>
+            <Header />
+            <section className="login-register">
+                <div className="container">
+                    <h1>Register</h1>
+                    <Form onSubmit={handleRegister}>
+                        <Form.Group controlId="formFirstName">
+                            <Form.Label>First Name: </Form.Label>
+                            <Form.Control name="firstname" type="text" placeholder="First Name" required />
+                        </Form.Group>
 
-                <Form.Group controlId="formLastName">
-                    <Form.Label>Last Name</Form.Label>
-                    <Form.Control name="lastname" type="text" placeholder="Last Name" />
-                </Form.Group>
+                        <Form.Group controlId="formLastName">
+                            <Form.Label>Last Name: </Form.Label>
+                            <Form.Control name="lastname" type="text" placeholder="Last Name" required />
+                        </Form.Group>
 
-                <Form.Group controlId="formUserName">
-                    <Form.Label>User Name</Form.Label>
-                    <Form.Control name="username" type="text" placeholder="Username" />
-                </Form.Group>
+                        <Form.Group controlId="formUserName">
+                            <Form.Label>User Name: </Form.Label>
+                            <Form.Control name="username" type="text" placeholder="Username" required />
+                        </Form.Group>
 
-                <Form.Group controlId="formPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control name="password" type="password" placeholder="Password" />
-                </Form.Group>
+                        <Form.Group controlId="formPassword">
+                            <Form.Label>Password: </Form.Label>
+                            <Form.Control name="password" type="password" placeholder="Password" required />
+                        </Form.Group>
 
-                <Form.Group controlId="formEmail">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control name="email" type="email" placeholder="Email" />
-                </Form.Group>
+                        <Form.Group controlId="formEmail">
+                            <Form.Label>Email: </Form.Label>
+                            <Form.Control name="email" type="email" placeholder="Email" required />
+                        </Form.Group>
 
-                <Form.Group controlId="formAdminCheckbox">
-                    <Form.Check name="admin-checkbox" type="checkbox" label="Register as admin?" />
-                </Form.Group>
-
-                <Button variant="primary" type="submit">
-                    Register
-                </Button>
-            </Form>
-            <Link to="/login">Log In</Link>
-        </div>
+                        <Form.Group controlId="formAdminCheckbox">
+                            <Form.Check name="admin-checkbox" type="checkbox" label="Register as admin?" />
+                        </Form.Group>
+                        <button type="submit">Register</button><button name="cancel "onClick={onCancel}>Cancel</button>
+                    </Form>
+                    <Link to="/login">Log In</Link>
+                </div>
+            </section>
+        </>
     );
 };
 

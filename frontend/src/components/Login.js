@@ -1,9 +1,11 @@
 import React, { useCallback, useContext } from "react";
-import { withRouter, Redirect } from "react-router";
+import { withRouter } from "react-router";
 import firebaseConfig from "../utils/firebase.js";
 import { AuthContext } from "../utils/Auth.js";
 import { Link } from "react-router-dom";
 import { storeUser } from "../utils/localstorage.js";
+import Form from 'react-bootstrap/Form';
+import './Components.css';
 
 const Login = ({ history }) => {
     const handleLogin = useCallback(
@@ -22,29 +24,36 @@ const Login = ({ history }) => {
         },
         [history]
     );
+    const onCancel = () => {
+        console.log("You tried to cancel!")
+    }
 
     const { currentUser } = useContext(AuthContext);
 
     if (currentUser) {
-        return <Redirect to="/" />;
     }
 
     return (
-        <div>
-            <h1>Log in</h1>
-            <form onSubmit={handleLogin}>
-                <label>
-                    Email
-          <input name="email" type="email" placeholder="Email" />
-                </label>
-                <label>
-                    Password
-          <input name="password" type="password" placeholder="Password" />
-                </label>
-                <button type="submit">Log in</button>
-            </form>
-            <Link to="/register">Register</Link>
-        </div>
+        <>
+            <section className="login-register">
+                <div className="container">
+                    <h1>Log in</h1>
+                    <Form onSubmit={handleLogin}>
+                        <Form.Group controlId="formEmail">
+                            <Form.Label>Email: </Form.Label>
+                            <Form.Control name="email" type="email" placeholder="Email" required />
+                        </Form.Group>
+
+                        <Form.Group controlId="formPassword">
+                            <Form.Label>Password: </Form.Label>
+                            <Form.Control name="password" type="password" placeholder="Password" required />
+                        </Form.Group>
+                        <button type="submit">Log in</button><button name="cancel "onClick={onCancel}>Cancel</button>
+                    </Form>
+                    <Link to="/register">Register</Link>
+                </div>
+            </section>
+        </>
     );
 };
 

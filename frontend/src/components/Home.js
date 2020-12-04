@@ -1,6 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import firebaseConfig from "../utils/firebase";
 import { clearUser } from "../utils/localstorage.js";
+import './Components.css';
+import Header from "./Header";
 
 const Home = () => {
 
@@ -16,10 +19,16 @@ const Home = () => {
 
   return (
     <>
-      <h1>Home</h1>
-      <p>Welcome, { user }</p>
-      <p>Verified: { isVerified ? <span>true</span> : <span>false</span>}</p>
-      <button onClick={handleSignOut}>Sign out</button>
+      <Header />
+      <section className="home">
+        <div className="container">
+          <h1>Home</h1>
+          <p>Welcome, {user}</p>
+          <p>Verified: {isVerified ? <span>true</span> : <span>false</span>}</p>
+          <button onClick={handleSignOut}>Sign out</button>
+          <Link to="/currentgames">Current Games</Link>
+        </div>
+      </section>
     </>
   );
 };
