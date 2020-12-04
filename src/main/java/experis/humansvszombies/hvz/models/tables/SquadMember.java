@@ -36,7 +36,7 @@ public class SquadMember {
     @OneToOne
     private Player player;
 
-    @OneToMany(mappedBy="squadMember", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="squadMember", cascade=CascadeType.REMOVE)
     private Collection<SquadCheckin> squadCheckins = new ArrayList<SquadCheckin>();
 
     public SquadMember() {
