@@ -34,7 +34,7 @@ public class Player {
     @ManyToOne
     private Game game;
 
-    @OneToOne(mappedBy="player", cascade=CascadeType.ALL)
+    @OneToOne(mappedBy="player", cascade=CascadeType.REMOVE)
     private SquadMember squadMember;
 
     @OneToMany(mappedBy="player", cascade=CascadeType.ALL)
