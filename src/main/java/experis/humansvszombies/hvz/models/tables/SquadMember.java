@@ -52,10 +52,8 @@ public class SquadMember {
         this.squadMemberId = squadMemberId;
     }
 
-    public SquadMember(Game game, Squad squad, Player player) {
-        this.game = game;
-        this.squad = squad;
-        this.player = player;
+    public SquadMember(SquadRank rank) {
+        this.squadRank = rank;        
     }
 
     public Integer getSquadMemberId() {
