@@ -58,7 +58,7 @@ public class GameController {
     }
 
     @CrossOrigin()
-    @PatchMapping("/api/update/game/{id}")
+    @PatchMapping("/api/update/game/{gameId}")
     public ResponseEntity<Game> updateGame(@RequestBody Game newGame, @PathVariable Integer gameId) {   
         try {
             Game game;

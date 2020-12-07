@@ -43,7 +43,6 @@ public class GameTests {
         assertEquals(HttpStatus.NOT_FOUND, response2.getStatusCode());
     }
 
-
     @Test
     void testFetchAllGameObjects() {
 		//Fetch all of the game objects from the database.
