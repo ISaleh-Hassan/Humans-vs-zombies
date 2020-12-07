@@ -19,15 +19,15 @@ const App = () => {
       <Router>
         <Switch>
           <BrowserRouter>
-          <PrivateRoute exact path="/" component={Home} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
-          <PrivateRoute exact path="/currentgames" component={CurrentGames} />
-          <PrivateRoute exact path="/admin" component={Admin} />
-          <PrivateRoute exact path="/game" component={Game} />
-          <PrivateRoute exact path="/playerstate" component={PlayerState} />
-          <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
-          <Route path="/*" component={NotFound} />
+            <PrivateRoute exact path="/" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route path="/*" component={NotFound} />
+            <PrivateRoute exact path="/currentgames" component={CurrentGames} />
+            <PrivateRoute exact path="/admin" component={Admin} />
+            <PrivateRoute exact path="/game" component={Game} />
+            <PrivateRoute exact path="/playerstate" component={PlayerState} />
+            <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
           </BrowserRouter>
         </Switch>
       </Router>

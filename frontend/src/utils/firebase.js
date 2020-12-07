@@ -11,6 +11,10 @@ const config = {
     appId: "1:610995848611:web:1c43c4bb6b30672b498616"
 
 };
+<div>
+<script src="/__/firebase/7.6.1/firebase-app.js"></script>
+<script src="/__/firebase/7.6.1/firebase-auth.js"></script>
+</div>
 
 const firebaseConfig = firebase.initializeApp(config);  
 
