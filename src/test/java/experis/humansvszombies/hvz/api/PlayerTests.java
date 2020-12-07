@@ -7,7 +7,6 @@ import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Player;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
 import experis.humansvszombies.hvz.models.tables.enums.Faction;
-import experis.humansvszombies.hvz.models.tables.enums.UserType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,12 +31,14 @@ public class PlayerTests {
     GameController gc;
 
     private int playerId;
+    private int userAccountId;
+    private int gameId;
 
     @BeforeEach
     void initTest() {
-        int userAccountId= createTestUserAccount();
-        int gameId = createTestGame();
-        ResponseEntity<Player> response = pc.addPlayer(new Player(),userAccountId,gameId);
+        this.userAccountId= createTestUserAccount();
+        this.gameId = createTestGame();
+        ResponseEntity<Player> response = pc.addPlayer(new Player(), this.userAccountId, this.gameId);
         this.playerId = response.getBody().getPlayerId();
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
@@ -48,6 +49,10 @@ public class PlayerTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ResponseEntity<Player> response2 = pc.getPlayerById(this.playerId);
         assertEquals(HttpStatus.NOT_FOUND, response2.getStatusCode());
+        response = gc.deleteGame(this.gameId);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        ResponseEntity<Game> response3 = gc.getGameById(this.gameId);
+        assertEquals(HttpStatus.NOT_FOUND, response3.getStatusCode());
     }
 
     @Test
@@ -58,15 +63,13 @@ public class PlayerTests {
 
     @Test
     void getPlayerById() {
-        ResponseEntity<UserAccount> response = uac.getUserById(this.playerId);
+        ResponseEntity<Player> response = pc.getPlayerById(this.playerId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void createPlayer() {
-        int userId = createTestUserAccount();
-        int gameId = createTestGame();
-        ResponseEntity<Player> response = pc.addPlayer(new Player(Faction.HUMAN,true,false,"XXDDXXE-4"),userId,gameId);
+        ResponseEntity<Player> response = pc.addPlayer(new Player(Faction.HUMAN,true,false,"XXDDXXE-4"), this.userAccountId , this.gameId);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         pc.deletePlayer(response.getBody().getPlayerId());
     }
@@ -75,6 +78,10 @@ public class PlayerTests {
     void updatePlayer() {
         ResponseEntity<Player> response = pc.updatePlayer((new Player(Faction.HUMAN,true,false,"XXDDXXE-4")), this.playerId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(Faction.HUMAN, response.getBody().getFaction());
+        assertEquals(true, response.getBody().isAlive());
+        assertEquals(false, response.getBody().isPatientZero());
+        assertEquals("XXDDXXE-4", response.getBody().getBiteCode());
     }
 
     int createTestUserAccount() {

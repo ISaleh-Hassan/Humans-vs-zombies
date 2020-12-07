@@ -57,7 +57,6 @@ public class UserAccount {
     }
 
     public UserAccount(String firstName, String lastName, UserType userType, String username, String password, String email) {
-        this.userAccountId = userAccountId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userType = userType;

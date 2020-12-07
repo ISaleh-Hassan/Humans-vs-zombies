@@ -1,8 +1,6 @@
 package experis.humansvszombies.hvz.api;
 
-import experis.humansvszombies.hvz.controllers.api.GameController;
 import experis.humansvszombies.hvz.controllers.api.UserAccountController;
-import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
 import experis.humansvszombies.hvz.models.tables.enums.UserType;
 import org.junit.jupiter.api.AfterEach;
@@ -46,7 +44,7 @@ public class UserTests {
 
     @Test
     void getUserById() {
-        int id = userAccountId;
+        int id = this.userAccountId;
         ResponseEntity<UserAccount> response = uac.getUserById(id);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -57,8 +55,10 @@ public class UserTests {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("Test", response.getBody().getFirstName());
         assertEquals("Person", response.getBody().getLastName());
+        assertEquals(UserType.PLAYER, response.getBody().getUserType());
         assertEquals("TestUsername", response.getBody().getUsername());
         assertEquals("TestPassword", response.getBody().getPassword());
+        assertEquals("test@test.test", response.getBody().getEmail());
     }
 
     @Test
@@ -67,8 +67,10 @@ public class UserTests {
         ResponseEntity<UserAccount> response = uac.updateUser(new UserAccount("Updated firstName","updated lastName", UserType.ADMINSTRATOR,"TestUsername" ,"TestPassword","test@test.test"), id);
         assertEquals("Updated firstName", response.getBody().getFirstName());
         assertEquals("updated lastName", response.getBody().getLastName());
+        assertEquals(UserType.ADMINSTRATOR, response.getBody().getUserType());
         assertEquals("TestUsername", response.getBody().getUsername());
         assertEquals("TestPassword", response.getBody().getPassword());
+        assertEquals("test@test.test", response.getBody().getEmail());
     }
 
     @Test

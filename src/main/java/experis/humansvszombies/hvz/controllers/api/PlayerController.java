@@ -42,13 +42,18 @@ public class PlayerController {
     @CrossOrigin()
     @PostMapping("/api/create/player/{userAccountId}/{gameId}")
     public ResponseEntity<Player> addPlayer(@RequestBody Player newPlayer, @PathVariable Integer userAccountId,
-        @PathVariable Integer gameId) {
-            HttpStatus response = HttpStatus.CREATED;
-            newPlayer.setUserAccount(new UserAccount(userAccountId));
-            newPlayer.setGame(new Game(gameId));
-            playerRepository.save(newPlayer);
-            System.out.println("Player CREATED with id: " + newPlayer.getPlayerId() + " belongs to game with id: " + gameId + " and useraccount with id: " + userAccountId);
-            return new ResponseEntity<>(newPlayer, response);
+        @PathVariable Integer gameId) {   
+            try {
+                HttpStatus response = HttpStatus.CREATED;
+                newPlayer.setUserAccount(new UserAccount(userAccountId));
+                newPlayer.setGame(new Game(gameId));
+                playerRepository.save(newPlayer);
+                System.out.println("Player CREATED with id: " + newPlayer.getPlayerId() + " belongs to game with id: " + gameId + " and useraccount with id: " + userAccountId);
+                return new ResponseEntity<>(newPlayer, response);
+            } catch(IllegalArgumentException e) {
+                System.out.println("Exception thrown: newPlayer was null.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }      
     }
 
     @CrossOrigin()
@@ -59,27 +64,13 @@ public class PlayerController {
             HttpStatus response;
             if (playerRepository.existsById(playerId)) {
                 player = playerRepository.findById(playerId).get();
-
-                if (newPlayer.getSquadMember() != null) {
-                    player.setSquadMember(newPlayer.getSquadMember());
-                }
                 if (newPlayer.getFaction() != null) {
                     player.setFaction(newPlayer.getFaction());
                 }
-                if (newPlayer.getGame() != null) {
-                    player.setGame(newPlayer.getGame());
-                }
-                if (newPlayer.getKiller() != null) {
-                    player.setKiller(newPlayer.getKiller());
-                }
-                if (newPlayer.getMessages() != null) {
-                    player.setMessages(newPlayer.getMessages());
-                }
-                if (newPlayer.getKills() != null) {
-                    player.setKills(newPlayer.getKills());
-                }
-                if (newPlayer.getUserAccount() != null) {
-                    player.setUserAccount(newPlayer.getUserAccount());
+                player.setAlive(newPlayer.isAlive());
+                player.setPatientZero(newPlayer.isPatientZero());
+                if (newPlayer.getBiteCode() != null) {
+                    player.setBiteCode(newPlayer.getBiteCode());
                 }
                 playerRepository.save(player);
                 response = HttpStatus.OK;
@@ -91,7 +82,7 @@ public class PlayerController {
             }
             return new ResponseEntity<>(player, response);
         } catch (IllegalArgumentException e) {
-            System.out.println("Exception thrown: id or player was null.");
+            System.out.println("Exception thrown: playerId or newPlayer was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -99,18 +90,23 @@ public class PlayerController {
     @CrossOrigin()
     @DeleteMapping("/api/delete/player/{playerId}")
     public ResponseEntity<String> deletePlayer(@PathVariable Integer playerId) {
-        String message = "";
-        HttpStatus response;
-        Player player = playerRepository.findById(playerId).orElse(null);
-        if(player != null) {
-            playerRepository.deleteById(playerId);
-            System.out.println("Player DELETED with id: " + player.getPlayerId());
-            message = "SUCCESS";
-            response = HttpStatus.OK;
-        } else {
-            message = "FAILED";
-            response = HttpStatus.NOT_FOUND;
-        }
-        return new ResponseEntity<>(message, response);
+        try {
+            String message = "";
+            HttpStatus response;
+            Player player = playerRepository.findById(playerId).orElse(null);
+            if(player != null) {
+                playerRepository.deleteById(playerId);
+                System.out.println("Player DELETED with id: " + player.getPlayerId());
+                message = "SUCCESS";
+                response = HttpStatus.OK;
+            } else {
+                message = "FAILED";
+                response = HttpStatus.NOT_FOUND;
+            }
+            return new ResponseEntity<>(message, response);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: playerId was null.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        }     
     }
 }

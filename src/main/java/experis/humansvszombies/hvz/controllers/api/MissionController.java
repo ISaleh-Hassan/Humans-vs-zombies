@@ -42,11 +42,16 @@ public class MissionController {
     @CrossOrigin
     @PostMapping("/api/create/mission/{gameId}")
     public ResponseEntity<Mission> addMission(@RequestBody Mission newMission, @PathVariable Integer gameId) {
+        try {
             HttpStatus response = HttpStatus.CREATED;
             newMission.setGame(new Game(gameId));
             missionRepository.save(newMission);
             System.out.println("Mission CREATED with id: " + newMission.getMissionId() + " belongs to game with id: " + gameId);
             return new ResponseEntity<>(newMission, response);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: newMission was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }   
     }
 
     @CrossOrigin()
@@ -67,11 +72,11 @@ public class MissionController {
                 if (newMission.getEndTime() != null) {
                     mission.setEndTime(newMission.getEndTime());
                 }
-                if (newMission.getGame() != null) {
-                    mission.setGame(newMission.getGame());
-                }
                 if (newMission.getName()!= null) {
                     mission.setName(newMission.getName());
+                }
+                if (newMission.getState() != null) {
+                    mission.setState(newMission.getState());
                 }
 
                 missionRepository.save(mission);
@@ -91,18 +96,23 @@ public class MissionController {
 
     @DeleteMapping("/api/delete/mission/{missionId}")
     public ResponseEntity<String> deleteMission(@PathVariable Integer missionId) {
-        String message = "";
-        HttpStatus response;
-        Mission mission = missionRepository.findById(missionId).orElse(null);
-        if(mission != null) {
-            missionRepository.deleteById(missionId);
-            System.out.println("Mission DELETED with id: " + mission.getMissionId());
-            message = "SUCCESS";
-            response = HttpStatus.OK;
-        } else {
-            message = "FAILED";
-            response = HttpStatus.NOT_FOUND;
-        }
-        return new ResponseEntity<>(message, response);
+        try {
+            String message = "";
+            HttpStatus response;
+            Mission mission = missionRepository.findById(missionId).orElse(null);
+            if(mission != null) {
+                missionRepository.deleteById(missionId);
+                System.out.println("Mission DELETED with id: " + mission.getMissionId());
+                message = "SUCCESS";
+                response = HttpStatus.OK;
+            } else {
+                message = "FAILED";
+                response = HttpStatus.NOT_FOUND;
+            }
+            return new ResponseEntity<>(message, response);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: missionId was null.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        }              
     }
 }
