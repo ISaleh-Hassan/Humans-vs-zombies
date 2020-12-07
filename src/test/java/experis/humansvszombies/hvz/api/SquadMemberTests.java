@@ -74,8 +74,8 @@ public class SquadMemberTests {
         ResponseEntity<Squad> response3 = squadController.getSquadById(this.squadId);
         assertEquals(HttpStatus.NOT_FOUND, response3.getStatusCode());
         //Check that the Player object does not exist in the database anymore.
-        // ResponseEntity<Player> response4 = playerController.getPlayerById(this.playerId);
-        // assertEquals(HttpStatus.NOT_FOUND, response4.getStatusCode());
+        ResponseEntity<Player> response4 = playerController.getPlayerById(this.playerId);
+        assertEquals(HttpStatus.NOT_FOUND, response4.getStatusCode());
         //Check that the SquadMember object does not exist anymore.
         ResponseEntity<SquadMember> response5 = squadMemberController.getSquadMemberById(this.squadMemberId);
         assertEquals(HttpStatus.NOT_FOUND, response5.getStatusCode());
@@ -83,8 +83,8 @@ public class SquadMemberTests {
         response = userAccountController.deleteUserAccount(this.userAccountId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         //Check that the UserAccount does not exist in the database.
-        // ResponseEntity<UserAccount> response6 = userAccountController.getUserAccountById(this.userAccountId);
-        // assertEquals(HttpStatus.NOT_FOUND, response6.getStatusCode());
+        ResponseEntity<UserAccount> response6 = userAccountController.getUserById(this.userAccountId);
+        assertEquals(HttpStatus.NOT_FOUND, response6.getStatusCode());
     }
 
     @Test

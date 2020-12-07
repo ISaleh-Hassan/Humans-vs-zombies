@@ -115,7 +115,7 @@ public class SquadMemberController {
         return new ResponseEntity<>(message, response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadMemberId was null.");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }
     }
 }
