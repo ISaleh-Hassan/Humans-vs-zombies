@@ -1,18 +1,18 @@
 import { useContext } from "react";
 import { withRouter } from "react-router";
-import { AuthContext } from "../utils/Auth";
+import { AuthContext } from "../utils/auth";
 import firebaseConfig from "../utils/firebase";
 import './Components.css';
+import React from 'react'
 
 const PhoneLogin = () => {
 
+    const auth = firebaseConfig.auth()
     const phoneNumberField = document.getElementById('phoneNumber');
     const codeField = document.getElementById('code');
     const signInWithPhoneButton = document.getElementById('signInWithPhone');
 
-    let recaptchaVerifier;
-
-    window.recaptchaVerifier = new firebaseConfig.auth.RecaptchaVerifier('recaptcha-container');
+    let recaptchaVerifier = new firebaseConfig.auth.RecaptchaVerifier('recaptcha-container');
 
     recaptchaVerifier.render().then(widgetId => {
         window.recaptchaWidgetId = widgetId;
@@ -22,7 +22,7 @@ const PhoneLogin = () => {
         const phoneNumber = phoneNumberField.value;
         const appVerifier = window.recaptchaVerifier;
 
-        firebaseConfig.auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+        auth.signInWithPhoneNumber(phoneNumber, appVerifier)
             .then(confirmationResult => {
                 const sentCodeId = confirmationResult.verificationId;
                 signInWithPhoneButton.addEventListener('click', () => signInWithPhone(sentCodeId));
@@ -31,8 +31,8 @@ const PhoneLogin = () => {
 
     const signInWithPhone = sentCodeId => {
         const code = codeField.value;
-        const credential = firebaseConfig.auth.PhoneAuthProvider.credential(sentCodeId, code);
-        firebaseConfig.auth.signInWithCredential(credential)
+        const credential = auth.PhoneAuthProvider.credential(sentCodeId, code);
+        auth.signInWithCredential(credential)
             .then(() => {
                 window.location.assign('./home');
             })

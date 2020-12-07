@@ -4,7 +4,7 @@ import { BrowserRouter, BrowserRouter as Router, Route, Switch } from "react-rou
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components//Register";
-import { AuthProvider } from "./utils/Auth";
+import { AuthProvider } from "./utils/auth";
 import PrivateRoute from "./utils/PrivateRoute";
 import NotFound from "./components/NotFound";
 import CurrentGames from "./components/CurrentGames";
