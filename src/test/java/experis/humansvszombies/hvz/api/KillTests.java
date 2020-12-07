@@ -5,7 +5,6 @@ import experis.humansvszombies.hvz.controllers.api.KillController;
 import experis.humansvszombies.hvz.controllers.api.PlayerController;
 import experis.humansvszombies.hvz.controllers.api.UserAccountController;
 import experis.humansvszombies.hvz.models.tables.*;
-import experis.humansvszombies.hvz.models.tables.enums.Faction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,15 +32,19 @@ public class KillTests {
 
     private int killId;
     private int gameId;
+    private int userAccountKillerId;
     private int killerId;
-    private int victemId;
+    private int userAccountVictimId;
+    private int victimId;
 
     @BeforeEach
     void initTest() {
-        this.gameId= createTestGame();
-        this.killerId = createTestPlayer();
-        this.victemId = createTestPlayer();
-        ResponseEntity<Kill> response = kc.addKill(new Kill(),gameId,killerId,victemId);
+        this.gameId = createTestGame();
+        this.userAccountKillerId = createTestUserAccount();
+        this.killerId = createTestPlayerKiller();
+        this.userAccountVictimId = createTestUserAccount();
+        this.victimId = createTestPlayerVictim();
+        ResponseEntity<Kill> response = kc.addKill(new Kill(), this.gameId, this.killerId, this.victimId);
         this.killId = response.getBody().getKillId();
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
@@ -56,10 +59,18 @@ public class KillTests {
         assertEquals(HttpStatus.OK, responseKiller.getStatusCode());
         ResponseEntity<Player> responseKiller2 = pc.getPlayerById(killerId);
         assertEquals(HttpStatus.NOT_FOUND, responseKiller2.getStatusCode());
-        ResponseEntity<String> responseVictem = pc.deletePlayer(this.victemId);
+        ResponseEntity<String> responseVictem = pc.deletePlayer(this.victimId);
         assertEquals(HttpStatus.OK, responseVictem.getStatusCode());
         ResponseEntity<Player> responseVictem2 = pc.getPlayerById(killerId);
         assertEquals(HttpStatus.NOT_FOUND, responseVictem2.getStatusCode());
+        ResponseEntity<String> responseUserAccount = uac.deleteUserAccount(this.userAccountKillerId);
+        assertEquals(HttpStatus.OK, responseUserAccount.getStatusCode());
+        ResponseEntity<UserAccount> responseUserAccountFind = uac.getUserById(this.userAccountKillerId);
+        assertEquals(HttpStatus.NOT_FOUND, responseUserAccountFind.getStatusCode());
+        responseUserAccount = uac.deleteUserAccount(this.userAccountVictimId);
+        assertEquals(HttpStatus.OK, responseUserAccount.getStatusCode());
+        responseUserAccountFind = uac.getUserById(this.userAccountVictimId);
+        assertEquals(HttpStatus.NOT_FOUND, responseUserAccountFind.getStatusCode());
     }
 
     @Test
@@ -76,7 +87,6 @@ public class KillTests {
 
     @Test
     void updateKill() {
-        Kill updatedKill = kc.getKillById(this.killId).getBody();
         ResponseEntity<Kill> response = kc.updateKill(new Kill(Timestamp.valueOf("2000-01-10 01:01:01"),new Point(77, 7)), this.killId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(new Point(77, 7), response.getBody().getPosition());
@@ -88,10 +98,13 @@ public class KillTests {
         return response.getBody().getGameId();
     }
 
-    int createTestPlayer() {
-        int userAccountId= createTestUserAccount();
-        int gameId = createTestGame();
-        ResponseEntity<Player> response = pc.addPlayer(new Player(),userAccountId,gameId);
+    int createTestPlayerKiller() {
+        ResponseEntity<Player> response = pc.addPlayer(new Player(), this.userAccountKillerId, this.gameId);
+        return response.getBody().getPlayerId();
+    }
+
+    int createTestPlayerVictim() {
+        ResponseEntity<Player> response = pc.addPlayer(new Player(), this.userAccountVictimId, this.gameId);
         return response.getBody().getPlayerId();
     }
 
