@@ -2,8 +2,6 @@ package experis.humansvszombies.hvz;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import experis.humansvszombies.hvz.models.tables.enums.Faction;
-import experis.humansvszombies.hvz.models.tables.enums.UserType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,6 @@ import experis.humansvszombies.hvz.models.tables.SquadCheckin;
 import experis.humansvszombies.hvz.models.tables.SquadMember;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
 
-import java.util.ArrayList;
 
 @SpringBootTest
 class HvzApplicationTests {
