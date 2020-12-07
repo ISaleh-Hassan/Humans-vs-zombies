@@ -41,7 +41,7 @@ public class SquadController {
             .orElseGet(() -> new ResponseEntity<>((Squad) null, HttpStatus.NOT_FOUND));
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId was null");
-            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -57,11 +57,11 @@ public class SquadController {
             }
             else {
                 System.out.println("Exception thrown: newGame was null.");
-                return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newGame was null.");
-            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }      
     }
 
@@ -93,7 +93,7 @@ public class SquadController {
             return new ResponseEntity<>(squad, status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId or newSquad was null.");
-            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
