@@ -122,8 +122,8 @@ public class GameController {
             }
             return new ResponseEntity<>(message, response);
         } catch (IllegalArgumentException e) {
-            System.out.println("Exception thrown: gameId was null.");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            System.out.println("Exception thrown: id was gameId was null.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }    
     }
 }
