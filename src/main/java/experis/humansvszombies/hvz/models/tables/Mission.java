@@ -9,6 +9,10 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import experis.humansvszombies.hvz.models.tables.enums.Faction;
+import org.springframework.data.geo.Point;
+
+import java.sql.Timestamp;
 
 @Entity
 @JsonIdentityInfo(
@@ -19,7 +23,19 @@ public class Mission {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="mission_id")
-    private Integer missionId;    
+    private Integer missionId;
+
+    @Column
+    private String name;
+
+    @Column(name="faction_visibilty")
+    private Faction factionVisibility;
+
+    @Column(name= "start_time")
+    private Timestamp startTime;
+
+    @Column(name="end_time")
+    private Timestamp endTime;
 
     @ManyToOne
     private Game game;
@@ -50,5 +66,37 @@ public class Mission {
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Faction getFactionVisibility() {
+        return factionVisibility;
+    }
+
+    public void setFactionVisibility(Faction factionVisibility) {
+        this.factionVisibility = factionVisibility;
+    }
+
+    public Timestamp getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Timestamp durationTime) {
+        this.startTime = durationTime;
+    }
+
+    public Timestamp getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Timestamp endTime) {
+        this.endTime = endTime;
     }
 }
