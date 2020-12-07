@@ -12,11 +12,11 @@ const PhoneLogin = () => {
     const codeField = document.getElementById('code');
     const signInWithPhoneButton = document.getElementById('signInWithPhone');
 
-    let recaptchaVerifier = new firebaseConfig.auth.RecaptchaVerifier('recaptcha-container');
-
-    recaptchaVerifier.render().then(widgetId => {
-        window.recaptchaWidgetId = widgetId;
-    })
+    window.recaptchaVerifier = new firebaseConfig.auth.RecaptchaVerifier(
+        "recaptcha-container", {
+            size: "invisible"
+        }
+    );
 
     const sendVerificationCode = () => {
         const phoneNumber = phoneNumberField.value;
