@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Squad;
-import experis.humansvszombies.hvz.repositories.GameRepository;
 import experis.humansvszombies.hvz.repositories.SquadRepository;
 
 
