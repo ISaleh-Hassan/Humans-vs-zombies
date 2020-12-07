@@ -20,7 +20,7 @@ public class KillController {
     KillRepository killRepository;
 
     @GetMapping("/api/fetch/kill/all")
-    public ResponseEntity<ArrayList<Kill>> getAllUsers() {
+    public ResponseEntity<ArrayList<Kill>> getAllKills() {
         ArrayList<Kill> kills = (ArrayList<Kill>)killRepository.findAll();
         System.out.println("Fetched all kills");
         return new ResponseEntity<>(kills, HttpStatus.OK);
@@ -28,7 +28,7 @@ public class KillController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/kill/{killId}")
-    public ResponseEntity<Kill> getMissionById(@PathVariable Integer killId) {
+    public ResponseEntity<Kill> getKillById(@PathVariable Integer killId) {
         try {
             return killRepository.findById(killId)
                     .map(kill -> new ResponseEntity<>(kill, HttpStatus.OK))
@@ -53,7 +53,7 @@ public class KillController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/kill/{killId}")
-    public ResponseEntity<Kill> updateMission(@RequestBody Kill newKill, @PathVariable Integer killId) {
+    public ResponseEntity<Kill> updateKill(@RequestBody Kill newKill, @PathVariable Integer killId) {
         try {
             Kill kill;
             HttpStatus response;

@@ -53,6 +53,11 @@ public class Kill {
         this.victim = victim;
     }
 
+    public Kill(Timestamp timeOfDeath, Point position) {
+        this.timeOfDeath = timeOfDeath;
+        this.position = position;
+    }
+
     public Integer getKillId() {
         return killId;
     }
