@@ -58,7 +58,7 @@ public class GameController {
     }
 
     @CrossOrigin()
-    @PatchMapping("/api/update/game/{id}")
+    @PatchMapping("/api/update/game/{gameId}")
     public ResponseEntity<Game> updateGame(@RequestBody Game newGame, @PathVariable Integer gameId) {   
         try {
             Game game;
@@ -122,7 +122,7 @@ public class GameController {
             }
             return new ResponseEntity<>(message, response);
         } catch (IllegalArgumentException e) {
-            System.out.println("Exception thrown: id was gameId was null.");
+            System.out.println("Exception thrown: gameId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }    
     }
