@@ -28,6 +28,7 @@ import experis.humansvszombies.hvz.models.tables.SquadCheckin;
 import experis.humansvszombies.hvz.models.tables.SquadMember;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
 
+
 @SpringBootTest
 class HvzApplicationTests {
 
