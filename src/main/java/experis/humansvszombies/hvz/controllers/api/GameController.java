@@ -123,7 +123,7 @@ public class GameController {
             return new ResponseEntity<>(message, response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was gameId was null.");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }    
     }
 }
