@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter, BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components//Register";
@@ -18,6 +18,7 @@ const App = () => {
     <AuthProvider>
       <Router>
         <Switch>
+          <BrowserRouter>
           <PrivateRoute exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
@@ -27,6 +28,7 @@ const App = () => {
           <PrivateRoute exact path="/playerstate" component={PlayerState} />
           <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
           <Route path="/*" component={NotFound} />
+          </BrowserRouter>
         </Switch>
       </Router>
     </AuthProvider>

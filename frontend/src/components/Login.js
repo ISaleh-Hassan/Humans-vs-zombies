@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import './Components.css';
 
 const Login = ({ history }) => {
+
     const handleLogin = useCallback(
         async event => {
             event.preventDefault();
@@ -24,6 +25,7 @@ const Login = ({ history }) => {
         },
         [history]
     );
+
     const onCancel = () => {
         console.log("You tried to cancel!")
     }
@@ -48,7 +50,7 @@ const Login = ({ history }) => {
                             <Form.Label>Password: </Form.Label>
                             <Form.Control name="password" type="password" placeholder="Password" required />
                         </Form.Group>
-                        <button type="submit">Log in</button><button name="cancel "onClick={onCancel}>Cancel</button>
+                        <button type="submit">Log in</button><button name="cancel " onClick={onCancel}>Cancel</button>
                     </Form>
                     <Link to="/register">Register</Link>
                 </div>

@@ -1,9 +1,11 @@
 import React from "react";
+import firebaseConfig from "../utils/firebase";
 import './Components.css';
 import Header from "./Header";
-import Login from "./Login";
 
 const CurrentGames = () => {
+
+    const isVerified = firebaseConfig.auth().currentUser.emailVerified;
 
     return (
         <>
@@ -29,7 +31,24 @@ const CurrentGames = () => {
                             <td>Complete</td>
                         </tr>
                     </table>
-                    <Login />
+
+                    { isVerified ?
+                        <section className="login-register">
+                            <div className="container">
+                                <h1>Log in</h1>
+                                <div>
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone" required />
+                                </div>
+                                <div>
+                                    <label for="code">Code</label>
+                                    <input type="text" id="code" name="code" />
+                                </div>
+                                <div id="recaptcha-container"></div>
+                                <button id="login-button">Login</button>
+                            </div>
+                        </section>
+                        : <p>Verify your email to login with phone.</p>}
                 </div>
             </section>
         </>
