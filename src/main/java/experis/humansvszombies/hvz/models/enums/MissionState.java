@@ -1,4 +1,4 @@
-package experis.humansvszombies.hvz.models.tables.enums;
+package experis.humansvszombies.hvz.models.enums;
 
 public enum MissionState {
     PREPERATION,

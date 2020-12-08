@@ -1,8 +1,8 @@
 package experis.humansvszombies.hvz.api;
 
 import experis.humansvszombies.hvz.controllers.api.UserAccountController;
+import experis.humansvszombies.hvz.models.enums.UserType;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
-import experis.humansvszombies.hvz.models.tables.enums.UserType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,10 +64,10 @@ public class UserTests {
     @Test
     void updateUser() {
         int id = userAccountId;
-        ResponseEntity<UserAccount> response = uac.updateUser(new UserAccount("Updated firstName","updated lastName", UserType.ADMINSTRATOR,"TestUsername" ,"TestPassword","test@test.test"), id);
+        ResponseEntity<UserAccount> response = uac.updateUser(new UserAccount("Updated firstName","updated lastName", UserType.ADMINISTRATOR,"TestUsername" ,"TestPassword","test@test.test"), id);
         assertEquals("Updated firstName", response.getBody().getFirstName());
         assertEquals("updated lastName", response.getBody().getLastName());
-        assertEquals(UserType.ADMINSTRATOR, response.getBody().getUserType());
+        assertEquals(UserType.ADMINISTRATOR, response.getBody().getUserType());
         assertEquals("TestUsername", response.getBody().getUsername());
         assertEquals("TestPassword", response.getBody().getPassword());
         assertEquals("test@test.test", response.getBody().getEmail());
