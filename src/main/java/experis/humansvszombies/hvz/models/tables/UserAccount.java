@@ -13,7 +13,8 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import experis.humansvszombies.hvz.models.tables.enums.UserType;
+
+import experis.humansvszombies.hvz.models.enums.UserType;
 
 @Entity
 @JsonIdentityInfo(

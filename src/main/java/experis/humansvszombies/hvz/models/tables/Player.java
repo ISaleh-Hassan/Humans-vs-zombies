@@ -15,7 +15,8 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import experis.humansvszombies.hvz.models.tables.enums.Faction;
+
+import experis.humansvszombies.hvz.models.enums.Faction;
 
 @Entity
 @JsonIdentityInfo(
