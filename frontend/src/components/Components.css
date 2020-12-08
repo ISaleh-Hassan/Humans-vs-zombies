@@ -47,3 +47,32 @@ table {
 #formLastName, #formFirstName, #formUserName, #formPassword, #formEmail {
     width: 100%;
 }
+
+.registered {
+  background-color: #4CAF50;
+  color: #fff;
+  cursor: pointer;
+  width: 100%;
+}
+
+.unregistered{
+  border-radius: 4px;
+  background: #fff;
+  cursor: not-allowed;
+  opacity: .4;
+  width: 100%;
+}
+
+.unregistered:active {
+  background: #000;
+  cursor: not-allowed;
+  opacity: .4;
+  width: 100%;
+}
+
+.unregistered:hover {
+  background: grey;
+  cursor: not-allowed;
+  opacity: .4;
+  width: 100%;
+}
