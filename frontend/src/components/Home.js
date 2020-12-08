@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import firebaseConfig from "../utils/firebase";
 import { clearUser } from "../utils/localstorage.js";
-import './Components.css';
-import Header from "./Header";
+import './Stylings/Components.css';
+import Header from './Stylings/Header';
 
 const Home = () => {
 

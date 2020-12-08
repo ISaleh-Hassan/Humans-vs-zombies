@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import firebaseConfig from '../utils/firebase'
+import firebaseConfig from '../../utils/firebase'
 
 export class PhoneLoginTest extends Component {
   handleClick=()=>{

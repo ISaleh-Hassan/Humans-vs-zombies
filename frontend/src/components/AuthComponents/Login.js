@@ -1,11 +1,11 @@
 import React, { useCallback, useContext } from "react";
 import { withRouter } from "react-router";
-import firebaseConfig from "../utils/firebase.js";
-import { AuthContext } from "../utils/auth.js";
+import firebaseConfig from "../../utils/firebase.js";
+import { AuthContext } from "../../utils/auth.js";
 import { Link } from "react-router-dom";
-import { storeUser } from "../utils/localstorage.js";
+import { storeUser } from "../../utils/localstorage.js";
 import Form from 'react-bootstrap/Form';
-import './Components.css';
+import '../Stylings/Components.css';
 
 const Login = ({ history }) => {
 

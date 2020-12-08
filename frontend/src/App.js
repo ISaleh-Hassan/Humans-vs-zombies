@@ -2,17 +2,18 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter, BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./components/Home";
-import Login from "./components/Login";
-import Register from "./components//Register";
+import Login from "./components/AuthComponents/Login";
+import Register from "./components/AuthComponents/Register";
 import { AuthProvider } from "./utils/auth";
 import PrivateRoute from "./utils/PrivateRoute";
-import NotFound from "./components/NotFound";
+import NotFound from "./components/Stylings/NotFound";
 import CurrentGames from "./components/CurrentGames";
-import Admin from "./components/Admin";
+import Admin from "./components/AuthComponents/Admin";
 import Game from "./components/Game";
 import PlayerState from "./components/PlayerState";
 import MissionMarker from "./components/MissionMarker";
-import PhoneLoginTest from "./components/PhoneLoginTest";
+import PhoneLoginTest from "./components/AuthComponents/PhoneLoginTest";
+import Maps from './components/MapComponents/Maps'
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
             <PrivateRoute exact path="/playerstate" component={PlayerState} />
             <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
             <PrivateRoute exact path="/test" component={PhoneLoginTest} />
+            <PrivateRoute exact path="/map" component={Maps} />
           </BrowserRouter>
         </Switch>
       </Router>

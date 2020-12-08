@@ -1,7 +1,7 @@
 import React from "react";
 import firebaseConfig from "../utils/firebase";
-import './Components.css';
-import Header from "./Header";
+import './Stylings/Components.css';
+import Header from './Stylings/Header';
 // import PhoneLogin from "./PhoneLogin";
 
 const CurrentGames = () => {

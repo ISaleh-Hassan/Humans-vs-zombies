@@ -1,12 +1,12 @@
 import React, { useCallback } from "react";
 import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
-import { storeUserDB } from "../utils/dbstorage";
-import firebaseConfig from "../utils/firebase";
-import { storeUser } from "../utils/localstorage";
+import { storeUserDB } from "../../utils/dbstorage";
+import firebaseConfig from "../../utils/firebase";
+import { storeUser } from "../../utils/localstorage";
 import Form from 'react-bootstrap/Form'
-import Header from "./Header";
-import './Components.css';
+import Header from "../Stylings/Header";
+import '../Stylings/Components.css';
 
 const Register = ({ history }) => {
     const handleRegister = useCallback(async event => {
