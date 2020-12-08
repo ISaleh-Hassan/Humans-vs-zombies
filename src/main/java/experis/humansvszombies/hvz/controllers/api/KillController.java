@@ -5,12 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Kill;
@@ -24,38 +19,95 @@ public class KillController {
     KillRepository killRepository;
 
     @GetMapping("/api/fetch/kill/all")
-    public ResponseEntity<ArrayList<Kill>> getAllUsers() {
+    public ResponseEntity<ArrayList<Kill>> getAllKills() {
         ArrayList<Kill> kills = (ArrayList<Kill>)killRepository.findAll();
         System.out.println("Fetched all kills");
         return new ResponseEntity<>(kills, HttpStatus.OK);
     }
 
+    @CrossOrigin()
+    @GetMapping("/api/fetch/kill/{killId}")
+    public ResponseEntity<Kill> getKillById(@PathVariable Integer killId) {
+        try {
+            return killRepository.findById(killId)
+                    .map(kill -> new ResponseEntity<>(kill, HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>((Kill) null, HttpStatus.NOT_FOUND));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: id was null");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/api/create/kill/{gameId}/{killerId}/{victimId}")
     public ResponseEntity<Kill> addKill(@RequestBody Kill newKill, @PathVariable Integer gameId, 
-        @PathVariable Integer killerId, @PathVariable Integer victimId) {
+    @PathVariable Integer killerId, @PathVariable Integer victimId) {
+        try {
             HttpStatus response = HttpStatus.CREATED;
-            newKill.setGame(new Game(gameId));
-            newKill.setKiller(new Player(killerId));
-            newKill.setVictim(new Player(victimId));
-            killRepository.save(newKill);
-            System.out.println("Kill CREATED with id: " + newKill.getKillId());
+            if (newKill != null) {
+                newKill.setGame(new Game(gameId));
+                newKill.setKiller(new Player(killerId));
+                newKill.setVictim(new Player(victimId));
+                killRepository.save(newKill);
+                System.out.println("Kill CREATED with id: " + newKill.getKillId());
+            } else {
+                System.out.println("Error: newKill was null.");
+                response = HttpStatus.BAD_REQUEST;
+            }
             return new ResponseEntity<>(newKill, response);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: newKill was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }   
+    }
+
+    @CrossOrigin()
+    @PatchMapping("/api/update/kill/{killId}")
+    public ResponseEntity<Kill> updateKill(@RequestBody Kill newKill, @PathVariable Integer killId) {
+        try {
+            Kill kill;
+            HttpStatus response;
+            if (killRepository.existsById(killId)) {
+                kill = killRepository.findById(killId).get();
+                if (newKill.getPosition() != null) {
+                    kill.setPosition(newKill.getPosition());
+                }
+                if (newKill.getTimeOfDeath() != null) {
+                    kill.setTimeOfDeath(newKill.getTimeOfDeath());
+                }
+                killRepository.save(kill);
+                response = HttpStatus.OK;
+                System.out.println("Updated kill with id: " + kill.getKillId());
+            } else {
+                System.out.println("Could not find kill with id: " + killId);
+                kill = null;
+                response = HttpStatus.NOT_FOUND;
+            }
+            return new ResponseEntity<>(kill, response);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: id or kill was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/api/delete/kill/{killId}")
     public ResponseEntity<String> deleteKill(@PathVariable Integer killId) {
-        String message = "";
-        HttpStatus response;
-        Kill kill = killRepository.findById(killId).orElse(null);
-        if(kill != null) {
-            killRepository.deleteById(killId);
-            System.out.println("Kill DELETED with id: " + kill.getKillId());
-            message = "SUCCESS";
-            response = HttpStatus.OK;
-        } else {
-            message = "FAILED";
-            response = HttpStatus.NOT_FOUND;
-        }
-        return new ResponseEntity<>(message, response);
+        try {
+            String message = "";
+            HttpStatus response;
+            Kill kill = killRepository.findById(killId).orElse(null);
+            if(kill != null) {
+                killRepository.deleteById(killId);
+                System.out.println("Kill DELETED with id: " + kill.getKillId());
+                message = "SUCCESS";
+                response = HttpStatus.OK;
+            } else {
+                message = "FAILED";
+                response = HttpStatus.NOT_FOUND;
+            }
+            return new ResponseEntity<>(message, response);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: killId was null.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        }  
     }
 }

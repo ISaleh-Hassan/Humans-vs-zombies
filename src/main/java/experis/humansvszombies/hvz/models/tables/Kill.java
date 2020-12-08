@@ -9,6 +9,9 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.springframework.data.geo.Point;
+
+import java.sql.Timestamp;
 
 @Entity
 @JsonIdentityInfo(
@@ -19,7 +22,13 @@ public class Kill {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="kill_id")
-    private Integer killId;   
+    private Integer killId;
+
+    @Column(name="time_of_death")
+    private Timestamp timeOfDeath;
+
+    @Column(name="position")
+    private Point position;
 
     @ManyToOne
     private Game game;
@@ -42,6 +51,11 @@ public class Kill {
         this.game = game;
         this.killer = killer;
         this.victim = victim;
+    }
+
+    public Kill(Timestamp timeOfDeath, Point position) {
+        this.timeOfDeath = timeOfDeath;
+        this.position = position;
     }
 
     public Integer getKillId() {
@@ -76,4 +90,19 @@ public class Kill {
         this.victim = victim;
     }
 
+    public Timestamp getTimeOfDeath() {
+        return timeOfDeath;
+    }
+
+    public void setTimeOfDeath(Timestamp timeOfDeath) {
+        this.timeOfDeath = timeOfDeath;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point position) {
+        this.position = position;
+    }
 }

@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import experis.humansvszombies.hvz.models.enums.Faction;
+
 
 @Entity
 @JsonIdentityInfo(
@@ -29,6 +31,15 @@ public class Squad {
 
     @ManyToOne
     private Game game;
+
+    @Column(name="name")
+    private String name;
+
+    @Column(name="faction")
+    private Faction faction;
+
+    @Column(name="max_number_of_member")
+    private int maxNumberOfMembers;
 
     @OneToMany(mappedBy="squad", cascade=CascadeType.ALL)
     private Collection<SquadMember> squadMembers = new ArrayList<SquadMember>();
@@ -48,8 +59,10 @@ public class Squad {
         this.squadId = squadId;
     }
 
-    public Squad(Game game) {
-        this.game = game;
+    public Squad(String name, Faction faction, int maxNumberOfMembers) {
+        this.name = name;
+        this.faction = faction;
+        this.maxNumberOfMembers = maxNumberOfMembers;
     }
 
     public Integer getSquadId() {
@@ -66,5 +79,29 @@ public class Squad {
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Faction getFaction() {
+        return faction;
+    }
+
+    public void setFaction(Faction faction) {
+        this.faction = faction;
+    }
+
+    public int getMaxNumberOfMembers() {
+        return maxNumberOfMembers;
+    }
+
+    public void setMaxNumberOfMembers(int maxNumberOfMembers) {
+        this.maxNumberOfMembers = maxNumberOfMembers;
     }
 }
