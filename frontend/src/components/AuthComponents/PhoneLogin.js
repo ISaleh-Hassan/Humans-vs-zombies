@@ -50,7 +50,7 @@
 //     return (
 //         <>
 //             <section className="login-register">
-//                 <div className="container">
+// //                 <div className="container">
 //                     <h1>Log in</h1>
 //                     <div>
 //                         <label for="phone">Phone Number</label>
