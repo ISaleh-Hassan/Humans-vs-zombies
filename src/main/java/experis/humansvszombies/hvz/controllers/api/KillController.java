@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import experis.humansvszombies.hvz.models.datastructures.RegisterKill;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Kill;
 import experis.humansvszombies.hvz.models.tables.Player;
@@ -17,6 +18,9 @@ import experis.humansvszombies.hvz.repositories.KillRepository;
 public class KillController {
     @Autowired
     KillRepository killRepository;
+
+    @Autowired 
+    PlayerController playerController;
 
     @CrossOrigin()
     @GetMapping("/api/fetch/kill/all")
@@ -112,5 +116,35 @@ public class KillController {
             System.out.println("Exception thrown: killId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }  
+    }
+
+    @CrossOrigin()
+    @PostMapping("/api/v2/create/kill/{gameId}/{killerId}/{victimId}")
+    public ResponseEntity<Kill> addKillVersion2(@RequestBody RegisterKill newKill) {
+        try {
+            HttpStatus status = HttpStatus.CREATED;
+            if (newKill != null) {
+                if (newKill.getKillObject() != null) {
+                    if (playerController.checkBiteCode(newKill.getVictimId(), newKill.getBiteCode()).getBody()) {
+                        newKill.getKillObject().setGame(new Game(newKill.getGameId()));
+                        newKill.getKillObject().setKiller(new Player(newKill.getKillerId()));
+                        newKill.getKillObject().setVictim(new Player(newKill.getVictimId()));
+                        killRepository.save(newKill.getKillObject());
+                        System.out.println("Kill CREATED with id: " + newKill.getKillObject().getKillId());
+                    } else {
+                        System.out.println("BiteCode did not match with victims BiteCode.");
+                        status = HttpStatus.BAD_REQUEST;
+                        newKill.setKillObject(null);
+                    }
+                }
+            } else {
+                System.out.println("Error: newKill was null.");
+                status = HttpStatus.BAD_REQUEST;
+            }
+            return new ResponseEntity<>(newKill.getKillObject(), status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: newKill was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }   
     }
 }
