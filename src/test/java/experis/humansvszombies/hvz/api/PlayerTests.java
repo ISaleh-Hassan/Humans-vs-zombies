@@ -3,10 +3,10 @@ package experis.humansvszombies.hvz.api;
 import experis.humansvszombies.hvz.controllers.api.GameController;
 import experis.humansvszombies.hvz.controllers.api.PlayerController;
 import experis.humansvszombies.hvz.controllers.api.UserAccountController;
+import experis.humansvszombies.hvz.models.enums.Faction;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Player;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
-import experis.humansvszombies.hvz.models.tables.enums.Faction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,19 +69,27 @@ public class PlayerTests {
 
     @Test
     void createPlayer() {
-        ResponseEntity<Player> response = pc.addPlayer(new Player(Faction.HUMAN,true,false,"XXDDXXE-4"), this.userAccountId , this.gameId);
+        ResponseEntity<Player> response = pc.addPlayer(new Player(Faction.HUMAN,true,false), this.userAccountId , this.gameId);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         pc.deletePlayer(response.getBody().getPlayerId());
     }
 
     @Test
     void updatePlayer() {
-        ResponseEntity<Player> response = pc.updatePlayer((new Player(Faction.HUMAN,true,false,"XXDDXXE-4")), this.playerId);
+        ResponseEntity<Player> response = pc.updatePlayer((new Player(Faction.HUMAN,true,false)), this.playerId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(Faction.HUMAN, response.getBody().getFaction());
         assertEquals(true, response.getBody().isAlive());
         assertEquals(false, response.getBody().isPatientZero());
-        assertEquals("XXDDXXE-4", response.getBody().getBiteCode());
+        assertEquals(8, response.getBody().getBiteCode().length());
+    }
+
+    @Test
+    void createPlayerAndCheckBiteCode() {
+        ResponseEntity<Player> response = pc.addPlayer(new Player(Faction.HUMAN,true,false), this.userAccountId , this.gameId);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(8, response.getBody().getBiteCode().length());
+        pc.deletePlayer(response.getBody().getPlayerId());
     }
 
     int createTestUserAccount() {

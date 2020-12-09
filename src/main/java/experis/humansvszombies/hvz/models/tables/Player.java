@@ -15,9 +15,10 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import experis.humansvszombies.hvz.models.tables.enums.Faction;
 
-@Entity
+import experis.humansvszombies.hvz.models.enums.Faction;
+
+@Entity(name="player")
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "playerId"
@@ -63,11 +64,10 @@ public class Player {
 
     }
 
-    public Player(Faction faction, boolean isAlive, boolean isPatientZero, String biteCode) {
+    public Player(Faction faction, boolean isAlive, boolean isPatientZero) {
         this.faction = faction;
         this.isAlive = isAlive;
         this.isPatientZero = isPatientZero;
-        this.biteCode = biteCode;
     }
 
     //METHODS

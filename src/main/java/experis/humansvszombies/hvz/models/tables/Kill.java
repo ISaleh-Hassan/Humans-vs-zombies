@@ -13,7 +13,7 @@ import org.springframework.data.geo.Point;
 
 import java.sql.Timestamp;
 
-@Entity
+@Entity(name="kill")
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "killId"

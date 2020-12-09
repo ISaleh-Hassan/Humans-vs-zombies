@@ -18,6 +18,7 @@ public class KillController {
     @Autowired
     KillRepository killRepository;
 
+    @CrossOrigin()
     @GetMapping("/api/fetch/kill/all")
     public ResponseEntity<ArrayList<Kill>> getAllKills() {
         ArrayList<Kill> kills = (ArrayList<Kill>)killRepository.findAll();
@@ -38,6 +39,7 @@ public class KillController {
         }
     }
 
+    @CrossOrigin()
     @PostMapping("/api/create/kill/{gameId}/{killerId}/{victimId}")
     public ResponseEntity<Kill> addKill(@RequestBody Kill newKill, @PathVariable Integer gameId, 
     @PathVariable Integer killerId, @PathVariable Integer victimId) {
@@ -89,6 +91,7 @@ public class KillController {
         }
     }
 
+    @CrossOrigin()
     @DeleteMapping("/api/delete/kill/{killId}")
     public ResponseEntity<String> deleteKill(@PathVariable Integer killId) {
         try {

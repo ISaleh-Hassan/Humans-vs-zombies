@@ -2,10 +2,10 @@ package experis.humansvszombies.hvz.api;
 
 import experis.humansvszombies.hvz.controllers.api.GameController;
 import experis.humansvszombies.hvz.controllers.api.MissionController;
+import experis.humansvszombies.hvz.models.enums.Faction;
+import experis.humansvszombies.hvz.models.enums.MissionState;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Mission;
-import experis.humansvszombies.hvz.models.tables.enums.Faction;
-import experis.humansvszombies.hvz.models.tables.enums.MissionState;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
