@@ -9,11 +9,14 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import experis.humansvszombies.hvz.models.enums.Faction;
+
+import java.sql.Timestamp;
 
 @Entity
 @JsonIdentityInfo(
-    generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "chatMessageId"
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "chatMessageId"
 )
 public class ChatMessage {
     @Id
@@ -21,10 +24,19 @@ public class ChatMessage {
     @Column(name="chat_message_id")
     private Integer chatMessageId;
 
+    @Column
+    private String message;
+
+    @Column
+    private Faction faction;
+
+    @Column(name="time_stamp")
+    private Timestamp timestamp;
+
     @ManyToOne
     private Game game;
 
-    @ManyToOne 
+    @ManyToOne
     private Player player;
 
     @ManyToOne
@@ -42,6 +54,12 @@ public class ChatMessage {
         this.game = game;
         this.player = player;
         this.squad = squad;
+    }
+
+    public ChatMessage(String message, Faction faction, Timestamp timestamp) {
+        this.message = message;
+        this.faction = faction;
+        this.timestamp = timestamp;
     }
 
     public Integer getChatMessageId() {
@@ -77,4 +95,27 @@ public class ChatMessage {
     }
 
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Faction getFaction() {
+        return faction;
+    }
+
+    public void setFaction(Faction faction) {
+        this.faction = faction;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
 }
