@@ -50,12 +50,6 @@ public class ChatMessage {
         this.chatMessageId = chatMessageId;
     }
 
-    public ChatMessage(Game game, Player player, Squad squad) {
-        this.game = game;
-        this.player = player;
-        this.squad = squad;
-    }
-
     public ChatMessage(String message, Faction faction, Timestamp timestamp) {
         this.message = message;
         this.faction = faction;

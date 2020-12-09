@@ -56,26 +56,22 @@ public class ChatMessageTests {
         assertEquals(HttpStatus.OK, responseChatMessage.getStatusCode());
         ResponseEntity<ChatMessage> responseChatMessage2 = cmc.getChatMessageById(this.chatMessageId);
         assertEquals(HttpStatus.NOT_FOUND, responseChatMessage2.getStatusCode());
-
         ResponseEntity<String> responsePlayer = pc.deletePlayer(this.playerId);
         assertEquals(HttpStatus.OK, responsePlayer.getStatusCode());
         ResponseEntity<Player> responsePlayer2 = pc.getPlayerById(this.playerId);
         assertEquals(HttpStatus.NOT_FOUND, responsePlayer2.getStatusCode());
-
         ResponseEntity<String> responseUserAccount = uac.deleteUserAccount(this.userAccountId);
         assertEquals(HttpStatus.OK, responseUserAccount.getStatusCode());
         ResponseEntity<UserAccount> responseUserAccount2 = uac.getUserById(this.userAccountId);
         assertEquals(HttpStatus.NOT_FOUND, responseUserAccount2.getStatusCode());
-
         ResponseEntity<String> responseSquad = sc.deleteSquad(this.squadId);
         assertEquals(HttpStatus.OK, responseSquad.getStatusCode());
         ResponseEntity<Squad> responseSquad2 = sc.getSquadById(this.squadId);
         assertEquals(HttpStatus.NOT_FOUND, responseSquad2.getStatusCode());
-
         ResponseEntity<String> responseGame = gc.deleteGame(this.gameId);
         assertEquals(HttpStatus.OK, responseGame.getStatusCode());
         ResponseEntity<Game> responseGame2 = gc.getGameById(this.gameId);
-        assertEquals(HttpStatus.NOT_FOUND, responseGame2.getStatusCode());  
+        assertEquals(HttpStatus.NOT_FOUND, responseGame2.getStatusCode());
     }
 
     @Test
@@ -99,8 +95,11 @@ public class ChatMessageTests {
 
     @Test
     void updateChatMessage() {
-        ResponseEntity<ChatMessage> response = cmc.updateChatMessage(new ChatMessage("This is a test message",Faction.HUMAN, Timestamp.valueOf("2000-01-10 01:01:01")),this.chatMessageId);
+        ChatMessage chatMessage = new ChatMessage("This is a test message",Faction.HUMAN, Timestamp.valueOf("2000-01-10 01:01:01"));
+        ResponseEntity<ChatMessage> response = cmc.updateChatMessage(chatMessage,this.chatMessageId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("This is a test message", response.getBody().getMessage());
+        assertEquals(Timestamp.valueOf("2000-01-10 01:01:01"), response.getBody().getTimestamp());
         assertEquals(Faction.HUMAN, response.getBody().getFaction());
     }
 

@@ -44,13 +44,13 @@ public class ChatMessageController {
             HttpStatus response;
             if (chatMessageRepository.existsById(chatMessageId)) {
                 chatMessage = chatMessageRepository.findById(chatMessageId).get();
-                if (chatMessage.getMessage() != null) {
+                if (newChatMessage.getMessage() != null) {
                     chatMessage.setMessage(newChatMessage.getMessage());
                 }
-                if (chatMessage.getFaction() != null) {
+                if (newChatMessage.getFaction() != null) {
                     chatMessage.setFaction(newChatMessage.getFaction());
                 }
-                if (chatMessage.getTimestamp() != null) {
+                if (newChatMessage.getTimestamp() != null) {
                     chatMessage.setTimestamp(newChatMessage.getTimestamp());
                 }
                 chatMessageRepository.save(chatMessage);
