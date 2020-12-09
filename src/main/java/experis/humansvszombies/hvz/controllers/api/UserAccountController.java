@@ -3,12 +3,15 @@ package experis.humansvszombies.hvz.controllers.api;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.tables.UserAccount;
 import experis.humansvszombies.hvz.repositories.UserAccountRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 
@@ -48,6 +51,9 @@ public class UserAccountController {
             return new ResponseEntity<>(newUserAccount, response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newUserAccount was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Exception thrown: email or username must be unique.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -115,4 +121,26 @@ public class UserAccountController {
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }
     }
+
+    //SPECIAL METHODS
+    @CrossOrigin()
+    @GetMapping("/api/useraccount/login")
+    public ResponseEntity<String> loginUser(@RequestBody UserAccount userAccount) {
+        //Assume the login will fail.
+        String message = "FAILED";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        //Check that userAccount isn't null. Then check if the supplied email exists in the database.
+        if (userAccount != null) {
+            UserAccount user = userAccountRepository.findDistinctByEmail(userAccount.getEmail());
+            if (user != null) {
+                //Compare supplied password to account password and return SUCCESS message if login information is correct.
+                if (user.getPassword().equals(userAccount.getPassword())) {
+                    message = "SUCCESS";
+                    status = HttpStatus.OK;
+                }
+            }  
+        }     
+        return new ResponseEntity<>(message, status);
+    }
+    
 }

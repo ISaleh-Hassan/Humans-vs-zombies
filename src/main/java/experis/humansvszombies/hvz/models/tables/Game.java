@@ -19,7 +19,7 @@ import org.springframework.data.geo.Point;
 
 import experis.humansvszombies.hvz.models.enums.GameState;
 
-@Entity
+@Entity(name="game")
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "gameId"

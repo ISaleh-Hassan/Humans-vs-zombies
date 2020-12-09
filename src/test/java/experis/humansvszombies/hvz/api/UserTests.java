@@ -84,6 +84,38 @@ public class UserTests {
         assertEquals(HttpStatus.NOT_FOUND, response1.getStatusCode());
     }
 
+    @Test
+    void createDuplicateUser() {
+        ResponseEntity<UserAccount> response = uac.addUserAccount(new UserAccount("Steve", "Harrington", UserType.PLAYER, "Scopes", "icecream", "scopes@email.com"));
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        int stevesId = response.getBody().getUserAccountId();
+        ResponseEntity<UserAccount> response2 = uac.addUserAccount(new UserAccount("Steve", "Harrington", UserType.PLAYER, "Scopes", "icecream", "scopes@email.com"));
+        assertEquals(HttpStatus.BAD_REQUEST, response2.getStatusCode());
+        //Delete steves account again.
+        ResponseEntity<String> deleteResponse = uac.deleteUserAccount(stevesId);
+        assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
+    }
+
+    @Test
+    void loginUser() {
+        //Create a user to test against.
+        UserAccount stevesAccount = new UserAccount("Steve", "Harrington", UserType.PLAYER, "Scoops", "icecream", "scoopes@email.com");
+        ResponseEntity<UserAccount> response = uac.addUserAccount(stevesAccount);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        //Try to login user with correct information.
+        ResponseEntity<String> loginResponse = uac.loginUser(new UserAccount(null,null,null,null,"icecream", "scoopes@email.com"));
+        assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
+        //Try to login user with faulty username.
+        loginResponse = uac.loginUser(new UserAccount(null,null,null,null,"icecream12", "scoopes@email.com"));
+        assertEquals(HttpStatus.BAD_REQUEST, loginResponse.getStatusCode());
+        //Try to login user with faulty email.
+        loginResponse = uac.loginUser(new UserAccount(null,null,null,null,"icecream", "scoopes12@email.com"));
+        assertEquals(HttpStatus.BAD_REQUEST, loginResponse.getStatusCode());
+        //Delete the UserAccount again.
+        ResponseEntity<String> deleteResponse = uac.deleteUserAccount(response.getBody().getUserAccountId());
+        assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
+    }
+
     int createTestUserAccount() {
         ResponseEntity<UserAccount> response = uac.addUserAccount(new UserAccount());
         return response.getBody().getUserAccountId();

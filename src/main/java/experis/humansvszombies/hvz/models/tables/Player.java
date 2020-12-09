@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import experis.humansvszombies.hvz.models.enums.Faction;
 
-@Entity
+@Entity(name="player")
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "playerId"
