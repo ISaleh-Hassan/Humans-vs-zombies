@@ -2,10 +2,13 @@ package experis.humansvszombies.hvz;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.sql.Timestamp;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -18,6 +21,9 @@ import experis.humansvszombies.hvz.controllers.api.SquadCheckinController;
 import experis.humansvszombies.hvz.controllers.api.SquadController;
 import experis.humansvszombies.hvz.controllers.api.SquadMemberController;
 import experis.humansvszombies.hvz.controllers.api.UserAccountController;
+import experis.humansvszombies.hvz.models.enums.Faction;
+import experis.humansvszombies.hvz.models.enums.GameState;
+import experis.humansvszombies.hvz.models.enums.UserType;
 import experis.humansvszombies.hvz.models.tables.ChatMessage;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Kill;
@@ -59,115 +65,37 @@ class HvzApplicationTests {
 	@Autowired
 	UserAccountController uac;
 
-
-	private int gameId = 0;
-	private int missionId = 0;
-	private int userAccountId = 0;
-	private int userAccountId2 = 0;
-	private int playerId = 0;
-	private int playerId2 = 0;
-	private int killId = 0;
-	private int squadId = 0;
-	private int squadMemberId = 0;
-	private int squadCheckinId = 0;
-	private int chatMessageId = 0;
-
-
-	@BeforeEach
-	public void init() {
-		//Create the Game object.
-		this.gameId = createTestGame();
-		//Create the mission object.
-		this.missionId = createTestMission(gameId);
-		//Create a useraccount and a player connected to the useraccount and the game object.
-		this.userAccountId = createTestUserAccount();
-		this.userAccountId2 = createTestUserAccount(); 
-		this.playerId = createTestPlayer(gameId, userAccountId);
-		this.playerId2 = createTestPlayer(gameId, userAccountId2);
-		this.killId = createTestKill(gameId, playerId, playerId2);
-		this.squadId = createTestSquad(gameId);
-		this.squadMemberId = createTestSquadMember(gameId, squadId, playerId);
-		this.squadCheckinId = createTestSquadCheckin(gameId, squadId, squadMemberId);
-		this.chatMessageId = createTestChatMessage(gameId, squadId, playerId);
-	}
-
 	@Test
-	void testDeleteGame() {
+	void CreateDummyDataForDatabase() {
 		//Delete the game object and make sure that each object created is deleted except for the user account.
-		ResponseEntity<String> response2 = gc.deleteGame(gameId);
-		assertEquals(HttpStatus.OK, response2.getStatusCode());
-	}
-
-	@Test
-	void testDeleteMissionBeforeGame() {
-		//Delete the game object and make sure that each object created is deleted except for the user account.
-		ResponseEntity<String> response = mc.deleteMission(missionId);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		// ResponseEntity<String> response2 = gc.deleteGame(gameId);
-		// assertEquals(HttpStatus.OK, response2.getStatusCode());
-	}
-
-	@Test
-	void testDeletePlayerKillerBeforeGame() {
-		//Delete the game object and make sure that each object created is deleted except for the user account.
-		ResponseEntity<String> response = pc.deletePlayer(playerId);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		// ResponseEntity<String> response2 = gc.deleteGame(gameId);
-		// assertEquals(HttpStatus.OK, response2.getStatusCode());
-	}
-
-	@Test
-	void testDeletePlayerVictimBeforeGame() {
-		//Delete the game object and make sure that each object created is deleted except for the user account.
-		ResponseEntity<String> response = pc.deletePlayer(playerId2);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		// ResponseEntity<String> response2 = gc.deleteGame(gameId);
-		// assertEquals(HttpStatus.OK, response2.getStatusCode());
-	}
-
-	@Test
-	void testDeleteKillBeforeGame() {
-		//Delete the game object and make sure that each object created is deleted except for the user account.
-		ResponseEntity<String> response = kc.deleteKill(killId);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		// ResponseEntity<String> response2 = gc.deleteGame(gameId);
-		// assertEquals(HttpStatus.OK, response2.getStatusCode());
-	}
-
-	@Test
-	void testDeleteChatMessageBeforeGame() {
-		//Delete the game object and make sure that each object created is deleted except for the user account.
-		ResponseEntity<String> response = cmc.deleteChatMessage(chatMessageId);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		// ResponseEntity<String> response2 = gc.deleteGame(gameId);
-		// assertEquals(HttpStatus.OK, response2.getStatusCode());
-	}
-
-	@Test
-	void testDeleteSquadBeforeGame() {
-		//Delete the game object and make sure that each object created is deleted except for the user account.
-		ResponseEntity<String> response = sc.deleteSquad(squadId);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		// ResponseEntity<String> response2 = gc.deleteGame(gameId);
-		// assertEquals(HttpStatus.OK, response2.getStatusCode());
-	}
-
-	@Test
-	void testDeleteSquadMemberBeforeGame() {
-		//Delete the game object and make sure that each object created is deleted except for the user account.
-		ResponseEntity<String> response = smc.deleteSquadMember(squadMemberId);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		// ResponseEntity<String> response2 = gc.deleteGame(gameId);
-		// assertEquals(HttpStatus.OK, response2.getStatusCode());
-	}
-
-	@Test
-	void testDeleteSquadCheckinBeforeGame() {
-		//Delete the game object and make sure that each object created is deleted except for the user account.
-		ResponseEntity<String> response = scc.deleteSquadCheckin(squadCheckinId);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		// ResponseEntity<String> response2 = gc.deleteGame(gameId);
-		// assertEquals(HttpStatus.OK, response2.getStatusCode());
+		for (int i = 1; i < 6; i++) {
+			if (i == 1) {
+				uac.addUserAccount(new UserAccount("FirstName" + i, "LastName" + i, UserType.ADMINISTRATOR, "Admin", "secret", "admin@admin.com"));
+			} else {
+				uac.addUserAccount(new UserAccount("FirstName" + i, "LastName" + i, UserType.PLAYER, "Player"+i, "password", "player"+ i + "@player.com"));
+			}
+		}
+		GameState state;
+		for (int i = 1; i < 6; i++) {		
+			if (i == 1) {
+				state = GameState.PREPERATION;
+			} else if (i==2) {
+				state = GameState.IN_PROGRESS;
+			} else {
+				state = GameState.COMPLETED;
+			}
+			int gId = gc.addGame(new Game("Dummy Game" + i, state, new Point(10, 10), 
+            new Point(20, 20), Timestamp.valueOf("2000-01-10 01:01:01"), Timestamp.valueOf("2020-12-12 12:12:12"), 100, "This is the description of dummy game:" + i)).getBody().getGameId();
+			for (int p = 1; p < 6; p++) {
+				if (p == 1) {
+					pc.addPlayer(new Player(Faction.ZOMBIE, true, true), i, gId);
+				} else if (p == 2) {
+					pc.addPlayer(new Player(Faction.HUMAN, false, false), i, gId);
+				} else {
+					pc.addPlayer(new Player(Faction.HUMAN, true, false), i, gId);
+				}
+			}
+		}
 	}
 
 	int createTestGame() {
