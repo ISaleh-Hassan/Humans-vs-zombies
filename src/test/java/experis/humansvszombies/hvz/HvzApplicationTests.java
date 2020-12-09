@@ -1,15 +1,13 @@
 package experis.humansvszombies.hvz;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.geo.Point;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import experis.humansvszombies.hvz.controllers.api.ChatMessageController;
@@ -67,13 +65,16 @@ class HvzApplicationTests {
 
 	@Test
 	void CreateDummyDataForDatabase() {
+		ArrayList<Integer> uaIds = new ArrayList<Integer>();
+		int uId;
 		//Delete the game object and make sure that each object created is deleted except for the user account.
 		for (int i = 1; i < 6; i++) {
 			if (i == 1) {
-				uac.addUserAccount(new UserAccount("FirstName" + i, "LastName" + i, UserType.ADMINISTRATOR, "Admin", "secret", "admin@admin.com"));
+				uId = uac.addUserAccount(new UserAccount("FirstName" + i, "LastName" + i, UserType.ADMINISTRATOR, "Admin", "secret", "admin@admin.com")).getBody().getUserAccountId();
 			} else {
-				uac.addUserAccount(new UserAccount("FirstName" + i, "LastName" + i, UserType.PLAYER, "Player"+i, "password", "player"+ i + "@player.com"));
+				uId = uac.addUserAccount(new UserAccount("FirstName" + i, "LastName" + i, UserType.PLAYER, "Player"+i, "password", "player"+ i + "@player.com")).getBody().getUserAccountId();
 			}
+			uaIds.add(uId);
 		}
 		GameState state;
 		for (int i = 1; i < 6; i++) {		
@@ -88,11 +89,11 @@ class HvzApplicationTests {
             new Point(20, 20), Timestamp.valueOf("2000-01-10 01:01:01"), Timestamp.valueOf("2020-12-12 12:12:12"), 100, "This is the description of dummy game:" + i)).getBody().getGameId();
 			for (int p = 1; p < 6; p++) {
 				if (p == 1) {
-					pc.addPlayer(new Player(Faction.ZOMBIE, true, true), i, gId);
+					pc.addPlayer(new Player(Faction.ZOMBIE, true, true), uaIds.get(p - 1), gId);
 				} else if (p == 2) {
-					pc.addPlayer(new Player(Faction.HUMAN, false, false), i, gId);
+					pc.addPlayer(new Player(Faction.HUMAN, false, false), uaIds.get(p - 1), gId);
 				} else {
-					pc.addPlayer(new Player(Faction.HUMAN, true, false), i, gId);
+					pc.addPlayer(new Player(Faction.HUMAN, true, false), uaIds.get(p - 1), gId);
 				}
 			}
 		}
