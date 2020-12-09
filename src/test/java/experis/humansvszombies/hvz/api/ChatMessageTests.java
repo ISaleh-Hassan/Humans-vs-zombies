@@ -52,6 +52,11 @@ public class ChatMessageTests {
 
     @AfterEach
     void cleanTest() {
+        ResponseEntity<String> responseChatMessage = cmc.deleteChatMessage(this.chatMessageId);
+        assertEquals(HttpStatus.OK, responseChatMessage.getStatusCode());
+        ResponseEntity<ChatMessage> responseChatMessage2 = cmc.getChatMessageById(this.chatMessageId);
+        assertEquals(HttpStatus.NOT_FOUND, responseChatMessage2.getStatusCode());
+
         ResponseEntity<String> responsePlayer = pc.deletePlayer(this.playerId);
         assertEquals(HttpStatus.OK, responsePlayer.getStatusCode());
         ResponseEntity<Player> responsePlayer2 = pc.getPlayerById(this.playerId);
@@ -62,20 +67,15 @@ public class ChatMessageTests {
         ResponseEntity<UserAccount> responseUserAccount2 = uac.getUserById(this.userAccountId);
         assertEquals(HttpStatus.NOT_FOUND, responseUserAccount2.getStatusCode());
 
-        ResponseEntity<String> responseGame = gc.deleteGame(this.gameId);
-        assertEquals(HttpStatus.OK, responseGame.getStatusCode());
-        ResponseEntity<Game> responseGame2 = gc.getGameById(this.gameId);
-        assertEquals(HttpStatus.NOT_FOUND, responseGame2.getStatusCode());
-
-        ResponseEntity<String> responseChatMessage = cmc.deleteChatMessage(this.chatMessageId);
-        assertEquals(HttpStatus.OK, responseChatMessage.getStatusCode());
-        ResponseEntity<ChatMessage> responseChatMessage2 = cmc.getChatMessageById(this.chatMessageId);
-        assertEquals(HttpStatus.NOT_FOUND, responseChatMessage2.getStatusCode());
-
         ResponseEntity<String> responseSquad = sc.deleteSquad(this.squadId);
         assertEquals(HttpStatus.OK, responseSquad.getStatusCode());
         ResponseEntity<Squad> responseSquad2 = sc.getSquadById(this.squadId);
         assertEquals(HttpStatus.NOT_FOUND, responseSquad2.getStatusCode());
+
+        ResponseEntity<String> responseGame = gc.deleteGame(this.gameId);
+        assertEquals(HttpStatus.OK, responseGame.getStatusCode());
+        ResponseEntity<Game> responseGame2 = gc.getGameById(this.gameId);
+        assertEquals(HttpStatus.NOT_FOUND, responseGame2.getStatusCode());  
     }
 
     @Test
