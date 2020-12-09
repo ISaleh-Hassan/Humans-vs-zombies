@@ -64,11 +64,10 @@ public class Player {
 
     }
 
-    public Player(Faction faction, boolean isAlive, boolean isPatientZero, String biteCode) {
+    public Player(Faction faction, boolean isAlive, boolean isPatientZero) {
         this.faction = faction;
         this.isAlive = isAlive;
         this.isPatientZero = isPatientZero;
-        this.biteCode = biteCode;
     }
 
     //METHODS
