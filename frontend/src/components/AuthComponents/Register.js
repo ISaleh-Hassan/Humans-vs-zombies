@@ -1,5 +1,5 @@
-import React, { useCallback } from "react";
-import { withRouter } from "react-router";
+import React, { useCallback, useContext } from "react";
+import { Redirect, withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import { storeUserDB } from "../../utils/dbstorage";
 import firebaseConfig from "../../utils/firebase";
@@ -7,6 +7,7 @@ import { storeUser } from "../../utils/localstorage";
 import Form from 'react-bootstrap/Form'
 import Header from "../Stylings/Header";
 import '../Stylings/Components.css';
+import { AuthContext } from "../../utils/Auth";
 
 const Register = ({ history }) => {
     const handleRegister = useCallback(async event => {
@@ -32,6 +33,12 @@ const Register = ({ history }) => {
     const onCancel = () => {
         console.log("You tried to cancel!")
     };
+
+    const { currentUser } = useContext(AuthContext);
+
+    if (currentUser) {
+        return <Redirect to="/" />
+    }
 
     return (
         <>
