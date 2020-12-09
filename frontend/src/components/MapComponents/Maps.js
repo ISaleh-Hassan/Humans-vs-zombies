@@ -19,8 +19,6 @@ const markerIcon = new L.Icon({
 const Maps = () => {
 
     const ZOOM_LEVEL = 100;
-    const mapRef = useRef();
-    const markerRef = useRef();
     const [center, setCenter] = useState({ lat: 59.331930951472984, lng: 18.062299042156532 });
 
     return (
@@ -32,7 +30,6 @@ const Maps = () => {
                         <MapContainer
                             center={center}
                             zoom={ZOOM_LEVEL}
-                            ref={mapRef}
                         >
                             <TileLayer url={osm.maptiler.url} attribution={osm.maptiler.attribution} />
                             <Marker
