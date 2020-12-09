@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import experis.humansvszombies.hvz.models.enums.UserType;
 
-@Entity
+@Entity(name="user_account")
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "userAccountId"
@@ -39,13 +39,13 @@ public class UserAccount {
     @Column(name="user_type")
     private UserType userType;
 
-    @Column(name="username")
+    @Column(name="username", unique=true)
     private String username;
 
     @Column(name="password")
     private String password;
 
-    @Column(name="email")
+    @Column(name="email", unique=true)
     private String email;
 
 
