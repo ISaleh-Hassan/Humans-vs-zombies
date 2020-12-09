@@ -1,6 +1,7 @@
 package experis.humansvszombies.hvz.controllers.api;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,9 @@ import experis.humansvszombies.hvz.repositories.PlayerRepository;
 public class PlayerController {
     @Autowired
     PlayerRepository playerRepository;
+
+    private static Random randomNumber = new Random();
+    private static char[] letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
 
     @CrossOrigin()
     @GetMapping("/api/fetch/player/all")
@@ -45,6 +49,11 @@ public class PlayerController {
         @PathVariable Integer gameId) {   
             try {
                 HttpStatus response = HttpStatus.CREATED;
+                StringBuilder bitecode = new StringBuilder();
+                for (int i = 0; i < 8; i++) {
+                    bitecode.append(letters[randomNumber.nextInt(letters.length)]);
+                }
+                newPlayer.setBiteCode(bitecode.toString());
                 newPlayer.setUserAccount(new UserAccount(userAccountId));
                 newPlayer.setGame(new Game(gameId));
                 playerRepository.save(newPlayer);

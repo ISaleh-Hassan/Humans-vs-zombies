@@ -1,8 +1,8 @@
 package experis.humansvszombies.hvz.api;
 
 import experis.humansvszombies.hvz.controllers.api.UserAccountController;
+import experis.humansvszombies.hvz.models.enums.UserType;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
-import experis.humansvszombies.hvz.models.tables.enums.UserType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,10 +64,10 @@ public class UserTests {
     @Test
     void updateUser() {
         int id = userAccountId;
-        ResponseEntity<UserAccount> response = uac.updateUser(new UserAccount("Updated firstName","updated lastName", UserType.ADMINSTRATOR,"TestUsername" ,"TestPassword","test@test.test"), id);
+        ResponseEntity<UserAccount> response = uac.updateUser(new UserAccount("Updated firstName","updated lastName", UserType.ADMINISTRATOR,"TestUsername" ,"TestPassword","test@test.test"), id);
         assertEquals("Updated firstName", response.getBody().getFirstName());
         assertEquals("updated lastName", response.getBody().getLastName());
-        assertEquals(UserType.ADMINSTRATOR, response.getBody().getUserType());
+        assertEquals(UserType.ADMINISTRATOR, response.getBody().getUserType());
         assertEquals("TestUsername", response.getBody().getUsername());
         assertEquals("TestPassword", response.getBody().getPassword());
         assertEquals("test@test.test", response.getBody().getEmail());
@@ -82,6 +82,38 @@ public class UserTests {
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         response1 = uac.getUserById(id);
         assertEquals(HttpStatus.NOT_FOUND, response1.getStatusCode());
+    }
+
+    @Test
+    void createDuplicateUser() {
+        ResponseEntity<UserAccount> response = uac.addUserAccount(new UserAccount("Steve", "Harrington", UserType.PLAYER, "Scopes", "icecream", "scopes@email.com"));
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        int stevesId = response.getBody().getUserAccountId();
+        ResponseEntity<UserAccount> response2 = uac.addUserAccount(new UserAccount("Steve", "Harrington", UserType.PLAYER, "Scopes", "icecream", "scopes@email.com"));
+        assertEquals(HttpStatus.BAD_REQUEST, response2.getStatusCode());
+        //Delete steves account again.
+        ResponseEntity<String> deleteResponse = uac.deleteUserAccount(stevesId);
+        assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
+    }
+
+    @Test
+    void loginUser() {
+        //Create a user to test against.
+        UserAccount stevesAccount = new UserAccount("Steve", "Harrington", UserType.PLAYER, "Scoops", "icecream", "scoopes@email.com");
+        ResponseEntity<UserAccount> response = uac.addUserAccount(stevesAccount);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        //Try to login user with correct information.
+        ResponseEntity<String> loginResponse = uac.loginUser(new UserAccount(null,null,null,null,"icecream", "scoopes@email.com"));
+        assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
+        //Try to login user with faulty username.
+        loginResponse = uac.loginUser(new UserAccount(null,null,null,null,"icecream12", "scoopes@email.com"));
+        assertEquals(HttpStatus.BAD_REQUEST, loginResponse.getStatusCode());
+        //Try to login user with faulty email.
+        loginResponse = uac.loginUser(new UserAccount(null,null,null,null,"icecream", "scoopes12@email.com"));
+        assertEquals(HttpStatus.BAD_REQUEST, loginResponse.getStatusCode());
+        //Delete the UserAccount again.
+        ResponseEntity<String> deleteResponse = uac.deleteUserAccount(response.getBody().getUserAccountId());
+        assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
     }
 
     int createTestUserAccount() {

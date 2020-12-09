@@ -16,7 +16,9 @@ import javax.persistence.OneToOne;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-@Entity
+import experis.humansvszombies.hvz.models.enums.SquadRank;
+
+@Entity(name="squad_member")
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "squadMemberId"
@@ -26,6 +28,9 @@ public class SquadMember {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="squad_member_id")
     private Integer squadMemberId;   
+
+    @Column(name="squad_rank")
+    private SquadRank squadRank;    
 
     @ManyToOne
     private Game game;
@@ -47,10 +52,8 @@ public class SquadMember {
         this.squadMemberId = squadMemberId;
     }
 
-    public SquadMember(Game game, Squad squad, Player player) {
-        this.game = game;
-        this.squad = squad;
-        this.player = player;
+    public SquadMember(SquadRank rank) {
+        this.squadRank = rank;        
     }
 
     public Integer getSquadMemberId() {
@@ -83,5 +86,13 @@ public class SquadMember {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public SquadRank getSquadRank() {
+        return squadRank;
+    }
+
+    public void setSquadRank(SquadRank squadRank) {
+        this.squadRank = squadRank;
     }
 }

@@ -1,5 +1,7 @@
 package experis.humansvszombies.hvz.models.tables;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +12,9 @@ import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-@Entity
+import org.springframework.data.geo.Point;
+
+@Entity(name="squad_checkin")
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "squadCheckinId"
@@ -20,6 +24,12 @@ public class SquadCheckin {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="squad_chekin_id")
     private Integer squadCheckinId;
+
+    @Column(name="point_of_time")
+    private Timestamp pointOfTime;
+    
+    @Column(name="position")
+    private Point position;
 
     @ManyToOne
     private Game game;
@@ -38,10 +48,9 @@ public class SquadCheckin {
         this.squadCheckinId = squadCheckinId;
     }
 
-    public SquadCheckin(Game game, Squad squad, SquadMember squadMember) {
-        this.game = game;
-        this.squad = squad;
-        this.squadMember = squadMember;
+    public SquadCheckin(Timestamp time, Point pos) {
+        this.pointOfTime = time;
+        this.position = pos;
     }
 
     public Integer getSquadCheckinId() {
@@ -74,5 +83,21 @@ public class SquadCheckin {
 
     public void setSquadMember(SquadMember squadMember) {
         this.squadMember = squadMember;
+    }
+
+    public Timestamp getPointOfTime() {
+        return pointOfTime;
+    }
+
+    public void setPointOfTime(Timestamp pointOfTime) {
+        this.pointOfTime = pointOfTime;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point position) {
+        this.position = position;
     }
 }

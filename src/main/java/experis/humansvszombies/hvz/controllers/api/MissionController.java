@@ -94,6 +94,7 @@ public class MissionController {
         }
     }
 
+    @CrossOrigin()
     @DeleteMapping("/api/delete/mission/{missionId}")
     public ResponseEntity<String> deleteMission(@PathVariable Integer missionId) {
         try {
