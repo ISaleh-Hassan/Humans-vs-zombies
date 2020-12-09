@@ -20,25 +20,25 @@ import DBTest from './utils/DBTest'
 const App = () => {
   return (
     <AuthProvider>
-      <Router>
+      <BrowserRouter>
         <Switch>
-          <BrowserRouter>
-            <PrivateRoute exact path="/" component={Home} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <PrivateRoute exact path="/currentgames" component={CurrentGames} />
-            <PrivateRoute exact path="/admin" component={Admin} />
-            <PrivateRoute exact path="/game" component={Game} />
-            <PrivateRoute exact path="/playerstate" component={PlayerState} />
-            <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
-            <PrivateRoute exact path="/test" component={PhoneLoginTest} />
-            <PrivateRoute exact path="/map" component={Maps} />
-            <PrivateRoute exact path="/maptest" component={MapTest} />
-            <PrivateRoute exact path="/dbtest" component={DBTest} />
-            <Route path="/*" component={NotFound} />
-          </BrowserRouter>
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <PrivateRoute exact path="/" component={Home} />
+          <PrivateRoute exact path="/currentgames" component={CurrentGames} />
+          <PrivateRoute exact path="/admin" component={Admin} />
+          <PrivateRoute exact path="/game" component={Game} />
+          <PrivateRoute exact path="/playerstate" component={PlayerState} />
+          <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
+          <PrivateRoute exact path="/test" component={PhoneLoginTest} />
+          <PrivateRoute exact path="/map" component={Maps} />
+          <PrivateRoute exact path="/maptest" component={MapTest} />
+          <PrivateRoute exact path="/dbtest" component={DBTest} />
+          <Route path='*'>
+            <NotFound header='Page not found' message='The page you requested does not exist' />
+          </Route>
         </Switch>
-      </Router>
+      </BrowserRouter>
     </AuthProvider>
   );
 };
