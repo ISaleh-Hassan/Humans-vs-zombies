@@ -4,7 +4,7 @@ import { BrowserRouter, BrowserRouter as Router, Route, Switch } from "react-rou
 import Home from "./components/Home";
 import Login from "./components/AuthComponents/Login";
 import Register from "./components/AuthComponents/Register";
-import { AuthProvider } from "./utils/auth";
+import { AuthProvider } from "./utils/Auth";
 import PrivateRoute from "./utils/PrivateRoute";
 import NotFound from "./components/Stylings/NotFound";
 import CurrentGames from "./components/CurrentGames";
@@ -26,7 +26,6 @@ const App = () => {
             <PrivateRoute exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
-            <Route path="/*" component={NotFound} />
             <PrivateRoute exact path="/currentgames" component={CurrentGames} />
             <PrivateRoute exact path="/admin" component={Admin} />
             <PrivateRoute exact path="/game" component={Game} />
@@ -36,6 +35,7 @@ const App = () => {
             <PrivateRoute exact path="/map" component={Maps} />
             <PrivateRoute exact path="/maptest" component={MapTest} />
             <PrivateRoute exact path="/dbtest" component={DBTest} />
+            <Route path="/*" component={NotFound} />
           </BrowserRouter>
         </Switch>
       </Router>
