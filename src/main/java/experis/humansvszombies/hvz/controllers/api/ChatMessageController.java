@@ -36,6 +36,23 @@ public class ChatMessageController {
         }
     }
 
+    @PostMapping("/api/create/chatmessage/{gameId}/{playerId}/{squadId}")
+    public ResponseEntity<ChatMessage> addChatMessage(@RequestBody ChatMessage newChatMessage, @PathVariable Integer gameId,
+                                                      @PathVariable Integer playerId, @PathVariable Integer squadId) {
+        try {
+            HttpStatus response = HttpStatus.CREATED;
+            newChatMessage.setGame(new Game(gameId));
+            newChatMessage.setPlayer(new Player(playerId));
+            newChatMessage.setSquad(new Squad(squadId));
+            chatMessageRepository.save(newChatMessage);
+            System.out.println("ChatMessage CREATED with id: " + newChatMessage.getChatMessageId());
+            return new ResponseEntity<>(newChatMessage, response);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: id was null");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @CrossOrigin()
     @PatchMapping("/api/update/kill/{chatMessageId}")
     public ResponseEntity<ChatMessage> updateChatMessage(@RequestBody ChatMessage newChatMessage, @PathVariable Integer chatMessageId) {
@@ -63,24 +80,7 @@ public class ChatMessageController {
             }
             return new ResponseEntity<>(chatMessage, response);
         } catch (IllegalArgumentException e) {
-            System.out.println("Exception thrown: id or kill was null.");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/api/create/chatmessage/{gameId}/{playerId}/{squadId}")
-    public ResponseEntity<ChatMessage> addChatMessage(@RequestBody ChatMessage newChatMessage, @PathVariable Integer gameId,
-                                                      @PathVariable Integer playerId, @PathVariable Integer squadId) {
-        try {
-            HttpStatus response = HttpStatus.CREATED;
-            newChatMessage.setGame(new Game(gameId));
-            newChatMessage.setPlayer(new Player(playerId));
-            newChatMessage.setSquad(new Squad(squadId));
-            chatMessageRepository.save(newChatMessage);
-            System.out.println("ChatMessage CREATED with id: " + newChatMessage.getChatMessageId());
-            return new ResponseEntity<>(newChatMessage, response);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Exception thrown: id was null");
+            System.out.println("Exception thrown: id or newChatMessage was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -103,7 +103,7 @@ public class ChatMessageController {
             return new ResponseEntity<>(message, response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }
     }
 }
