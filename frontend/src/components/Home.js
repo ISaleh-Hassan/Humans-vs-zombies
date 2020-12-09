@@ -28,6 +28,9 @@ const Home = () => {
           <button onClick={handleSignOut}>Sign out</button>
           <Link to="/currentgames">Current Games</Link>
         </div>
+        <div>
+          <p>{}</p>
+        </div>
       </section>
     </>
   );

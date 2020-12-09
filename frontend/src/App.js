@@ -15,6 +15,7 @@ import MissionMarker from "./components/MissionMarker";
 import PhoneLoginTest from "./components/AuthComponents/PhoneLoginTest";
 import Maps from './components/MapComponents/Maps'
 import MapTest from './components/MapComponents/MapTest'
+import DBTest from './utils/DBTest'
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
             <PrivateRoute exact path="/test" component={PhoneLoginTest} />
             <PrivateRoute exact path="/map" component={Maps} />
             <PrivateRoute exact path="/maptest" component={MapTest} />
+            <PrivateRoute exact path="/dbtest" component={DBTest} />
           </BrowserRouter>
         </Switch>
       </Router>

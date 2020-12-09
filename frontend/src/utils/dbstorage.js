@@ -7,3 +7,9 @@ export const storeUserDB = (user) => {
         body: JSON.stringify({ name: user })
     })
 }
+
+export const getUserInfo = () => {
+    fetch('http://localhost:8080/api/fetch/useraccount/all')
+  .then(response => response.json())
+  .then(data => console.log(data));
+}
