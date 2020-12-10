@@ -16,6 +16,7 @@ public class ChatMessageController {
     @Autowired
     ChatMessageRepository chatMessageRepository;
 
+    @CrossOrigin()
     @GetMapping("/api/fetch/chatmessage/all")
     public ResponseEntity<ArrayList<ChatMessage>> getAllChatMessages() {
         ArrayList<ChatMessage> messages = (ArrayList<ChatMessage>)chatMessageRepository.findAll();
@@ -36,6 +37,7 @@ public class ChatMessageController {
         }
     }
 
+    @CrossOrigin()
     @PostMapping("/api/create/chatmessage/{gameId}/{playerId}/{squadId}")
     public ResponseEntity<ChatMessage> addChatMessage(@RequestBody ChatMessage newChatMessage, @PathVariable Integer gameId,
                                                       @PathVariable Integer playerId, @PathVariable Integer squadId) {
@@ -85,6 +87,7 @@ public class ChatMessageController {
         }
     }
 
+    @CrossOrigin()
     @DeleteMapping("/api/delete/chatmessage/{chatMessageId}")
     public ResponseEntity<String> deleteChatMessage(@PathVariable Integer chatMessageId) {
         try {
