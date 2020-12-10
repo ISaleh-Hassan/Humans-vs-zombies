@@ -15,7 +15,7 @@ import experis.humansvszombies.hvz.models.enums.MissionState;
 
 import java.sql.Timestamp;
 
-@Entity
+@Entity(name="mission")
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "missionId"

@@ -38,7 +38,7 @@ const PlayerComponent = () => {
   }
 
   async function getPlayers() {
-    let response = await fetch("http://localhost:8080/api/player", {
+    let response = await fetch("http://localhost:8080/api/fetch/useraccount/all", {
       method: 'GET',
       mode: 'cors'
     })
@@ -49,7 +49,8 @@ const PlayerComponent = () => {
 
 
   function postPlayer() {
-    fetch("http://localhost:8080/api/create/player", {
+    console.log(player)
+    fetch("http://localhost:8080/api/create/useraccount", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
