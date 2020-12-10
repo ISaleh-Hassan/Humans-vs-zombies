@@ -12,7 +12,7 @@ import { AuthContext } from "../../utils/Auth";
 const Register = ({ history }) => {
     const handleRegister = useCallback(async event => {
         event.preventDefault();
-        const { username, email, password } = event.target.elements;
+        const { username, email, password, firstname, lastname } = event.target.elements;
         try {
             firebaseConfig.auth().createUserWithEmailAndPassword(email.value, password.value)
                 .then(userData => {
@@ -24,7 +24,7 @@ const Register = ({ history }) => {
                 });
             history.push("/")
             storeUser(username.value);
-            storeUserDB(email.value);
+            storeUserDB(username.value, firstname.value, lastname.value, password.value, email.value);
         } catch (error) {
             alert(error);
         }
@@ -77,7 +77,7 @@ const Register = ({ history }) => {
                         </Form.Group>
                         <button type="submit">Register</button><button name="cancel "onClick={onCancel}>Cancel</button>
                     </Form>
-                    <Link to="/login">Log In</Link>
+                    <Link to="/login">Already have an account? Log in here.</Link>
                 </div>
             </section>
         </>

@@ -53,7 +53,7 @@ const Login = ({ history }) => {
                         </Form.Group>
                         <button type="submit">Log in</button><button name="cancel " onClick={onCancel}>Cancel</button>
                     </Form>
-                    <Link to="/register">Register</Link>
+                    <Link to="/register">Don't have an account? Register here.</Link>
                 </div>
             </section>
         </>

@@ -1,10 +1,17 @@
-export const storeUserDB = (user) => {
+export const storeUserDB = (username, firstname, lastname, password, email) => {
     fetch("http://localhost:8080/api/create/useraccount", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name: user })
+        body: JSON.stringify({  players: [],
+                                username: username,
+                                firstName: firstname,
+                                lastName: lastname,
+                                userType: null,
+                                password: password,  
+                                email: email             
+        })
     })
 }
 
