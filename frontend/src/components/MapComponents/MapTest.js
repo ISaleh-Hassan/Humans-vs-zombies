@@ -14,6 +14,7 @@ class MapTest extends Component {
   }
 
   componentDidMount() {
+    let coordinates = document.getElementById('coordinates');
     const map = new mapboxgl.Map({
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -21,21 +22,29 @@ class MapTest extends Component {
       zoom: this.state.zoom
     });
 
-    map.on('move', () => {
-      this.setState({
-        lng: map.getCenter().lng.toFixed(4),
-        lat: map.getCenter().lat.toFixed(4),
-        zoom: map.getZoom().toFixed(2)
-      });
-    });
+    let marker = new mapboxgl.Marker({
+      draggable: true
+    })
+      .setLngLat([this.state.lng, this.state.lat])
+      .addTo(map);
+
+    function onDragEnd() {
+      let lngLat = marker.getLngLat();
+      coordinates.style.display = 'block';
+      coordinates.innerHTML =
+        'Longitude: ' + lngLat.lng + '<br />Latitude: ' + lngLat.lat;
+    }
+
+    marker.on('dragend', onDragEnd);
   }
 
   render() {
     return (
       <section className="home">
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
         <div className="container">
-          <div>Longitude: {this.state.lng} | Latitude: {this.state.lat} | Zoom: {this.state.zoom}</div>
-          <div ref={el => this.mapContainer = el} className='leaflet-container' />
+          <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
+          <p id="coordinates" class="coordinates"></p>
         </div>
       </section>
     )
