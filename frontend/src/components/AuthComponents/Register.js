@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { Redirect, withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import { storeUserDB } from "../../utils/dbstorage";
@@ -7,32 +7,58 @@ import { storeUser } from "../../utils/localstorage";
 import Form from 'react-bootstrap/Form'
 import Header from "../Stylings/Header";
 import '../Stylings/Components.css';
-import { AuthContext } from "../../utils/Auth";
+import { AuthContext } from "../../utils/auth";
 
 const Register = ({ history }) => {
+
+    let [isAdmin, setIsAdmin] = useState(false);
+
     const handleRegister = useCallback(async event => {
         event.preventDefault();
-        const { username, email, password } = event.target.elements;
+        let { username, email, password, firstname, lastname, userType } = event.target.elements;
+        if (isAdmin) {
+            userType = 'ADMINISTRATOR'
+        } else {
+            userType = 'USER'
+        }
         try {
-            firebaseConfig.auth().createUserWithEmailAndPassword(email.value, password.value)
-                .then(userData => {
-                    userData.user.sendEmailVerification();
-                    console.log(userData);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-            history.push("/")
-            storeUser(username.value);
-            storeUserDB(email.value);
+            const status = await storeUserDB(username.value, firstname.value, lastname.value, userType.value, password.value, email.value);
+            if (status === 201) {
+                firebaseConfig.auth().createUserWithEmailAndPassword(email.value, password.value)
+                    .then(userData => {
+                        userData.user.sendEmailVerification();
+                        console.log(userData);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                history.push("/")
+                storeUser(username.value);
+            } else {
+                alert("Username or email already in use!")
+            }
         } catch (error) {
             alert(error);
         }
     }, [history])
-    
+
     const onCancel = () => {
         console.log("You tried to cancel!")
     };
+
+    const handleCheckbox = e => {
+        const target = e.target;
+        let isChecked = target.type === 'checkbox' ? target.checked : target.value;
+        if (isChecked) {
+            isChecked = 'ADMINISTRATOR'
+            setIsAdmin(true)
+            console.log(isChecked)
+        } else {
+            isChecked = 'USER'
+            setIsAdmin(false)
+            console.log(isChecked)
+        }
+    }
 
     const { currentUser } = useContext(AuthContext);
 
@@ -73,11 +99,11 @@ const Register = ({ history }) => {
                         </Form.Group>
 
                         <Form.Group controlId="formAdminCheckbox">
-                            <Form.Check name="admin-checkbox" type="checkbox" label="Register as admin?" />
+                            <Form.Check name="userType" type="checkbox" label="Register as admin?" onChange={handleCheckbox} />
                         </Form.Group>
-                        <button type="submit">Register</button><button name="cancel "onClick={onCancel}>Cancel</button>
+                        <button type="submit">Register</button><button name="cancel " onClick={onCancel}>Cancel</button>
                     </Form>
-                    <Link to="/login">Log In</Link>
+                    <Link to="/login">Already have an account? Log in here.</Link>
                 </div>
             </section>
         </>
