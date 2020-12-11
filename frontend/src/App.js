@@ -2,6 +2,12 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter, BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./components/Home";
+import LandingPage from "./components/LandingPage";
+import BiteHuman from "./components/BiteHuman";
+import BiteZombie from "./components/BiteZombie";
+import SquadList from "./components/SquadList";
+import SquadDetail from "./components/SquadDetail";
+import SquadCreate from "./components/SquadCreate";
 import Login from "./components/AuthComponents/Login";
 import Register from "./components/AuthComponents/Register";
 import { AuthProvider } from "./utils/Auth";
@@ -25,6 +31,12 @@ const App = () => {
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <PrivateRoute exact path="/" component={Home} />
+          <PrivateRoute exact path="/landing" component={LandingPage} />
+          <PrivateRoute exakt path="/bitehuman" component={BiteHuman} />
+          <PrivateRoute exakt path="/bitezombie" component={BiteZombie} />
+          <PrivateRoute exakt path="/squads" component={SquadList} />
+          <PrivateRoute exakt path="/squaddetails" component={SquadDetail} />
+          <PrivateRoute exakt path="/createsquad" component={SquadCreate} />
           <PrivateRoute exact path="/currentgames" component={CurrentGames} />
           <PrivateRoute exact path="/admin" component={Admin} />
           <PrivateRoute exact path="/game" component={Game} />
