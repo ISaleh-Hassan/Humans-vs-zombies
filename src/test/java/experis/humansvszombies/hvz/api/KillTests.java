@@ -4,6 +4,7 @@ import experis.humansvszombies.hvz.controllers.api.GameController;
 import experis.humansvszombies.hvz.controllers.api.KillController;
 import experis.humansvszombies.hvz.controllers.api.PlayerController;
 import experis.humansvszombies.hvz.controllers.api.UserAccountController;
+import experis.humansvszombies.hvz.models.datastructures.RegisterKill;
 import experis.humansvszombies.hvz.models.tables.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,7 @@ public class KillTests {
     private int killerId;
     private int userAccountVictimId;
     private int victimId;
+    private String victimBiteCode;
 
     @BeforeEach
     void initTest() {
@@ -93,6 +95,19 @@ public class KillTests {
         assertEquals(Timestamp.valueOf("2000-01-10 01:01:01"), response.getBody().getTimeOfDeath());
     }
 
+    @Test
+    void createKillWithVerifiedBiteCode() {
+        //Test with correct code
+        ResponseEntity<Kill> response = kc.addKillVersion2(new RegisterKill(new Kill(), this.gameId, this.killerId, this.victimId, this.victimBiteCode));
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        //Test with faulty code
+        ResponseEntity<Kill> response2 = kc.addKillVersion2(new RegisterKill(new Kill(), this.gameId, this.killerId, this.victimId, "ThisCodeIsWrong"));
+        assertEquals(HttpStatus.BAD_REQUEST, response2.getStatusCode());
+        // //Delete Kill objects
+        ResponseEntity<String> deleteResponse = kc.deleteKill(response.getBody().getKillId());
+        assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
+    }
+
     int createTestGame() {
         ResponseEntity<Game> response = gc.addGame(new Game());
         return response.getBody().getGameId();
@@ -105,6 +120,7 @@ public class KillTests {
 
     int createTestPlayerVictim() {
         ResponseEntity<Player> response = pc.addPlayer(new Player(), this.userAccountVictimId, this.gameId);
+        this.victimBiteCode = response.getBody().getBiteCode();
         return response.getBody().getPlayerId();
     }
 

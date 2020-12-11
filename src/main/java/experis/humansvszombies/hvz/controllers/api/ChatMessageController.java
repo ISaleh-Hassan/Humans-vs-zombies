@@ -46,7 +46,9 @@ public class ChatMessageController {
             HttpStatus response = HttpStatus.CREATED;
             newChatMessage.setGame(new Game(gameId));
             newChatMessage.setPlayer(new Player(playerId));
-            newChatMessage.setSquad(new Squad(squadId));
+            if (squadId != null) {
+                newChatMessage.setSquad(new Squad(squadId));
+            }
             chatMessageRepository.save(newChatMessage);
             System.out.println("ChatMessage CREATED with id: " + newChatMessage.getChatMessageId());
             return new ResponseEntity<>(newChatMessage, response);
