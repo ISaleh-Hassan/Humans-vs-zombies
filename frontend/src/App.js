@@ -12,9 +12,9 @@ import Admin from "./components/AuthComponents/Admin";
 import Game from "./components/Game";
 import PlayerState from "./components/PlayerState";
 import MissionMarker from "./components/MissionMarker";
-import PhoneLoginTest from "./components/AuthComponents/PhoneLoginTest";
 import DBTest from './utils/DBTest'
 import MainMap from "./components/MapComponents/MainMap";
+import PhoneLogin from "./components/AuthComponents/PhoneLogin";
 
 const App = () => {
   return (
@@ -29,7 +29,7 @@ const App = () => {
           <PrivateRoute exact path="/game" component={Game} />
           <PrivateRoute exact path="/playerstate" component={PlayerState} />
           <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
-          <PrivateRoute exact path="/test" component={PhoneLoginTest} />
+          <PrivateRoute exact path="/test" component={PhoneLogin} />
           <PrivateRoute exact path="/map" component={MainMap} />
           <PrivateRoute exact path="/dbtest" component={DBTest} />
           <Route path='*'>

@@ -32,12 +32,12 @@ export async function loginUser(email, password) {
             password: password
         })
     })
-    const status = await response.status;
-    console.log(status);
+    const status = await response.status
+    return status;
 }
 
-export const getUserInfo = () => {
-    fetch('http://localhost:8080/api/fetch/useraccount/all')
-        .then(response => response.json())
-        .then(data => console.log(data));
-}
+// export const getUserInfo = () => {
+//     fetch('http://localhost:8080/api/fetch/useraccount/all')
+//         .then(response => response.json())
+//         .then(data => console.log(data));
+// }

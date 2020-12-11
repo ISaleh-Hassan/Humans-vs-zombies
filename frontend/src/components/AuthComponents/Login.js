@@ -15,8 +15,8 @@ const Login = ({ history }) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
             try {
-                loginUser(email.value, password.value);
-                //do an if 400, don't login to firebase 
+                const status = loginUser(email.value, password.value)
+                console.log(status)
                 await firebaseConfig
                     .auth()
                     .signInWithEmailAndPassword(email.value, password.value);
