@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { Redirect, withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import { storeUserDB } from "../../utils/dbstorage";
@@ -10,11 +10,20 @@ import '../Stylings/Components.css';
 import { AuthContext } from "../../utils/Auth";
 
 const Register = ({ history }) => {
+
+    const [isAdmin, setIsAdmin] = useState(false); 
+
     const handleRegister = useCallback(async event => {
         event.preventDefault();
         const { username, email, password, firstname, lastname } = event.target.elements;
+        let userType;
+        if (isAdmin){
+            userType = 'ADMINISTRATOR'
+        } else {
+            userType = 'USER'
+        }
         try {
-            const status = await storeUserDB(username.value, firstname.value, lastname.value, password.value, email.value);
+            const status = await storeUserDB(username.value, firstname.value, lastname.value, userType, password.value, email.value);
             if (status === 201) {
                 firebaseConfig.auth().createUserWithEmailAndPassword(email.value, password.value)
                     .then(userData => {
@@ -37,6 +46,20 @@ const Register = ({ history }) => {
     const onCancel = () => {
         console.log("You tried to cancel!")
     };
+
+    const handleCheckbox = e => {
+        const target = e.target;
+        let isChecked = target.type === 'checkbox' ? target.checked : target.value;
+        if (isChecked) {
+            isChecked = 'ADMINISTRATOR'
+            setIsAdmin(true)
+            console.log(isChecked)
+        } else {
+            isChecked = 'USER'
+            setIsAdmin(false)
+            console.log(isChecked)
+        }
+    }
 
     const { currentUser } = useContext(AuthContext);
 
@@ -77,7 +100,7 @@ const Register = ({ history }) => {
                         </Form.Group>
 
                         <Form.Group controlId="formAdminCheckbox">
-                            <Form.Check name="admin-checkbox" type="checkbox" label="Register as admin?" />
+                            <Form.Check name="admin-checkbox" type="checkbox" label="Register as admin?" onChange={handleCheckbox} />
                         </Form.Group>
                         <button type="submit">Register</button><button name="cancel " onClick={onCancel}>Cancel</button>
                     </Form>

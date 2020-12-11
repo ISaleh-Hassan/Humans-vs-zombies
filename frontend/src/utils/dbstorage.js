@@ -1,4 +1,4 @@
-export async function storeUserDB(username, firstname, lastname, password, email) {
+export async function storeUserDB(username, firstname, lastname, usertype, password, email) {
     const response = await fetch("http://localhost:8080/api/create/useraccount", {
         method: 'POST',
         headers: {
@@ -9,7 +9,7 @@ export async function storeUserDB(username, firstname, lastname, password, email
             username: username,
             firstName: firstname,
             lastName: lastname,
-            userType: null,
+            userType: usertype,
             password: password,
             email: email
         })
@@ -38,8 +38,8 @@ export async function loginUser(email, password) {
     return status;
 }
 
-// export const getUserInfo = () => {
-//     fetch('http://localhost:8080/api/fetch/useraccount/all')
-//         .then(response => response.json())
-//         .then(data => console.log(data));
-// }
+export const getUserInfo = () => {
+    fetch('http://localhost:8080/api/fetch/useraccount/all')
+        .then(response => response.json())
+        .then(data => console.log(data));
+}
