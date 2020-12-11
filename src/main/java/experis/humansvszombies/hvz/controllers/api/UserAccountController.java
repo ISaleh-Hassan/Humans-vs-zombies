@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import experis.humansvszombies.hvz.models.datastructures.UserInfo;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
 import experis.humansvszombies.hvz.repositories.UserAccountRepository;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -125,9 +126,9 @@ public class UserAccountController {
     //SPECIAL METHODS
     @CrossOrigin()
     @PostMapping("/api/useraccount/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserAccount userAccount) {
+    public ResponseEntity<UserInfo> loginUser(@RequestBody UserAccount userAccount) {
         //Assume the login will fail.
-        String message = "FAILED";
+        UserInfo userInfo = null;
         HttpStatus status = HttpStatus.BAD_REQUEST;
         //Check that userAccount isn't null. Then check if the supplied email exists in the database.
         if (userAccount != null) {
@@ -135,12 +136,12 @@ public class UserAccountController {
             if (user != null) {
                 //Compare supplied password to account password and return SUCCESS message if login information is correct.
                 if (user.getPassword().equals(userAccount.getPassword())) {
-                    message = "SUCCESS";
                     status = HttpStatus.OK;
+                    userInfo = new UserInfo(user.getUserAccountId(), user.getUsername(), user.getUserType());
                 }
             }  
         }
-        return new ResponseEntity<>(message, status);
+        return new ResponseEntity<>(userInfo, status);
     }
     
 }
