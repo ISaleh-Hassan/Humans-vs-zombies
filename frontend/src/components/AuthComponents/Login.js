@@ -12,6 +12,7 @@ const Login = ({ history }) => {
 
     const handleLogin = useCallback(
         async event => {
+            
             event.preventDefault();
             const { email, password } = event.target.elements;
             try {

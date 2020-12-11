@@ -118,4 +118,26 @@ public class PlayerController {
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }     
     }
+
+    public ResponseEntity<Boolean> checkBiteCode(Integer victimId, String biteCode) {
+        try {
+            HttpStatus status = HttpStatus.OK;
+            Boolean result;
+            Player victim = playerRepository.findById(victimId).orElse(null);
+            if (victim != null) {
+                if (victim.getBiteCode().equals(biteCode)) {
+                    result = true;
+                } else {
+                    result = false;
+                }
+            } else {
+                status = HttpStatus.BAD_REQUEST;
+                result = false;
+            }
+            return new ResponseEntity<>(result, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: victimId was null.");
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
