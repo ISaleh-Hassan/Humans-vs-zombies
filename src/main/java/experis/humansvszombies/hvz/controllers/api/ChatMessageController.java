@@ -2,6 +2,7 @@ package experis.humansvszombies.hvz.controllers.api;
 
 import java.util.ArrayList;
 
+import experis.humansvszombies.hvz.models.datastructures.ChatMessageRequest;
 import experis.humansvszombies.hvz.models.tables.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -107,6 +108,22 @@ public class ChatMessageController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin("/api/fetch/chatmessage/bundle")
+    public ResponseEntity<ArrayList<ChatMessage>> fetchBundleOfChatMessages(@RequestBody ChatMessageRequest request) {
+        try {
+            ArrayList<ChatMessage> messages;
+            if (request.getSquadId() == null) {
+                messages = chatMessageRepository.findByGameAndFaction(request.getGameId(), request.getFaction());
+            } else {
+                messages = chatMessageRepository.findByGameAndSquad(request.getGameId(), request.getSquadId());
+            }
+            return new ResponseEntity<>(messages, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Exception thrown when fetching bundle of ChatMessages.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 }
