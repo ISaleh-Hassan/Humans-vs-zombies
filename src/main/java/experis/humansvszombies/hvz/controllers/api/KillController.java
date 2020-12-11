@@ -119,7 +119,7 @@ public class KillController {
     }
 
     @CrossOrigin()
-    @PostMapping("/api/v2/create/kill/{gameId}/{killerId}/{victimId}")
+    @PostMapping("/api/v2/create/kill")
     public ResponseEntity<Kill> addKillVersion2(@RequestBody RegisterKill newKill) {
         try {
             HttpStatus status = HttpStatus.CREATED;
