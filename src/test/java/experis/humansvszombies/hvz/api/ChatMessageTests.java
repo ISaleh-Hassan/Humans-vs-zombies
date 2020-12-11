@@ -1,6 +1,7 @@
 package experis.humansvszombies.hvz.api;
 
 import experis.humansvszombies.hvz.controllers.api.*;
+import experis.humansvszombies.hvz.models.datastructures.ChatMessageRequest;
 import experis.humansvszombies.hvz.models.enums.Faction;
 import experis.humansvszombies.hvz.models.tables.*;
 import org.junit.jupiter.api.AfterEach;
@@ -102,6 +103,39 @@ public class ChatMessageTests {
         assertEquals(Timestamp.valueOf("2000-01-10 01:01:01"), response.getBody().getTimestamp());
         assertEquals(Faction.HUMAN, response.getBody().getFaction());
     }
+
+    @Test
+    void fetchGlobalChatMessages() {
+        //Fetch Global
+        ResponseEntity<ArrayList<ChatMessage>> messages = cmc.fetchBundleOfChatMessages(new ChatMessageRequest(Faction.ALL, null, 1));
+        assertEquals(HttpStatus.OK, messages.getStatusCode());
+        for (ChatMessage message : messages.getBody()) {
+            System.out.println(message.getChatMessageId());
+            System.out.println(message.getMessage());         
+        }
+        //Fetch Human Faction Messages
+        messages = cmc.fetchBundleOfChatMessages(new ChatMessageRequest(Faction.HUMAN, null, 1));
+        assertEquals(HttpStatus.OK, messages.getStatusCode());
+        for (ChatMessage message : messages.getBody()) {
+            System.out.println(message.getChatMessageId());
+            System.out.println(message.getMessage());         
+        }
+        //Fetch Zombie Faction Messages
+        messages = cmc.fetchBundleOfChatMessages(new ChatMessageRequest(Faction.ZOMBIE, null, 1));
+        assertEquals(HttpStatus.OK, messages.getStatusCode());
+        for (ChatMessage message : messages.getBody()) {
+            System.out.println(message.getChatMessageId());
+            System.out.println(message.getMessage());         
+        }
+        //Fetch Squad Messages
+        messages = cmc.fetchBundleOfChatMessages(new ChatMessageRequest(Faction.HUMAN, 1, 1));
+        assertEquals(HttpStatus.OK, messages.getStatusCode());
+        for (ChatMessage message : messages.getBody()) {
+            System.out.println(message.getChatMessageId());
+            System.out.println(message.getMessage());         
+        }
+    }
+
 
     int createTestPlayer() {
         ResponseEntity<Player> response = pc.addPlayer(new Player(),this.userAccountId,this.gameId);
