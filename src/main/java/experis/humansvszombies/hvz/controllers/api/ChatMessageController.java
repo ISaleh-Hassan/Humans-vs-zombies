@@ -116,11 +116,15 @@ public class ChatMessageController {
     @CrossOrigin("/api/fetch/chatmessage/bundle")
     public ResponseEntity<ArrayList<ChatMessage>> fetchBundleOfChatMessages(@RequestBody ChatMessageRequest request) {
         try {
+            System.out.println("Hello from bundle messages.");
+            System.out.println("GameId: " + request.getGameId());
+            System.out.println("Faction: " + request.getFaction());
+            System.out.println("SquadId: " + request.getSquadId());
             ArrayList<ChatMessage> messages;
             if (request.getSquadId() == null) {
-                messages = chatMessageRepository.findByGameAndFaction(request.getGameId(), request.getFaction());
+                messages = chatMessageRepository.findByGameAndFactionAndSquad(new Game(request.getGameId()), request.getFaction(), null);
             } else {
-                messages = chatMessageRepository.findByGameAndSquad(request.getGameId(), request.getSquadId());
+                messages = chatMessageRepository.findByGameAndSquad(new Game(request.getGameId()), new Squad(request.getSquadId()));
             }
             return new ResponseEntity<>(messages, HttpStatus.OK);
         } catch (Exception e) {

@@ -11,6 +11,12 @@ public class ChatMessageRequest {
 
     }
 
+    public ChatMessageRequest(Faction faction, Integer squadId, Integer gameId) {
+        this.faction = faction;
+        this.squadId = squadId;
+        this.gameId = gameId;
+    }
+
     public Faction getFaction() {
         return faction;
     }
