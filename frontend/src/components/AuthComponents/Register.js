@@ -14,22 +14,26 @@ const Register = ({ history }) => {
         event.preventDefault();
         const { username, email, password, firstname, lastname } = event.target.elements;
         try {
-            firebaseConfig.auth().createUserWithEmailAndPassword(email.value, password.value)
-                .then(userData => {
-                    userData.user.sendEmailVerification();
-                    console.log(userData);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-            history.push("/")
-            storeUser(username.value);
-            storeUserDB(username.value, firstname.value, lastname.value, password.value, email.value);
+            const status = await storeUserDB(username.value, firstname.value, lastname.value, password.value, email.value);
+            if (status === 201) {
+                firebaseConfig.auth().createUserWithEmailAndPassword(email.value, password.value)
+                    .then(userData => {
+                        userData.user.sendEmailVerification();
+                        console.log(userData);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                history.push("/")
+                storeUser(username.value);
+            } else {
+                alert("Username or email already in use!")
+            }
         } catch (error) {
             alert(error);
         }
     }, [history])
-    
+
     const onCancel = () => {
         console.log("You tried to cancel!")
     };
@@ -75,7 +79,7 @@ const Register = ({ history }) => {
                         <Form.Group controlId="formAdminCheckbox">
                             <Form.Check name="admin-checkbox" type="checkbox" label="Register as admin?" />
                         </Form.Group>
-                        <button type="submit">Register</button><button name="cancel "onClick={onCancel}>Cancel</button>
+                        <button type="submit">Register</button><button name="cancel " onClick={onCancel}>Cancel</button>
                     </Form>
                     <Link to="/login">Already have an account? Log in here.</Link>
                 </div>

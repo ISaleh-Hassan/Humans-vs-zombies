@@ -15,13 +15,16 @@ const Login = ({ history }) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
             try {
-                const status = loginUser(email.value, password.value)
-                console.log(status)
-                await firebaseConfig
-                    .auth()
-                    .signInWithEmailAndPassword(email.value, password.value);
-                history.push("/")
-                storeUser(email.value);
+                const status = await loginUser(email.value, password.value)
+                if (status === 200) {
+                    await firebaseConfig
+                        .auth()
+                        .signInWithEmailAndPassword(email.value, password.value);
+                    history.push("/")
+                    storeUser(email.value);
+                } else {
+                    alert("Incorrect email or password!")
+                }
             } catch (error) {
                 alert(error);
             }
