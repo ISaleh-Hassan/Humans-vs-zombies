@@ -6,6 +6,7 @@ import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,7 +52,7 @@ public class Player {
     @OneToOne(mappedBy="player", cascade=CascadeType.REMOVE)
     private SquadMember squadMember;
 
-    @OneToMany(mappedBy="player", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="player", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private Collection<ChatMessage> messages = new ArrayList<ChatMessage>();
 
     @OneToMany(mappedBy="killer", cascade=CascadeType.ALL)
