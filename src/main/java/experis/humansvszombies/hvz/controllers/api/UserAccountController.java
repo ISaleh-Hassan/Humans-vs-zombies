@@ -124,7 +124,7 @@ public class UserAccountController {
 
     //SPECIAL METHODS
     @CrossOrigin()
-    @GetMapping("/api/useraccount/login")
+    @PostMapping("/api/useraccount/login")
     public ResponseEntity<String> loginUser(@RequestBody UserAccount userAccount) {
         //Assume the login will fail.
         String message = "FAILED";

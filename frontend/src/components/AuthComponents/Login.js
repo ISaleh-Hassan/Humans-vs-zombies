@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { storeUser } from "../../utils/localstorage.js";
 import Form from 'react-bootstrap/Form';
 import '../Stylings/Components.css';
+import { loginUser } from "../../utils/dbstorage.js";
 
 const Login = ({ history }) => {
 
@@ -19,6 +20,7 @@ const Login = ({ history }) => {
                     .signInWithEmailAndPassword(email.value, password.value);
                 history.push("/")
                 storeUser(email.value);
+                loginUser(email.value, password.value)
             } catch (error) {
                 alert(error);
             }
