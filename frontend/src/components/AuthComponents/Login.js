@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from "react";
 import { Redirect, withRouter } from "react-router";
 import firebaseConfig from "../../utils/firebase.js";
-import { AuthContext } from "../../utils/Auth";
+import { AuthContext } from "../../utils/auth";
 import { Link } from "react-router-dom";
 import { storeUser } from "../../utils/localstorage.js";
 import Form from 'react-bootstrap/Form';

@@ -7,23 +7,22 @@ import { storeUser } from "../../utils/localstorage";
 import Form from 'react-bootstrap/Form'
 import Header from "../Stylings/Header";
 import '../Stylings/Components.css';
-import { AuthContext } from "../../utils/Auth";
+import { AuthContext } from "../../utils/auth";
 
 const Register = ({ history }) => {
 
-    const [isAdmin, setIsAdmin] = useState(false); 
+    let [isAdmin, setIsAdmin] = useState(false);
 
     const handleRegister = useCallback(async event => {
         event.preventDefault();
-        const { username, email, password, firstname, lastname } = event.target.elements;
-        let userType;
-        if (isAdmin){
+        let { username, email, password, firstname, lastname, userType } = event.target.elements;
+        if (isAdmin) {
             userType = 'ADMINISTRATOR'
         } else {
             userType = 'USER'
         }
         try {
-            const status = await storeUserDB(username.value, firstname.value, lastname.value, userType, password.value, email.value);
+            const status = await storeUserDB(username.value, firstname.value, lastname.value, userType.value, password.value, email.value);
             if (status === 201) {
                 firebaseConfig.auth().createUserWithEmailAndPassword(email.value, password.value)
                     .then(userData => {
@@ -100,7 +99,7 @@ const Register = ({ history }) => {
                         </Form.Group>
 
                         <Form.Group controlId="formAdminCheckbox">
-                            <Form.Check name="admin-checkbox" type="checkbox" label="Register as admin?" onChange={handleCheckbox} />
+                            <Form.Check name="userType" type="checkbox" label="Register as admin?" onChange={handleCheckbox} />
                         </Form.Group>
                         <button type="submit">Register</button><button name="cancel " onClick={onCancel}>Cancel</button>
                     </Form>
