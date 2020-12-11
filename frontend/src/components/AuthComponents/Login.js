@@ -15,12 +15,13 @@ const Login = ({ history }) => {
             event.preventDefault();
             const { email, password } = event.target.elements;
             try {
+                loginUser(email.value, password.value);
+                //do an if 400, don't login to firebase 
                 await firebaseConfig
                     .auth()
                     .signInWithEmailAndPassword(email.value, password.value);
                 history.push("/")
                 storeUser(email.value);
-                loginUser(email.value, password.value)
             } catch (error) {
                 alert(error);
             }
