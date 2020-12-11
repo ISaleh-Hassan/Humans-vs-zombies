@@ -103,7 +103,7 @@ table {
   border-radius: 50%;
   cursor: pointer;
 }
-.coordinates {
+.coordinates, #current-position {
   background: rgba(0, 0, 0, 0.5);
   color: #fff;
   bottom: 40px;
@@ -113,5 +113,5 @@ table {
   font-size: 11px;
   line-height: 18px;
   border-radius: 3px;
-  display: none;
-  }
+  display: block;
+}

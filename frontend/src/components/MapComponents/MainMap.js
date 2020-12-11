@@ -3,13 +3,13 @@ import mapboxgl from 'mapbox-gl';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 
-class MapTest extends Component {
+class MainMap extends Component {
   constructor(props) {
     super(props);
     this.state = {
       lng: 18.0622,
       lat: 59.3319,
-      zoom: 10
+      zoom: 5
     };
   }
 
@@ -24,18 +24,35 @@ class MapTest extends Component {
 
     let marker = new mapboxgl.Marker({
       draggable: true
-    })
-      .setLngLat([this.state.lng, this.state.lat])
-      .addTo(map);
+    });
 
     function onDragEnd() {
       let lngLat = marker.getLngLat();
-      coordinates.style.display = 'block';
       coordinates.innerHTML =
         'Longitude: ' + lngLat.lng + '<br />Latitude: ' + lngLat.lat;
     }
 
     marker.on('dragend', onDragEnd);
+
+    function showPosition(position) {
+      let currentPosition = document.getElementById("current-position");
+      currentPosition.innerHTML = "Longitude: " + position.coords.longitude +
+        "<br>Latitude: " + position.coords.latitude;
+      marker.setLngLat([position.coords.longitude, position.coords.latitude]).addTo(map)
+    }
+
+    if (navigator.geolocation) {
+      map.addControl(
+        new mapboxgl.GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true,
+          },
+          trackUserLocation: true
+        }),
+        navigator.geolocation.getCurrentPosition(showPosition)
+      );
+    }
+
   }
 
   render() {
@@ -44,11 +61,14 @@ class MapTest extends Component {
         <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
         <div className="container">
           <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
-          <p id="coordinates" class="coordinates"></p>
+          <label>Marker Location: </label>
+          <p id="coordinates" className="coordinates"></p>
+            <label>Current Location: </label>
+            <p id="current-position"></p>
         </div>
       </section>
     )
   }
 }
 
-export default MapTest
+export default MainMap
