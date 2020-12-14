@@ -10,7 +10,7 @@ import SquadDetail from "./components/SquadDetail";
 import SquadCreate from "./components/SquadCreate";
 import Login from "./components/AuthComponents/Login";
 import Register from "./components/AuthComponents/Register";
-import { AuthProvider } from "./utils/auth";
+import { AuthProvider } from "./utils/Auth";
 import PrivateRoute from "./utils/PrivateRoute";
 import NotFound from "./components/Stylings/NotFound";
 import CurrentGames from "./components/CurrentGames";

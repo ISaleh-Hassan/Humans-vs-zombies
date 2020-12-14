@@ -12,19 +12,24 @@ class MenuTest extends Component {
         this.closeMenu = this.closeMenu.bind(this);
     }
 
+    
     showMenu(event) {
         event.preventDefault();
 
         this.setState({ showMenu: true }, () => {
             document.addEventListener('click', this.closeMenu);
+            console.log(this.state + " show");
+            console.log(this.state.showMenu)    
         });
+        
     }
 
     closeMenu(event) {
 
-        if (!this.dropdownMenu.contains(event.target)) {
+        if (this.dropdownMenu.contains(event.target)) {
             this.setState({ showMenu: false }, () => {
                 document.removeEventListener('click', this.closeMenu);
+                console.log(this.state + " hide");
             });
         }
     }
