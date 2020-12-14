@@ -1,4 +1,5 @@
 export async function storeUserDB(username, firstname, lastname, usertype, password, email) {
+    console.log(usertype);
     const response = await fetch("http://localhost:8080/api/create/useraccount", {
         method: 'POST',
         headers: {

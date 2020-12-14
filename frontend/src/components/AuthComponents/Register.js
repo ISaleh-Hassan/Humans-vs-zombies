@@ -22,7 +22,7 @@ const Register = ({ history }) => {
             userType = 'USER'
         }
         try {
-            const status = await storeUserDB(username.value, firstname.value, lastname.value, userType.value, password.value, email.value);
+            const status = await storeUserDB(username.value, firstname.value, lastname.value, userType, password.value, email.value);
             if (status === 201) {
                 firebase.auth().createUserWithEmailAndPassword(email.value, password.value)
                     .then(userData => {
