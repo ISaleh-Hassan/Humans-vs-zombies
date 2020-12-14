@@ -1,47 +1,59 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Header from './Stylings/Header';
 
-class SquadList extends Component {
+const SquadList = () => {
+    let gameId = localStorage.getItem('gameId');
 
-    state = {
-        details: []
-    };
+    const [squads, setSquads] = useState([]);
 
-    componentDidMount() {
-      fetch('http://localhost:8080/api/fetch/squad/all')
-          .then(res => res.json())
-          .then((data) => {
-              this.setState({details: data})
-          })
-          .catch(console.log);
-    };
+    useEffect(() => {
+        fetchSquads();
+    }, [])
 
-    render() {
-        return (
-            <div>
-                <h2>Active Squads {console.log(this.state.details)} </h2>
-                <div id="squadListContainer">
-                    <div id="testSquad1">
-                        <h4>Ominous Latin Name</h4>
-                        <p>Members: 8/10   (fetch from database)
-                            <br/>
-                            HUMAN (fetch from database)
-                        </p>
-                        <button>JOIN</button>
-                    </div>
-
-                    <div id="testSquad2">
-                        <h4>Leather Gear Solid</h4>
-                        <p>Members: 10/10   (fetch from database)
-                            <br/>
-                            ZOMBIE (fetch from database)
-                        </p>
-                        <button>JOIN</button>
-                    </div>
-                </div>
-            </div>
-        );
+    async function fetchSquads() {
+        const response = await (await fetch('http://localhost:8080/api/fetch/squad/game=' + gameId)).json();
+        setSquads(response);
     }
-};
+
+    function handleJoinSquad(id) {
+        localStorage.setItem('squadId', id);
+        console.log(id);
+    }
+
+    return (
+        <div>
+            <Header />
+            <section className="squadList">
+                <div className="container">
+                    <h1>Active Squads</h1>
+                    <div>{console.log(squads)}</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Faction</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {squads.map((s) =>
+                                <tr>
+                                    <td>{s.name}</td>
+                                    <td>{s.faction}</td>
+                                    <td>
+                                        <Link to="squaddetails">
+                                            <button type="button" onClick={() => handleJoinSquad(s.squadId)}>JOIN</button>
+                                        </Link>
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    );
+}
 
 export default SquadList;
