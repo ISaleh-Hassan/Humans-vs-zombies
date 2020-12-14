@@ -1,6 +1,6 @@
 import React from "react";
 import firebase from "../utils/firebase";
-import PhoneLoginTest from "./AuthComponents/PhoneLoginTest";
+import PhoneLoginTest from "./AuthComponents/PhoneLogin";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
 import NavBar from "./Stylings/NavBar";
@@ -9,6 +9,7 @@ import NavBar from "./Stylings/NavBar";
 const CurrentGames = () => {
 
     const isVerified = firebase.auth().currentUser.emailVerified;
+    const isLoggedInPhone = firebase.auth().currentUser;
 
     return (
         <>
@@ -44,6 +45,9 @@ const CurrentGames = () => {
                     {isVerified ?
                         <PhoneLoginTest />
                         : <p>Verify your email to login with phone.</p>}
+                    {isLoggedInPhone ?
+                        <p>Logged in with phone!</p>
+                        : <p>Please verify with phone!</p>}
                 </div>
             </section>
         </>

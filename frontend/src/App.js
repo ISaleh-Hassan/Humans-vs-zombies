@@ -13,7 +13,7 @@ import Game from "./components/Game";
 import PlayerState from "./components/PlayerState";
 import MissionMarker from "./components/MissionMarker";
 import MainMap from "./components/MapComponents/MainMap";
-import PhoneLoginTest from "./components/AuthComponents/PhoneLoginTest";
+import PhoneLogin from "./components/AuthComponents/PhoneLogin";
 
 const App = () => {
   return (
@@ -28,7 +28,7 @@ const App = () => {
           <PrivateRoute exact path="/game" component={Game} />
           <PrivateRoute exact path="/playerstate" component={PlayerState} />
           <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
-          <PrivateRoute exact path="/test" component={PhoneLoginTest} />
+          <PrivateRoute exact path="/test" component={PhoneLogin} />
           <PrivateRoute exact path="/map" component={MainMap} />
           <Route path='*'>
             <NotFound header='Page not found' message='The page you requested does not exist' />
