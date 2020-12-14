@@ -46,6 +46,23 @@ public class SquadController {
     }
 
     @CrossOrigin()
+    @GetMapping("/api/fetch/squad/game={gameId}")
+    public ResponseEntity<ArrayList<Squad>> getSquadByGameId(@PathVariable Integer gameId) {
+        try {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            ArrayList<Squad> squads = null;
+            if (gameId != null) {
+                squads = squadRepository.findByGame(new Game(gameId));
+                status = HttpStatus.OK;
+            }
+            return new ResponseEntity<>(squads, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: gameId was null");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin()
     @PostMapping("/api/create/squad/{gameId}")
     public ResponseEntity<Squad> addSquad(@RequestBody Squad newSquad, @PathVariable Integer gameId) {
         try {
