@@ -1,55 +1,42 @@
 import { useContext } from "react";
 import { withRouter } from "react-router";
 import { AuthContext } from "../../utils/auth";
-import firebase from "../../utils/firebase";
 import React from 'react'
-
+import firebase from "../../utils/firebase";
 const PhoneLogin = () => {
-
     const auth = firebase.auth()
-    const phoneNumberField = document.getElementById('phoneNumber');
+    const phoneNumberField = document.getElementById('phone');
     const codeField = document.getElementById('code');
     const signInWithPhoneButton = document.getElementById('signInWithPhone');
-
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-        "recaptcha-container", {
-            size: "invisible"
-        }
-    );
-
     const sendVerificationCode = () => {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container");
         const phoneNumber = phoneNumberField.value;
         const appVerifier = window.recaptchaVerifier;
-
         auth.signInWithPhoneNumber(phoneNumber, appVerifier)
             .then(confirmationResult => {
                 const sentCodeId = confirmationResult.verificationId;
                 signInWithPhoneButton.addEventListener('click', () => signInWithPhone(sentCodeId));
             })
     }
-
     const signInWithPhone = sentCodeId => {
         const code = codeField.value;
         const credential = auth.PhoneAuthProvider.credential(sentCodeId, code);
         auth.signInWithCredential(credential)
             .then(() => {
-                window.location.assign('./home');
+                window.location.assign('/');
             })
             .catch(error => {
                 console.error(error);
             })
     }
-
     const { currentUser } = useContext(AuthContext);
-
     if (currentUser) {
     }
-
-
     return (
         <>
             <section className="login-register">
-//                 <div className="container">
+                <div className="container">
+                    <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase.js"></script>
                     <h1>Log in</h1>
                     <div>
                         <label for="phone">Phone Number</label>
@@ -67,5 +54,4 @@ const PhoneLogin = () => {
         </>
     );
 };
-
 export default withRouter(PhoneLogin);

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useContext } from "react";
 import { Redirect, withRouter } from "react-router";
 import firebase from "../../utils/firebase.js";
 import { AuthContext } from "../../utils/auth";

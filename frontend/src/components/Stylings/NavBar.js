@@ -1,7 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import firebase from '../../utils/firebase'
+import { clearUser } from "../../utils/localstorage";
 
 const NavBar = () => {
+
+    const handleSignOut = () => {
+        firebase.auth().signOut()
+        clearUser();
+    }
 
     return (
         <>
@@ -12,7 +19,7 @@ const NavBar = () => {
                     <Link to="/admin">Admin</Link>
                     <Link to="/map">Maps</Link>
                     <Link to="/chat">Chat</Link>
-                    <Link to="/logout">Logout</Link>
+                    <button onClick={handleSignOut}>Sign out</button>
                 </div>
             </section>
         </>

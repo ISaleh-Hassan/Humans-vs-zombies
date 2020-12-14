@@ -28,6 +28,12 @@ class MainMap extends Component {
       draggable: true
     });
 
+    let missionMarker = new mapboxgl.Marker();
+    missionMarker.setLngLat([this.state.lng, this.state.lat]).addTo(map);
+
+    let graveStoneMarker = new mapboxgl.Marker();
+    graveStoneMarker.setLngLat([14.1618, 57.7826]).addTo(map);
+
     function onDragEnd() {
       let lngLat = marker.getLngLat();
       coordinates.innerHTML =
