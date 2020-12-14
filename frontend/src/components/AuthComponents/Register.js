@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useState } from "react";
 import { Redirect, withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import { storeUserDB } from "../../utils/dbstorage";
-import firebaseConfig from "../../utils/firebase";
+import firebase from "../../utils/firebase";
 import { storeUser } from "../../utils/localstorage";
 import Form from 'react-bootstrap/Form'
 import Header from "../Stylings/Header";
@@ -24,7 +24,7 @@ const Register = ({ history }) => {
         try {
             const status = await storeUserDB(username.value, firstname.value, lastname.value, userType.value, password.value, email.value);
             if (status === 201) {
-                firebaseConfig.auth().createUserWithEmailAndPassword(email.value, password.value)
+                firebase.auth().createUserWithEmailAndPassword(email.value, password.value)
                     .then(userData => {
                         userData.user.sendEmailVerification();
                         console.log(userData);

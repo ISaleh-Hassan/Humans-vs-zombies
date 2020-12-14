@@ -1,19 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import firebaseConfig from "../utils/firebase";
+import firebase from "../utils/firebase";
 import { clearUser } from "../utils/localstorage.js";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
 
 const Home = () => {
 
-  const user = firebaseConfig.auth().currentUser.email;
-  const isVerified = firebaseConfig.auth().currentUser.emailVerified;
+  const user = firebase.auth().currentUser.email;
+  const isVerified = firebase.auth().currentUser.emailVerified;
 
-  console.log(firebaseConfig.auth().currentUser.emailVerified)
+  console.log(firebase.auth().currentUser.emailVerified)
 
   const handleSignOut = () => {
-    firebaseConfig.auth().signOut()
+    firebase.auth().signOut()
     clearUser();
   }
 

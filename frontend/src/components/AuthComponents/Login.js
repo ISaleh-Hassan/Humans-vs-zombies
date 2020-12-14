@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from "react";
 import { Redirect, withRouter } from "react-router";
-import firebaseConfig from "../../utils/firebase.js";
+import firebase from "../../utils/firebase.js";
 import { AuthContext } from "../../utils/auth";
 import { Link } from "react-router-dom";
 import { storeUser } from "../../utils/localstorage.js";
@@ -18,7 +18,7 @@ const Login = ({ history }) => {
             try {
                 const status = await loginUser(email.value, password.value)
                 if (status === 200) {
-                    await firebaseConfig
+                    await firebase
                         .auth()
                         .signInWithEmailAndPassword(email.value, password.value);
                     history.push("/")

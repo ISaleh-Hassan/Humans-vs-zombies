@@ -1,12 +1,12 @@
 import React from "react";
-import firebaseConfig from "../utils/firebase";
+import firebase from "../utils/firebase";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
 // import PhoneLogin from "./PhoneLogin";
 
 const CurrentGames = () => {
 
-    const isVerified = firebaseConfig.auth().currentUser.emailVerified;
+    const isVerified = firebase.auth().currentUser.emailVerified;
 
     return (
         <>

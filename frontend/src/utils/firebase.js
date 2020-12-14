@@ -1,4 +1,5 @@
-import firebase from 'firebase'
+import firebase from "firebase/app";
+import "firebase/auth";
 // const config = {
 //     apiKey: "AIzaSyCLvDtCpR3TtjgBaE8hgHtObqr3KeG3LNw",
 //     authDomain: "fir-auth-demo-c828b.firebaseapp.com",
@@ -15,6 +16,11 @@ var MFAConfig = {
     authDomain: "hardy-order-298218.firebaseapp.com",
 };
 
-const firebaseConfig = firebase.initializeApp(MFAConfig);
+// const firebaseConfig = firebase.initializeApp(MFAConfig);
 
-export default firebaseConfig;
+// export default firebaseConfig;
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(MFAConfig);
+  }
+  export default firebase;
