@@ -3,17 +3,12 @@ import { Link } from 'react-router-dom';
 
 class BiteZombie extends Component {
 
-    state = {
-        details: []
+    killPlayer() {
+
     };
 
-    componentDidMount() {
-      fetch('http://localhost:8080/api/fetch/player/1')
-          .then(res => res.json())
-          .then((data) => {
-              this.setState({details: data})
-          })
-          .catch(console.log);
+    makePlayerZombie() {
+
     };
 
     render() {

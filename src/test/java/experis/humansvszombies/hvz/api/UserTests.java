@@ -1,6 +1,7 @@
 package experis.humansvszombies.hvz.api;
 
 import experis.humansvszombies.hvz.controllers.api.UserAccountController;
+import experis.humansvszombies.hvz.models.datastructures.UserInfo;
 import experis.humansvszombies.hvz.models.enums.UserType;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
 import org.junit.jupiter.api.AfterEach;
@@ -103,8 +104,11 @@ public class UserTests {
         ResponseEntity<UserAccount> response = uac.addUserAccount(stevesAccount);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         //Try to login user with correct information.
-        ResponseEntity<String> loginResponse = uac.loginUser(new UserAccount(null,null,null,null,"icecream", "scoopes@email.com"));
+        ResponseEntity<UserInfo> loginResponse = uac.loginUser(new UserAccount(null,null,null,null,"icecream", "scoopes@email.com"));
         assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
+        assertEquals("Scoops", loginResponse.getBody().getUsername());
+        assertEquals(UserType.PLAYER, loginResponse.getBody().getType());
+        assertEquals(response.getBody().getUserAccountId(), loginResponse.getBody().getUserId());
         //Try to login user with faulty username.
         loginResponse = uac.loginUser(new UserAccount(null,null,null,null,"icecream12", "scoopes@email.com"));
         assertEquals(HttpStatus.BAD_REQUEST, loginResponse.getStatusCode());
