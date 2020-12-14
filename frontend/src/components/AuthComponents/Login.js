@@ -10,7 +10,7 @@ import { loginUser } from "../../utils/dbstorage.js";
 
 const Login = ({ history }) => {
 
-    const handleLogin = useCallback(
+    const handleLogin = 
         async event => {
             
             event.preventDefault();
@@ -29,9 +29,7 @@ const Login = ({ history }) => {
             } catch (error) {
                 alert(error);
             }
-        },
-        [history]
-    );
+        };
 
     const onCancel = () => {
         console.log("You tried to cancel!")
