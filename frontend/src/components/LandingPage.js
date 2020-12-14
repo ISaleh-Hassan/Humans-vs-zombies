@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Header from './Stylings/Header';
 
 class LandingPage extends Component {
 
@@ -9,18 +10,22 @@ class LandingPage extends Component {
 
     componentDidMount() {
         let gameId = localStorage.getItem('gameId');
-      fetch('http://localhost:8080/api/fetch/game/' + gameId)
-          .then(res => res.json())
-          .then((data) => {
-              this.setState({details: data})
+        fetch('http://localhost:8080/api/fetch/game/' + gameId)
+            .then(res => res.json())
+            .then((data) => {
+                this.setState({details: data})
           })
-          .catch(console.log);
+            .catch(console.log);
     };
 
+    handleLeaveGame() {
+        localStorage.removeItem('gameId');
+    };
 
     render() {
         return (
             <div>
+                <Header />
                 <div id="landing">
                     <h2> {this.state.details.name}
                         {console.log(this.state.details)} </h2>
@@ -37,7 +42,14 @@ class LandingPage extends Component {
                     </div>
                 </div>
 
+                <div>
+                    <Link to="/currentgames">
+                        <button onClick={this.handleLeaveGame}>Leave Game</button>
+                    </Link>
+                </div>
+
                 <div id="rules">
+                    <br/>
                     <h3>Rules: </h3>
                     <div>
                         <h4>Overview</h4>
@@ -123,13 +135,6 @@ class LandingPage extends Component {
                         <h4>DBag Clause</h4>    
                         <p>Don’t be a douchebag. Everyone plays Humans vs. Zombies to have fun, and the rules of HvZ only exist because we agree they do. That’s why the most important rule of Humans vs. Zombies is to treat your fellow players with respect, and gracefully accept when you have been tagged or stunned.</p>                
                     </div>
-                </div>
-
-                <div>
-                    <br/>
-                    <Link to="/">
-                        <button>Leave Game</button>
-                    </Link>
                 </div>
             </div>
         );
