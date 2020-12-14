@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
+import Header from '../Stylings/Header';
+import NavBar from '../Stylings/NavBar';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 
@@ -57,6 +59,9 @@ class MainMap extends Component {
 
   render() {
     return (
+      <>
+      <Header />
+      <NavBar />
       <section className="home">
         <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
         <div className="container">
@@ -67,6 +72,7 @@ class MainMap extends Component {
             <p id="current-position"></p>
         </div>
       </section>
+      </>
     )
   }
 }

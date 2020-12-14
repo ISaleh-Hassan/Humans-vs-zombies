@@ -4,6 +4,7 @@ import firebase from "../utils/firebase";
 import { clearUser } from "../utils/localstorage.js";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
+import NavBar from "./Stylings/NavBar";
 
 const Home = () => {
 
@@ -20,6 +21,7 @@ const Home = () => {
   return (
     <>
       <Header />
+      <NavBar />
       <section className="home">
         <div className="container">
           <h1>Home</h1>

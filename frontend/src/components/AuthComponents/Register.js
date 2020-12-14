@@ -7,7 +7,7 @@ import { storeUser } from "../../utils/localstorage";
 import Form from 'react-bootstrap/Form'
 import Header from "../Stylings/Header";
 import '../Stylings/Components.css';
-import { AuthContext } from "../../utils/Auth";
+import { AuthContext } from "../../utils/auth";
 
 const Register = ({ history }) => {
 

@@ -2,6 +2,7 @@ import React from "react";
 import firebase from "../utils/firebase";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
+import NavBar from "./Stylings/NavBar";
 // import PhoneLogin from "./PhoneLogin";
 
 const CurrentGames = () => {
@@ -11,6 +12,7 @@ const CurrentGames = () => {
     return (
         <>
             <Header />
+            <NavBar />
             <section className="home">
                 <div className="container">
                     <h1>Curent Games</h1>
@@ -38,7 +40,7 @@ const CurrentGames = () => {
                     </table>
                     <br></br>
 
-                    { isVerified ?
+                    {isVerified ?
                         <p>Phone Login</p>
                         : <p>Verify your email to login with phone.</p>}
                 </div>
