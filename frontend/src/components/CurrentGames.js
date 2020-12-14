@@ -4,7 +4,7 @@ import './Stylings/Components.css';
 import Header from './Stylings/Header';
 // import PhoneLogin from "./PhoneLogin";
 
-const CurrentGames = () => {
+const CurrentGames = (props) => {
 
     const isVerified = firebaseConfig.auth().currentUser.emailVerified;
     const [games, setGames] = useState([]);
@@ -12,16 +12,16 @@ const CurrentGames = () => {
 
     useEffect(() => {
         fetchGames();
-    },[])
+    }, [])
 
     async function fetchGames() {
         const response = await (await fetch('http://localhost:8080/api/fetch/game/all')).json();
         setGames(response);
-        console.log(response);
-        console.log(games);
     }
 
     function handleJoin(id){
+        localStorage.setItem("gameId", id);
+        props.history.push("/landing");
         console.log(id);
     }
 

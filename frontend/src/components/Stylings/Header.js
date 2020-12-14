@@ -7,7 +7,7 @@ const Header = () => {
     <>
       <section className="header">
           <div id="logoContainer">
-              <img>LOGO</img>
+              {/* <img>LOGO</img> */}
           </div>
           <h1>Humans vs Zombies</h1>
           <div id="gameMenu">
