@@ -113,7 +113,8 @@ public class ChatMessageController {
         }
     }
 
-    @CrossOrigin("/api/fetch/chatmessage/bundle")
+    @CrossOrigin()
+    @PostMapping("/api/fetch/chatmessage/bundle")
     public ResponseEntity<ArrayList<ChatMessage>> fetchBundleOfChatMessages(@RequestBody ChatMessageRequest request) {
         try {
             System.out.println("Hello from bundle messages.");
@@ -126,7 +127,20 @@ public class ChatMessageController {
             } else {
                 messages = chatMessageRepository.findByGameAndSquad(new Game(request.getGameId()), new Squad(request.getSquadId()));
             }
-            return new ResponseEntity<>(messages, HttpStatus.OK);
+            ArrayList<ChatMessage> result = new ArrayList<ChatMessage>();
+            for (ChatMessage chatMessage : messages) {
+                ChatMessage msg = new ChatMessage(
+                    chatMessage.getChatMessageId(), 
+                    chatMessage.getMessage(), 
+                    chatMessage.getFaction(), 
+                    chatMessage.getTimestamp(),
+                    chatMessage.getGame(),
+                    chatMessage.getPlayer(),
+                    chatMessage.getSquad()
+                    );
+                result.add(msg);
+            }
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println("Exception thrown when fetching bundle of ChatMessages.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

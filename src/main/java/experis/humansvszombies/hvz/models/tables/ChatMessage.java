@@ -56,6 +56,16 @@ public class ChatMessage {
         this.timestamp = timestamp;
     }
 
+    public ChatMessage(Integer id, String message, Faction faction, Timestamp timestamp, Game game, Player player, Squad squad) {
+        this.chatMessageId = id;
+        this.message = message;
+        this.faction = faction;
+        this.timestamp = timestamp;
+        this.game = game;
+        this.player = player;
+        this.squad = squad;
+    }
+
     public Integer getChatMessageId() {
         return chatMessageId;
     }
