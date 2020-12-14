@@ -1,5 +1,6 @@
 import React from "react";
 import firebase from "../utils/firebase";
+import PhoneLoginTest from "./AuthComponents/PhoneLoginTest";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
 import NavBar from "./Stylings/NavBar";
@@ -41,7 +42,7 @@ const CurrentGames = () => {
                     <br></br>
 
                     {isVerified ?
-                        <p>Phone Login</p>
+                        <PhoneLoginTest />
                         : <p>Verify your email to login with phone.</p>}
                 </div>
             </section>
