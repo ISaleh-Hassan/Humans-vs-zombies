@@ -10,13 +10,14 @@ public class UserAccountObject {
     private String username;
     private String password;
     private String email;
+    private String phoneNumber;
 
     public UserAccountObject() {
 
     }
 
     public UserAccountObject(int userAccountId, String firstName, String lastName, UserType userType,
-                    String username, String password, String email) {
+                    String username, String password, String email, String phoneNumber) {
         this.userAccountId = userAccountId;
         this.firstName = firstName;
         this.lastName= lastName;
@@ -24,6 +25,7 @@ public class UserAccountObject {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
     public Integer getUserAccountId() {
@@ -80,5 +82,13 @@ public class UserAccountObject {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

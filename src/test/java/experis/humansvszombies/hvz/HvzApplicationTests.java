@@ -82,9 +82,9 @@ class HvzApplicationTests {
 		//Create UserAccount objects
 		for (int i = 0; i < numberOfUsers; i++) {
 			if (i < numberOfUsers - 1) {
-				tempId = uac.addUserAccount(new UserAccount("FirstName" + (i + 1), "LastName" + (i + 1), UserType.PLAYER, "Player"+ (i + 1), "password", "player"+ (i + 1)  + "@player.com")).getBody().getUserAccountId();
+				tempId = uac.addUserAccount(new UserAccount("FirstName" + (i + 1), "LastName" + (i + 1), UserType.PLAYER, "Player"+ (i + 1), "password", "player"+ (i + 1)  + "@player.com", null)).getBody().getUserAccountId();
 			} else {
-				tempId = uac.addUserAccount(new UserAccount("Administrator", "Adminton", UserType.ADMINISTRATOR, "Admin", "secret", "admin@admin.com")).getBody().getUserAccountId();
+				tempId = uac.addUserAccount(new UserAccount("Administrator", "Adminton", UserType.ADMINISTRATOR, "Admin", "secret", "admin@admin.com", null)).getBody().getUserAccountId();
 			}
 			uaIds.add(tempId);
 		}
