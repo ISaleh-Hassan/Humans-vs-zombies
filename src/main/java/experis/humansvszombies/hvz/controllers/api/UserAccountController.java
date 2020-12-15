@@ -89,6 +89,9 @@ public class UserAccountController {
                 if (newUser.getEmail() != null) {
                     user.setEmail(newUser.getEmail());
                 }
+                if (newUser.getPhoneNumber() != null) {
+                    user.setPhoneNumber(newUser.getPhoneNumber());
+                }
                 userAccountRepository.save(user);
                 response = HttpStatus.OK;
                 System.out.println("Updated user with id: " + user.getUserAccountId());
@@ -148,6 +151,7 @@ public class UserAccountController {
                         user.getUserType(), 
                         user.getUsername(), 
                         null, 
+                        null,
                         null
                     );
                 }
@@ -159,12 +163,13 @@ public class UserAccountController {
     private UserAccountObject createUserAccountObject(UserAccount userAccount) {
         UserAccountObject userAccountObject = new UserAccountObject(
             userAccount.getUserAccountId(),
-            userAccount.getFirstName(),
-            userAccount.getLastName(),
+            null,
+            null,
             userAccount.getUserType(),
             userAccount.getUsername(),
-            userAccount.getPassword(),
-            userAccount.getEmail()
+            null,
+            null,
+            null
         );
         return userAccountObject;
     }

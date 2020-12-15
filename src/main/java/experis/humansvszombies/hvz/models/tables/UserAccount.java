@@ -45,6 +45,9 @@ public class UserAccount {
     @Column(name="email", unique=true)
     private String email;
 
+    @Column(name="phone_number", unique=true)
+    private String phoneNumber;
+
     @OneToMany(mappedBy="userAccount", cascade=CascadeType.ALL)
     private Collection<Player> players = new ArrayList<Player>();
 
@@ -56,13 +59,14 @@ public class UserAccount {
         this.userAccountId = userAccountId;
     }
 
-    public UserAccount(String firstName, String lastName, UserType userType, String username, String password, String email) {
+    public UserAccount(String firstName, String lastName, UserType userType, String username, String password, String email, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userType = userType;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
 
@@ -72,14 +76,6 @@ public class UserAccount {
 
     public void setUserAccountId(Integer userAccountId) {
         this.userAccountId = userAccountId;
-    }
-
-    public Collection<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(Collection<Player> players) {
-        this.players = players;
     }
 
     public String getFirstName() {
@@ -128,5 +124,21 @@ public class UserAccount {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Collection<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Collection<Player> players) {
+        this.players = players;
     }
 }
