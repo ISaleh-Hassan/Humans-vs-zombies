@@ -66,18 +66,19 @@ class MainMap extends Component {
   render() {
     return (
       <>
-      <Header />
-      <NavBar />
-      <section className="home">
-        <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
-        <div className="container">
-          <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
-          <label>Marker Location: </label>
-          <p id="coordinates" className="coordinates"></p>
+        <Header />
+        <NavBar />
+        <section className="home">
+          <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
+          <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
+          <div className="container">
+            <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
+            <label>Marker Location: </label>
+            <p id="coordinates" className="coordinates"></p>
             <label>Current Location: </label>
             <p id="current-position"></p>
-        </div>
-      </section>
+          </div>
+        </section>
       </>
     )
   }

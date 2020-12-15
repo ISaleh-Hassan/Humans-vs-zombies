@@ -13,11 +13,6 @@ const Home = () => {
 
   console.log(firebase.auth().currentUser.emailVerified)
 
-  const handleSignOut = () => {
-    firebase.auth().signOut()
-    clearUser();
-  }
-
   return (
     <>
       <Header />
@@ -27,7 +22,6 @@ const Home = () => {
           <h1>Home</h1>
           <p>Welcome, {user}</p>
           <p>Verified: {isVerified ? <span>true</span> : <span>false</span>}</p>
-          <button onClick={handleSignOut}>Sign out</button>
           <Link to="/currentgames">Current Games</Link>
         </div>
         <div>
