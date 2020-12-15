@@ -40,7 +40,7 @@ export async function loginUser(email, password) {
     const status = await response.status
     if (status === 200) {
         const user = await response.json()
-        storeUser(user.userId);
+        storeUser(user.userAccountId, user.username, user.userType);
     }
     return status;
 }

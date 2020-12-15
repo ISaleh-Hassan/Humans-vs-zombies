@@ -45,9 +45,6 @@ const CurrentGames = () => {
                     {isVerified ?
                         <PhoneLoginTest />
                         : <p>Verify your email to login with phone.</p>}
-                    {isLoggedInPhone ?
-                        <p>Logged in with phone!</p>
-                        : <p>Please verify with phone!</p>}
                 </div>
             </section>
         </>

@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import firebase from "../utils/firebase";
-import { clearUser } from "../utils/localstorage.js";
+import { clearUser, getUser } from "../utils/localstorage.js";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
 import NavBar from "./Stylings/NavBar";
 
 const Home = () => {
 
-  const user = firebase.auth().currentUser.email;
+  const user = getUser();
   const isVerified = firebase.auth().currentUser.emailVerified;
 
   console.log(firebase.auth().currentUser.emailVerified)
