@@ -54,13 +54,13 @@ public class UserTests {
     void createUser() {
         ResponseEntity<UserAccountObject> response = uac.addUserAccount(new UserAccount("Test","Person", UserType.PLAYER,"TestUsername" ,"TestPassword","test@test.test", "1234567890"));
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("Test", response.getBody().getFirstName());
-        assertEquals("Person", response.getBody().getLastName());
+        assertEquals(null, response.getBody().getFirstName());
+        assertEquals(null, response.getBody().getLastName());
         assertEquals(UserType.PLAYER, response.getBody().getUserType());
         assertEquals("TestUsername", response.getBody().getUsername());
-        assertEquals("TestPassword", response.getBody().getPassword());
-        assertEquals("test@test.test", response.getBody().getEmail());
-        assertEquals("1234567890", response.getBody().getPhoneNumber());
+        assertEquals(null, response.getBody().getPassword());
+        assertEquals(null, response.getBody().getEmail());
+        assertEquals(null, response.getBody().getPhoneNumber());
         ResponseEntity<String> deleteResponse = uac.deleteUserAccount(response.getBody().getUserAccountId());
         assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
     }
@@ -69,12 +69,13 @@ public class UserTests {
     void updateUser() {
         int id = userAccountId;
         ResponseEntity<UserAccountObject> response = uac.updateUser(new UserAccount("Updated firstName","updated lastName", UserType.ADMINISTRATOR,"TestUsername" ,"TestPassword","test@test.test", "1234567890"), id);
-        assertEquals("Updated firstName", response.getBody().getFirstName());
-        assertEquals("updated lastName", response.getBody().getLastName());
+        assertEquals(null, response.getBody().getFirstName());
+        assertEquals(null, response.getBody().getLastName());
         assertEquals(UserType.ADMINISTRATOR, response.getBody().getUserType());
         assertEquals("TestUsername", response.getBody().getUsername());
-        assertEquals("TestPassword", response.getBody().getPassword());
-        assertEquals("test@test.test", response.getBody().getEmail());
+        assertEquals(null, response.getBody().getPassword());
+        assertEquals(null, response.getBody().getEmail());
+        assertEquals(null, response.getBody().getPhoneNumber());
     }
 
     @Test

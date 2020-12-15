@@ -163,13 +163,13 @@ public class UserAccountController {
     private UserAccountObject createUserAccountObject(UserAccount userAccount) {
         UserAccountObject userAccountObject = new UserAccountObject(
             userAccount.getUserAccountId(),
-            userAccount.getFirstName(),
-            userAccount.getLastName(),
+            null,
+            null,
             userAccount.getUserType(),
             userAccount.getUsername(),
-            userAccount.getPassword(),
-            userAccount.getEmail(),
-            userAccount.getPhoneNumber()
+            null,
+            null,
+            null
         );
         return userAccountObject;
     }
