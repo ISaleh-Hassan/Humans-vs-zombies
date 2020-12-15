@@ -75,6 +75,32 @@ public class SquadMemberController {
     }
 
     @CrossOrigin()
+    @GetMapping("/api/fetch/squadMember/game={gameId}/player={playerId}")
+    public ResponseEntity<SquadMemberObject> getSquadMemberByPlayerId(@PathVariable Integer gameId, @PathVariable Integer playerId) {
+        try {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            SquadMemberObject squadMemberObject = null;
+            if (gameId != null && playerId != null) {
+                SquadMember squadMember = squadMemberRepository.findDistinctByGameAndPlayer(new Game(gameId),new Player(playerId));
+                if (squadMember != null) {
+                    squadMemberObject = this.createSquadMemberObject(squadMember);
+                    status = HttpStatus.OK;
+                } else {
+                    System.out.println("ERROR: a SquadMember that belongs to a Game with id: " + gameId + " and a Player with id: " + playerId + " could not be found.");
+                    status = HttpStatus.NOT_FOUND;
+                }
+            } else {
+                System.out.println("ERROR: gameId and/or playerId was null.");
+                status = HttpStatus.BAD_REQUEST;
+            }       
+            return new ResponseEntity<>(squadMemberObject, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: playerId was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin()
     @PostMapping("/api/create/squadmember/{gameId}/{squadId}/{playerId}")
     public ResponseEntity<SquadMemberObject> addSquadMember(@RequestBody SquadMember newSquadMember, @PathVariable Integer gameId,
         @PathVariable Integer squadId, @PathVariable Integer playerId) {
