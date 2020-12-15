@@ -47,6 +47,32 @@ public class PlayerController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+    
+    @CrossOrigin()
+    @GetMapping("/api/fetch/player/game={gameId}/user={userId}")
+    public ResponseEntity<PlayerObject> getPlayerByGameIdAndUserId(@PathVariable Integer gameId, @PathVariable Integer userId) {
+        try {
+            HttpStatus status;
+            PlayerObject playerObject = null;
+            if (gameId != null && userId != null) {
+                Player player = playerRepository.findDistinctByGameAndUserAccount(new Game(gameId), new UserAccount(userId));
+                if (player != null) {
+                    playerObject = this.createPlayerObject(player);
+                    status = HttpStatus.OK;
+                } else {
+                    System.out.println("ERROR: player belonging to Game: " + gameId + " and UserAccount:" + userId + " could not be found.");
+                    status = HttpStatus.NOT_FOUND;
+                }
+            } else {
+                System.out.println("ERROR: gameId or userId was null.");
+                status = HttpStatus.BAD_REQUEST;
+            }
+            return new ResponseEntity<>(playerObject, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: gameId or userId was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);        
+        }
+    }
 
     @CrossOrigin()
     @PostMapping("/api/create/player/{userAccountId}/{gameId}")
