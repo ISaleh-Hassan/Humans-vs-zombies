@@ -1,15 +1,13 @@
 import React from "react";
 import firebase from "../utils/firebase";
-import PhoneLoginTest from "./AuthComponents/PhoneLogin";
+import PhoneLogin from "./AuthComponents/PhoneLogin";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
 import NavBar from "./Stylings/NavBar";
-// import PhoneLogin from "./PhoneLogin";
 
 const CurrentGames = () => {
 
     const isVerified = firebase.auth().currentUser.emailVerified;
-    const isLoggedInPhone = firebase.auth().currentUser;
 
     return (
         <>
@@ -43,7 +41,7 @@ const CurrentGames = () => {
                     <br></br>
 
                     {isVerified ?
-                        <PhoneLoginTest />
+                        <PhoneLogin />
                         : <p>Verify your email to login with phone.</p>}
                 </div>
             </section>

@@ -1,4 +1,4 @@
-const uKey = 'user';
+const uKey = 'User ID';
 const userName = 'Username';
 const userType = 'Usertype'
 
@@ -8,7 +8,7 @@ export const storeUser = (user, username, usertype) => {
     localStorage.setItem(userType, usertype);
 }
 
-export const clearUser = (user) => {
+export const clearUser = () => {
     localStorage.removeItem(uKey)
 }
 
