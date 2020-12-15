@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import experis.humansvszombies.hvz.models.datastructures.SquadCheckinObject;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Squad;
 import experis.humansvszombies.hvz.models.tables.SquadCheckin;
@@ -27,19 +28,23 @@ public class SquadCheckinController {
     SquadCheckinRepository squadCheckinRepository;
 
     @GetMapping("/api/fetch/squadcheckin/all")
-    public ResponseEntity<ArrayList<SquadCheckin>> getAllSquadCheckins() {
+    public ResponseEntity<ArrayList<SquadCheckinObject>> getAllSquadCheckins() {
         ArrayList<SquadCheckin> checkins = (ArrayList<SquadCheckin>)squadCheckinRepository.findAll();
+        ArrayList<SquadCheckinObject> returnCheckins = new ArrayList<SquadCheckinObject>();
+        for (SquadCheckin checkin : checkins) {
+            returnCheckins.add(this.createSquadCheckinObject(checkin));       
+        }
         System.out.println("Fetched all squad checkins");
-        return new ResponseEntity<>(checkins, HttpStatus.OK);
+        return new ResponseEntity<>(returnCheckins, HttpStatus.OK);
     }
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squadcheckin/{squadCheckinId}")
-    public ResponseEntity<SquadCheckin> getSquadCheckinById(@PathVariable Integer squadCheckinId) {
+    public ResponseEntity<SquadCheckinObject> getSquadCheckinById(@PathVariable Integer squadCheckinId) {
         try {
             return squadCheckinRepository.findById(squadCheckinId)
-            .map(checkin -> new ResponseEntity<>(checkin, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>((SquadCheckin) null, HttpStatus.NOT_FOUND));
+            .map(checkin -> new ResponseEntity<>(this.createSquadCheckinObject(checkin), HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>((SquadCheckinObject) null, HttpStatus.NOT_FOUND));
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadCheckinId was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -48,7 +53,7 @@ public class SquadCheckinController {
 
     @CrossOrigin()
     @PostMapping("/api/create/squadcheckin/{gameId}/{squadId}/{squadMemberId}")
-    public ResponseEntity<SquadCheckin> addSquadCheckin(@RequestBody SquadCheckin newSquadCheckin, @PathVariable Integer gameId,
+    public ResponseEntity<SquadCheckinObject> addSquadCheckin(@RequestBody SquadCheckin newSquadCheckin, @PathVariable Integer gameId,
     @PathVariable Integer squadId, @PathVariable Integer squadMemberId) {
         try {
             HttpStatus response;
@@ -63,7 +68,7 @@ public class SquadCheckinController {
                 System.out.println("Error: newSquadCheckin was null.");
                 response = HttpStatus.BAD_REQUEST;
             }
-            return new ResponseEntity<>(newSquadCheckin, response);
+            return new ResponseEntity<>(this.createSquadCheckinObject(newSquadCheckin), response);
             
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newSquadCheckin was null.");
@@ -73,7 +78,7 @@ public class SquadCheckinController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/squadcheckin/{squadCheckinId}")
-    public ResponseEntity<SquadCheckin> updateSquadCheckin(@RequestBody SquadCheckin newSquadCheckin, @PathVariable Integer squadCheckinId) {
+    public ResponseEntity<SquadCheckinObject> updateSquadCheckin(@RequestBody SquadCheckin newSquadCheckin, @PathVariable Integer squadCheckinId) {
         try {
             SquadCheckin checkin;
             HttpStatus status;
@@ -93,7 +98,7 @@ public class SquadCheckinController {
                 checkin = null;
                 status = HttpStatus.NOT_FOUND;
             }
-            return new ResponseEntity<>(checkin, status);
+            return new ResponseEntity<>(this.createSquadCheckinObject(checkin), status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadCheckinId or newSquadCheckin was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -121,5 +126,17 @@ public class SquadCheckinController {
             System.out.println("Exception thrown: squadCheckinId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         } 
+    }
+
+    private SquadCheckinObject createSquadCheckinObject(SquadCheckin squadCheckin) {
+        SquadCheckinObject squadCheckinObject = new SquadCheckinObject(
+            squadCheckin.getSquadCheckinId(), 
+            squadCheckin.getPointOfTime(),
+            squadCheckin.getPosition(), 
+            (squadCheckin.getGame() != null) ? squadCheckin.getGame().getGameId() : null, 
+            (squadCheckin.getSquad() != null) ? squadCheckin.getSquad().getSquadId() : null,
+            (squadCheckin.getSquadMember() != null) ? squadCheckin.getSquadMember().getSquadMemberId() : null 
+        );
+        return squadCheckinObject;
     }
 }

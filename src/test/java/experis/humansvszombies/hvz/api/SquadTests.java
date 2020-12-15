@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 
 import experis.humansvszombies.hvz.controllers.api.GameController;
 import experis.humansvszombies.hvz.controllers.api.SquadController;
+import experis.humansvszombies.hvz.models.datastructures.GameObject;
+import experis.humansvszombies.hvz.models.datastructures.SquadObject;
 import experis.humansvszombies.hvz.models.enums.Faction;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Squad;
@@ -31,10 +33,10 @@ public class SquadTests {
 
     @BeforeEach
     void initTest() {
-        ResponseEntity<Game> response = gameController.addGame(new Game());
+        ResponseEntity<GameObject> response = gameController.addGame(new Game());
         this.gameId = response.getBody().getGameId();
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ResponseEntity<Squad> response2 = squadController.addSquad(new Squad(), gameId);
+        ResponseEntity<SquadObject> response2 = squadController.addSquad(new Squad(), gameId);
         this.squadId = response2.getBody().getSquadId();
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
@@ -44,16 +46,16 @@ public class SquadTests {
         //Delete the game object and make sure that each object created is deleted except for the user account.
 		ResponseEntity<String> response = gameController.deleteGame(this.gameId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        ResponseEntity<Game> response2 = gameController.getGameById(gameId);
+        ResponseEntity<GameObject> response2 = gameController.getGameById(gameId);
         assertEquals(HttpStatus.NOT_FOUND, response2.getStatusCode());
-        ResponseEntity<Squad> response3 = squadController.getSquadById(squadId);
+        ResponseEntity<SquadObject> response3 = squadController.getSquadById(squadId);
         assertEquals(HttpStatus.NOT_FOUND, response3.getStatusCode());
     }
 
     @Test
     void testFetchAllSquadObjects() {
         //Fetch all of the Squad objects from the database
-        ResponseEntity<ArrayList<Squad>> response = squadController.getAllSquads();
+        ResponseEntity<ArrayList<SquadObject>> response = squadController.getAllSquads();
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotEquals(0, response.getBody().size());
     }
@@ -61,7 +63,7 @@ public class SquadTests {
     @Test
     void testFetchSquadById() {
         //Fetch a Squad object by id from the database.
-        ResponseEntity<Squad> response = squadController.getSquadById(this.squadId);
+        ResponseEntity<SquadObject> response = squadController.getSquadById(this.squadId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -69,9 +71,9 @@ public class SquadTests {
     void updateSquadById() {
         //Create a new Squad object and update a Squad object in the database with the new information.
         Squad newSquad = new Squad("Updated Squad", Faction.HUMAN, 100);
-        ResponseEntity<Squad> response = squadController.updateSquad(newSquad, this.squadId);
+        ResponseEntity<SquadObject> response = squadController.updateSquad(newSquad, this.squadId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        Squad updatedSquad = squadController.getSquadById(this.squadId).getBody();
+        SquadObject updatedSquad = squadController.getSquadById(this.squadId).getBody();
         assertNotEquals(null, updatedSquad);
         assertEquals(newSquad.getName(), updatedSquad.getName());
         assertEquals(newSquad.getFaction(), updatedSquad.getFaction());

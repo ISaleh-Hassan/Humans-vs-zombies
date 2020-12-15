@@ -82,9 +82,9 @@ class HvzApplicationTests {
 		//Create UserAccount objects
 		for (int i = 0; i < numberOfUsers; i++) {
 			if (i < numberOfUsers - 1) {
-				tempId = uac.addUserAccount(new UserAccount("FirstName" + (i + 1), "LastName" + (i + 1), UserType.PLAYER, "Player"+ (i + 1), "password", "player"+ (i + 1)  + "@player.com")).getBody().getUserAccountId();
+				tempId = uac.addUserAccount(new UserAccount("FirstName" + (i + 1), "LastName" + (i + 1), UserType.PLAYER, "Player"+ (i + 1), "password", "player"+ (i + 1)  + "@player.com", null)).getBody().getUserAccountId();
 			} else {
-				tempId = uac.addUserAccount(new UserAccount("Administrator", "Adminton", UserType.ADMINISTRATOR, "Admin", "secret", "admin@admin.com")).getBody().getUserAccountId();
+				tempId = uac.addUserAccount(new UserAccount("Administrator", "Adminton", UserType.ADMINISTRATOR, "Admin", "secret", "admin@admin.com", null)).getBody().getUserAccountId();
 			}
 			uaIds.add(tempId);
 		}
@@ -131,42 +131,42 @@ class HvzApplicationTests {
 				sIds.add(tempId);
 			}
 			//Add SquadMember Objects to Squad 1
-			tempId = smc.addSquadMember(new SquadMember(SquadRank.LEADER), gId, sIds.get(0), pIds.get(2)).getBody().getSquadMemberId();
+			tempId = smc.addSquadMember(new SquadMember(SquadRank.LEADER), gId, sIds.get(((gId - 1) * 2) + 0), pIds.get(2)).getBody().getSquadMemberId();
 			smIds.add(tempId);
-			tempId = smc.addSquadMember(new SquadMember(SquadRank.MEMBER), gId, sIds.get(0), pIds.get(3)).getBody().getSquadMemberId();
+			tempId = smc.addSquadMember(new SquadMember(SquadRank.MEMBER), gId, sIds.get(((gId - 1) * 2) + 0), pIds.get(3)).getBody().getSquadMemberId();
 			smIds.add(tempId);
 			//Add SquadMember Objects to Squad 2
-			tempId = smc.addSquadMember(new SquadMember(SquadRank.LEADER), gId, sIds.get(1), pIds.get(4)).getBody().getSquadMemberId();
+			tempId = smc.addSquadMember(new SquadMember(SquadRank.LEADER), gId, sIds.get(((gId - 1) * 2) + 1), pIds.get(4)).getBody().getSquadMemberId();
 			smIds.add(tempId);
-			tempId = smc.addSquadMember(new SquadMember(SquadRank.MEMBER), gId, sIds.get(1), pIds.get(5)).getBody().getSquadMemberId();
+			tempId = smc.addSquadMember(new SquadMember(SquadRank.MEMBER), gId, sIds.get(((gId - 1) * 2) + 1), pIds.get(5)).getBody().getSquadMemberId();
 			smIds.add(tempId);
-			tempId = smc.addSquadMember(new SquadMember(SquadRank.MEMBER), gId, sIds.get(1), pIds.get(6)).getBody().getSquadMemberId();
+			tempId = smc.addSquadMember(new SquadMember(SquadRank.MEMBER), gId, sIds.get(((gId - 1) * 2) + 1), pIds.get(6)).getBody().getSquadMemberId();
 			smIds.add(tempId);
 
 			//Add SquadCheckin objects to Squad 1
-			scc.addSquadCheckin(new SquadCheckin(Timestamp.valueOf("2000-01-10 04:04:04"), new Point(11, 11)), gId, sIds.get(0), smIds.get(0));
-			scc.addSquadCheckin(new SquadCheckin(Timestamp.valueOf("2000-01-10 05:05:05"), new Point(12, 12)), gId, sIds.get(0), smIds.get(1));
+			scc.addSquadCheckin(new SquadCheckin(Timestamp.valueOf("2000-01-10 04:04:04"), new Point(11, 11)), gId, sIds.get(((gId - 1) * 2) + 0), smIds.get((gId - 1) * 5 + 0));
+			scc.addSquadCheckin(new SquadCheckin(Timestamp.valueOf("2000-01-10 05:05:05"), new Point(12, 12)), gId, sIds.get(((gId - 1) * 2) + 0), smIds.get((gId - 1) * 5 + 1));
 
 			//Add SquadCheckin objects to Squad 2
-			scc.addSquadCheckin(new SquadCheckin(Timestamp.valueOf("2000-01-10 06:06:06"), new Point(13, 13)), gId, sIds.get(1), smIds.get(2));
-			scc.addSquadCheckin(new SquadCheckin(Timestamp.valueOf("2000-01-10 07:07:07"), new Point(14, 14)), gId, sIds.get(1), smIds.get(3));
-			scc.addSquadCheckin(new SquadCheckin(Timestamp.valueOf("2000-01-10 08:08:08"), new Point(15, 15)), gId, sIds.get(1), smIds.get(4));
+			scc.addSquadCheckin(new SquadCheckin(Timestamp.valueOf("2000-01-10 06:06:06"), new Point(13, 13)), gId, sIds.get(((gId - 1) * 2) + 0), smIds.get((gId - 1) * 5 + 2));
+			scc.addSquadCheckin(new SquadCheckin(Timestamp.valueOf("2000-01-10 07:07:07"), new Point(14, 14)), gId, sIds.get(((gId - 1) * 2) + 0), smIds.get((gId - 1) * 5 + 3));
+			scc.addSquadCheckin(new SquadCheckin(Timestamp.valueOf("2000-01-10 08:08:08"), new Point(15, 15)), gId, sIds.get(((gId - 1) * 2) + 0), smIds.get((gId - 1) * 5 + 4));
 
 			//Add Global ChatMessages
-			cmc.addChatMessage(new ChatMessage("This is a Global Message from a Zombie", Faction.ALL, Timestamp.valueOf("2000-01-10 06:06:06")), gId, pIds.get(0), null);
-			cmc.addChatMessage(new ChatMessage("This is a Global Message from a Human who is dead", Faction.ALL, Timestamp.valueOf("2000-01-10 06:08:06")), gId, pIds.get(1), null);
-			cmc.addChatMessage(new ChatMessage("This is a Global Message from a Human who is alive", Faction.ALL, Timestamp.valueOf("2000-01-10 06:06:06")), gId, pIds.get(2), null);
+			cmc.addChatMessage(new ChatMessage("This is a Global Message from a Zombie", Faction.ALL, Timestamp.valueOf("2000-01-10 06:06:06")), gId, pIds.get(((gId - 1) * 9) + 0), null);
+			cmc.addChatMessage(new ChatMessage("This is a Global Message from a Human who is dead", Faction.ALL, Timestamp.valueOf("2000-01-10 06:08:06")), gId, pIds.get(((gId - 1) * 9) + 1), null);
+			cmc.addChatMessage(new ChatMessage("This is a Global Message from a Human who is alive", Faction.ALL, Timestamp.valueOf("2000-01-10 06:06:06")), gId, pIds.get(((gId - 1) * 9) + 2), null);
 			//Add Faction Messages
-			cmc.addChatMessage(new ChatMessage("This is a Faction Message from a Zombie", Faction.ZOMBIE, Timestamp.valueOf("2000-01-10 06:06:06")), gId, pIds.get(0), null);
-			cmc.addChatMessage(new ChatMessage("This is a Faction Message from a Human who is dead", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:06:06")), gId, pIds.get(1), null);
-			cmc.addChatMessage(new ChatMessage("This is a Faction Message from a Human who is alive", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:07:06")), gId, pIds.get(2), null);
+			cmc.addChatMessage(new ChatMessage("This is a Faction Message from a Zombie", Faction.ZOMBIE, Timestamp.valueOf("2000-01-10 06:06:06")), gId, pIds.get(((gId - 1) * 9) + 0), null);
+			cmc.addChatMessage(new ChatMessage("This is a Faction Message from a Human who is dead", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:06:06")), gId, pIds.get(((gId - 1) * 9) + 1), null);
+			cmc.addChatMessage(new ChatMessage("This is a Faction Message from a Human who is alive", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:07:06")), gId, pIds.get(((gId - 1) * 9) + 2), null);
 			//Add Squad Messages for squad 1
-			cmc.addChatMessage(new ChatMessage("This is a Squad Message from a Leader", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:06:06")), gId, pIds.get(2), sIds.get(0));
-			cmc.addChatMessage(new ChatMessage("This is a Squad Message from a Member", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:07:06")), gId, pIds.get(3), sIds.get(0));
+			cmc.addChatMessage(new ChatMessage("This is a Squad Message from a Leader", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:06:06")), gId, pIds.get(((gId - 1) * 9) + 2), sIds.get(((gId - 1) * 2) + 0));
+			cmc.addChatMessage(new ChatMessage("This is a Squad Message from a Member", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:07:06")), gId, pIds.get(((gId - 1) * 9) + 3), sIds.get(((gId - 1) * 2) + 0));
 			//Add Squad Messages for Squad 2
-			cmc.addChatMessage(new ChatMessage("This is a Squad Message from a Leader", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:07:06")), gId, pIds.get(4), sIds.get(1));
-			cmc.addChatMessage(new ChatMessage("This is a Squad Message from a Member", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:08:06")), gId, pIds.get(5), sIds.get(1));
-			cmc.addChatMessage(new ChatMessage("This is a Squad Message from another Member", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:09:06")), gId, pIds.get(6), sIds.get(1));
+			cmc.addChatMessage(new ChatMessage("This is a Squad Message from a Leader", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:07:06")), gId, pIds.get(((gId - 1) * 9) + 4), sIds.get(((gId - 1) * 2) + 1));
+			cmc.addChatMessage(new ChatMessage("This is a Squad Message from a Member", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:08:06")), gId, pIds.get(((gId - 1) * 9) + 5), sIds.get(((gId - 1) * 2) + 1));
+			cmc.addChatMessage(new ChatMessage("This is a Squad Message from another Member", Faction.HUMAN, Timestamp.valueOf("2000-01-10 06:09:06")), gId, pIds.get(((gId - 1) * 9) + 6), sIds.get(((gId - 1) * 2) + 1));
 
 			gIds.add(gId);
 		}

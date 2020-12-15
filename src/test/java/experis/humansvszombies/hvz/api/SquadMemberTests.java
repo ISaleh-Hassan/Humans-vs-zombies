@@ -17,6 +17,11 @@ import experis.humansvszombies.hvz.controllers.api.PlayerController;
 import experis.humansvszombies.hvz.controllers.api.SquadController;
 import experis.humansvszombies.hvz.controllers.api.SquadMemberController;
 import experis.humansvszombies.hvz.controllers.api.UserAccountController;
+import experis.humansvszombies.hvz.models.datastructures.GameObject;
+import experis.humansvszombies.hvz.models.datastructures.PlayerObject;
+import experis.humansvszombies.hvz.models.datastructures.SquadMemberObject;
+import experis.humansvszombies.hvz.models.datastructures.SquadObject;
+import experis.humansvszombies.hvz.models.datastructures.UserAccountObject;
 import experis.humansvszombies.hvz.models.enums.SquadRank;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Player;
@@ -45,19 +50,19 @@ public class SquadMemberTests {
 
     @BeforeEach
     void initTest() {
-        ResponseEntity<Game> response = gameController.addGame(new Game());
+        ResponseEntity<GameObject> response = gameController.addGame(new Game());
         this.gameId = response.getBody().getGameId();
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        ResponseEntity<Squad> response2 = squadController.addSquad(new Squad(), this.gameId);
+        ResponseEntity<SquadObject> response2 = squadController.addSquad(new Squad(), this.gameId);
         this.squadId = response2.getBody().getSquadId();
         assertEquals(HttpStatus.CREATED, response2.getStatusCode());
-        ResponseEntity<UserAccount> response3 = userAccountController.addUserAccount(new UserAccount());
+        ResponseEntity<UserAccountObject> response3 = userAccountController.addUserAccount(new UserAccount());
         this.userAccountId = response3.getBody().getUserAccountId();
         assertEquals(HttpStatus.CREATED, response3.getStatusCode());
-        ResponseEntity<Player> response4 = playerController.addPlayer(new Player(), this.userAccountId, this.gameId);
+        ResponseEntity<PlayerObject> response4 = playerController.addPlayer(new Player(), this.userAccountId, this.gameId);
         this.playerId = response4.getBody().getPlayerId();
         assertEquals(HttpStatus.CREATED, response4.getStatusCode());
-        ResponseEntity<SquadMember> response5 = squadMemberController.addSquadMember(new SquadMember(), this.gameId, this.squadId, this.playerId);
+        ResponseEntity<SquadMemberObject> response5 = squadMemberController.addSquadMember(new SquadMember(), this.gameId, this.squadId, this.playerId);
         this.squadMemberId = response5.getBody().getSquadMemberId();
         assertEquals(HttpStatus.CREATED, response5.getStatusCode());
     }
@@ -68,29 +73,29 @@ public class SquadMemberTests {
 		ResponseEntity<String> response = gameController.deleteGame(this.gameId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         //Check that the Game object does not exist in the database anymore.
-        ResponseEntity<Game> response2 = gameController.getGameById(this.gameId);
+        ResponseEntity<GameObject> response2 = gameController.getGameById(this.gameId);
         assertEquals(HttpStatus.NOT_FOUND, response2.getStatusCode());
         //Check that the Squad object does not exist in the database anymore.
-        ResponseEntity<Squad> response3 = squadController.getSquadById(this.squadId);
+        ResponseEntity<SquadObject> response3 = squadController.getSquadById(this.squadId);
         assertEquals(HttpStatus.NOT_FOUND, response3.getStatusCode());
         //Check that the Player object does not exist in the database anymore.
-        ResponseEntity<Player> response4 = playerController.getPlayerById(this.playerId);
+        ResponseEntity<PlayerObject> response4 = playerController.getPlayerById(this.playerId);
         assertEquals(HttpStatus.NOT_FOUND, response4.getStatusCode());
         //Check that the SquadMember object does not exist anymore.
-        ResponseEntity<SquadMember> response5 = squadMemberController.getSquadMemberById(this.squadMemberId);
+        ResponseEntity<SquadMemberObject> response5 = squadMemberController.getSquadMemberById(this.squadMemberId);
         assertEquals(HttpStatus.NOT_FOUND, response5.getStatusCode());
         //Delete the UserAccount
         response = userAccountController.deleteUserAccount(this.userAccountId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         //Check that the UserAccount does not exist in the database.
-        ResponseEntity<UserAccount> response6 = userAccountController.getUserById(this.userAccountId);
+        ResponseEntity<UserAccountObject> response6 = userAccountController.getUserById(this.userAccountId);
         assertEquals(HttpStatus.NOT_FOUND, response6.getStatusCode());
     }
 
     @Test
     void testFetchAllSquadMemberObjects() {
         //Fetch all of the SquadMember objects from the database.
-        ResponseEntity<ArrayList<SquadMember>> response = squadMemberController.getAllSquadMembers();
+        ResponseEntity<ArrayList<SquadMemberObject>> response = squadMemberController.getAllSquadMembers();
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotEquals(0, response.getBody().size());
     }
@@ -98,7 +103,7 @@ public class SquadMemberTests {
     @Test
     void testFetchSquadMemberById() {
         //Fetch a SquadMember object by id from the database.
-        ResponseEntity<SquadMember> response = squadMemberController.getSquadMemberById(this.squadMemberId);
+        ResponseEntity<SquadMemberObject> response = squadMemberController.getSquadMemberById(this.squadMemberId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -106,9 +111,9 @@ public class SquadMemberTests {
     void updateSquadMemberById() {
         //Create a new SquadMember object and update a SquadMember object in the database with the new information.
         SquadMember newSquadMember = new SquadMember(SquadRank.LEADER);
-        ResponseEntity<SquadMember> response = squadMemberController.updateSquadMember(newSquadMember, this.squadMemberId);
+        ResponseEntity<SquadMemberObject> response = squadMemberController.updateSquadMember(newSquadMember, this.squadMemberId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        SquadMember updatedSquadMember = squadMemberController.getSquadMemberById(this.squadMemberId).getBody();
+        SquadMemberObject updatedSquadMember = squadMemberController.getSquadMemberById(this.squadMemberId).getBody();
         assertNotEquals(null, updatedSquadMember);
         assertEquals(SquadRank.LEADER, updatedSquadMember.getSquadRank());
     }

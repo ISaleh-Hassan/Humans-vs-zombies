@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import experis.humansvszombies.hvz.models.datastructures.PlayerObject;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Player;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
@@ -24,28 +25,58 @@ public class PlayerController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/player/all")
-    public ResponseEntity<ArrayList<Player>> getAllPlayers() {
+    public ResponseEntity<ArrayList<PlayerObject>> getAllPlayers() {
         ArrayList<Player> players = (ArrayList<Player>)playerRepository.findAll();
+        ArrayList<PlayerObject> returnPlayers = new ArrayList<PlayerObject>();
+        for (Player player : players) {
+            returnPlayers.add(this.createPlayerObject(player));
+        }
         System.out.println("Fetched all players");
-        return new ResponseEntity<>(players, HttpStatus.OK);
+        return new ResponseEntity<>(returnPlayers, HttpStatus.OK);
     }
 
     @CrossOrigin()
     @GetMapping("/api/fetch/player/{playerId}")
-    public ResponseEntity<Player> getPlayerById(@PathVariable Integer playerId) {
+    public ResponseEntity<PlayerObject> getPlayerById(@PathVariable Integer playerId) {
         try {
             return playerRepository.findById(playerId)
-                    .map(player -> new ResponseEntity<>(player, HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>((Player) null, HttpStatus.NOT_FOUND));
+                    .map(player -> new ResponseEntity<>(this.createPlayerObject(player), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>((PlayerObject) null, HttpStatus.NOT_FOUND));
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+    
+    @CrossOrigin()
+    @GetMapping("/api/fetch/player/game={gameId}/user={userId}")
+    public ResponseEntity<PlayerObject> getPlayerByGameIdAndUserId(@PathVariable Integer gameId, @PathVariable Integer userId) {
+        try {
+            HttpStatus status;
+            PlayerObject playerObject = null;
+            if (gameId != null && userId != null) {
+                Player player = playerRepository.findDistinctByGameAndUserAccount(new Game(gameId), new UserAccount(userId));
+                if (player != null) {
+                    playerObject = this.createPlayerObject(player);
+                    status = HttpStatus.OK;
+                } else {
+                    System.out.println("ERROR: player belonging to Game: " + gameId + " and UserAccount:" + userId + " could not be found.");
+                    status = HttpStatus.NOT_FOUND;
+                }
+            } else {
+                System.out.println("ERROR: gameId or userId was null.");
+                status = HttpStatus.BAD_REQUEST;
+            }
+            return new ResponseEntity<>(playerObject, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: gameId or userId was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);        
+        }
+    }
 
     @CrossOrigin()
     @PostMapping("/api/create/player/{userAccountId}/{gameId}")
-    public ResponseEntity<Player> addPlayer(@RequestBody Player newPlayer, @PathVariable Integer userAccountId,
+    public ResponseEntity<PlayerObject> addPlayer(@RequestBody Player newPlayer, @PathVariable Integer userAccountId,
         @PathVariable Integer gameId) {   
             try {
                 HttpStatus response = HttpStatus.CREATED;
@@ -58,7 +89,7 @@ public class PlayerController {
                 newPlayer.setGame(new Game(gameId));
                 playerRepository.save(newPlayer);
                 System.out.println("Player CREATED with id: " + newPlayer.getPlayerId() + " belongs to game with id: " + gameId + " and useraccount with id: " + userAccountId);
-                return new ResponseEntity<>(newPlayer, response);
+                return new ResponseEntity<>(this.createPlayerObject(newPlayer), response);
             } catch(IllegalArgumentException e) {
                 System.out.println("Exception thrown: newPlayer was null.");
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -67,7 +98,7 @@ public class PlayerController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/player/{playerId}")
-    public ResponseEntity<Player> updatePlayer(@RequestBody Player newPlayer, @PathVariable Integer playerId) {
+    public ResponseEntity<PlayerObject> updatePlayer(@RequestBody Player newPlayer, @PathVariable Integer playerId) {
         try {
             Player player;
             HttpStatus response;
@@ -89,7 +120,7 @@ public class PlayerController {
                 player = null;
                 response = HttpStatus.NOT_FOUND;
             }
-            return new ResponseEntity<>(player, response);
+            return new ResponseEntity<>(this.createPlayerObject(player), response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: playerId or newPlayer was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -139,5 +170,19 @@ public class PlayerController {
             System.out.println("Exception thrown: victimId was null.");
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private PlayerObject createPlayerObject(Player player) {
+        PlayerObject playerObject = new PlayerObject(
+            player.getPlayerId(), 
+            player.getFaction(), 
+            player.isAlive(), 
+            player.isPatientZero(), 
+            player.getBiteCode(), 
+            (player.getUserAccount() != null) ? player.getUserAccount().getUserAccountId() : null,
+            (player.getGame() != null) ? player.getGame().getGameId() : null,
+            (player.getSquadMember() != null) ? player.getSquadMember().getSquadMemberId() : null
+        );
+        return playerObject;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import experis.humansvszombies.hvz.models.datastructures.MissionObject;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Mission;
 import experis.humansvszombies.hvz.repositories.MissionRepository;
@@ -20,19 +21,23 @@ public class MissionController {
 
     @CrossOrigin
     @GetMapping("/api/fetch/mission/all")
-    public ResponseEntity<ArrayList<Mission>> getAllMissions() {
+    public ResponseEntity<ArrayList<MissionObject>> getAllMissions() {
         ArrayList<Mission> missions = (ArrayList<Mission>)missionRepository.findAll();
+        ArrayList<MissionObject> returnMissions = new ArrayList<MissionObject>();
+        for (Mission mission : missions) {
+            returnMissions.add(this.createMissionObject(mission));
+        }
         System.out.println("Fetched all missions");
-        return new ResponseEntity<>(missions, HttpStatus.OK);
+        return new ResponseEntity<>(returnMissions, HttpStatus.OK);
     }
 
     @CrossOrigin()
     @GetMapping("/api/fetch/mission/{missionId}")
-    public ResponseEntity<Mission> getMissionById(@PathVariable Integer missionId) {
+    public ResponseEntity<MissionObject> getMissionById(@PathVariable Integer missionId) {
         try {
             return missionRepository.findById(missionId)
-                    .map(mission -> new ResponseEntity<>(mission, HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>((Mission) null, HttpStatus.NOT_FOUND));
+                    .map(mission -> new ResponseEntity<>(this.createMissionObject(mission), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>((MissionObject) null, HttpStatus.NOT_FOUND));
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -41,13 +46,13 @@ public class MissionController {
 
     @CrossOrigin
     @PostMapping("/api/create/mission/{gameId}")
-    public ResponseEntity<Mission> addMission(@RequestBody Mission newMission, @PathVariable Integer gameId) {
+    public ResponseEntity<MissionObject> addMission(@RequestBody Mission newMission, @PathVariable Integer gameId) {
         try {
             HttpStatus response = HttpStatus.CREATED;
             newMission.setGame(new Game(gameId));
             missionRepository.save(newMission);
             System.out.println("Mission CREATED with id: " + newMission.getMissionId() + " belongs to game with id: " + gameId);
-            return new ResponseEntity<>(newMission, response);
+            return new ResponseEntity<>(this.createMissionObject(newMission), response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newMission was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -56,7 +61,7 @@ public class MissionController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/mission/{missionId}")
-    public ResponseEntity<Mission> updateMission(@RequestBody Mission newMission, @PathVariable Integer missionId) {
+    public ResponseEntity<MissionObject> updateMission(@RequestBody Mission newMission, @PathVariable Integer missionId) {
         try {
             Mission mission;
             HttpStatus response;
@@ -87,7 +92,7 @@ public class MissionController {
                 mission = null;
                 response = HttpStatus.NOT_FOUND;
             }
-            return new ResponseEntity<>(mission, response);
+            return new ResponseEntity<>(this.createMissionObject(mission), response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or mission was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -115,5 +120,18 @@ public class MissionController {
             System.out.println("Exception thrown: missionId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }              
+    }
+
+    private MissionObject createMissionObject(Mission mission) {
+        MissionObject missionObject = new MissionObject(
+            mission.getMissionId(),
+            mission.getName(),
+            mission.getFactionVisibility(),
+            mission.getState(),
+            mission.getStartTime(),
+            mission.getEndTime(),
+            (mission.getGame() != null) ? mission.getGame().getGameId() : null
+        );
+        return missionObject;
     }
 }

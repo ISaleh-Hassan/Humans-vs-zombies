@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import experis.humansvszombies.hvz.models.datastructures.GameObject;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.repositories.GameRepository;
 
@@ -25,19 +26,23 @@ public class GameController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/game/all")
-    public ResponseEntity<ArrayList<Game>> getAllGames() {
+    public ResponseEntity<ArrayList<GameObject>> getAllGames() {
         ArrayList<Game> games = (ArrayList<Game>)gameRepository.findAll();
+        ArrayList<GameObject> returnGames = new ArrayList<GameObject>();
+        for (Game game : games) {
+            returnGames.add(this.createGameObject(game));
+        }
         System.out.println("Fetched all games");
-        return new ResponseEntity<>(games, HttpStatus.OK);
+        return new ResponseEntity<>(returnGames, HttpStatus.OK);
     }
 
     @CrossOrigin()
     @GetMapping("/api/fetch/game/{gameId}")
-    public ResponseEntity<Game> getGameById(@PathVariable Integer gameId) {
+    public ResponseEntity<GameObject> getGameById(@PathVariable Integer gameId) {
         try {   
             return gameRepository.findById(gameId)
-            .map(game -> new ResponseEntity<>(game, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>((Game) null, HttpStatus.NOT_FOUND));
+            .map(game -> new ResponseEntity<>(this.createGameObject(game), HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>((GameObject) null, HttpStatus.NOT_FOUND));
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -46,11 +51,11 @@ public class GameController {
 
     @CrossOrigin()
     @PostMapping("/api/create/game")
-    public ResponseEntity<Game> addGame(@RequestBody Game newGame) {
+    public ResponseEntity<GameObject> addGame(@RequestBody Game newGame) {
         try {
             newGame = gameRepository.save(newGame);
             System.out.println("Game CREATED with id: " + newGame.getGameId());
-            return new ResponseEntity<>(newGame, HttpStatus.CREATED);
+            return new ResponseEntity<>(this.createGameObject(newGame), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newGame was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -59,7 +64,7 @@ public class GameController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/game/{gameId}")
-    public ResponseEntity<Game> updateGame(@RequestBody Game newGame, @PathVariable Integer gameId) {   
+    public ResponseEntity<GameObject> updateGame(@RequestBody Game newGame, @PathVariable Integer gameId) {   
         try {
             Game game;
             HttpStatus status;
@@ -97,7 +102,7 @@ public class GameController {
                 game = null;
                 status = HttpStatus.NOT_FOUND;
             }
-            return new ResponseEntity<>(game, status);
+            return new ResponseEntity<>(this.createGameObject(game), status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or newGame was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -125,5 +130,21 @@ public class GameController {
             System.out.println("Exception thrown: id was gameId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }    
+    }
+
+    private GameObject createGameObject(Game game) {
+        GameObject gameObject = new GameObject(
+            game.getGameId(),
+            game.getName(), 
+            game.getGameState(), 
+            game.getNwPoint(), 
+            game.getSePoint(), 
+            game.getStartTime(), 
+            game.getEndTime(), 
+            game.getMaxNumberOfPlayers(), 
+            game.getDescription(), 
+            0
+        );
+        return gameObject;
     }
 }
