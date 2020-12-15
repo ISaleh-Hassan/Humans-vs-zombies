@@ -27,9 +27,6 @@ public class UserAccount {
     @Column(name="user_account_id")
     private Integer userAccountId;
 
-    @OneToMany(mappedBy="userAccount", cascade=CascadeType.ALL)
-    private Collection<Player> players = new ArrayList<Player>();
-
     @Column(name="first_Name")
     private String firstName;
 
@@ -48,6 +45,8 @@ public class UserAccount {
     @Column(name="email", unique=true)
     private String email;
 
+    @OneToMany(mappedBy="userAccount", cascade=CascadeType.ALL)
+    private Collection<Player> players = new ArrayList<Player>();
 
     public UserAccount() {
         

@@ -29,9 +29,6 @@ public class Squad {
     @Column(name="squad_id")
     private Integer squadId;
 
-    @ManyToOne
-    private Game game;
-
     @Column(name="name")
     private String name;
 
@@ -40,6 +37,9 @@ public class Squad {
 
     @Column(name="max_number_of_member")
     private int maxNumberOfMembers;
+
+    @ManyToOne
+    private Game game;
 
     @OneToMany(mappedBy="squad", cascade=CascadeType.ALL)
     private Collection<SquadMember> squadMembers = new ArrayList<SquadMember>();

@@ -4,7 +4,10 @@ import experis.humansvszombies.hvz.controllers.api.GameController;
 import experis.humansvszombies.hvz.controllers.api.KillController;
 import experis.humansvszombies.hvz.controllers.api.PlayerController;
 import experis.humansvszombies.hvz.controllers.api.UserAccountController;
-import experis.humansvszombies.hvz.models.datastructures.RegisterKill;
+import experis.humansvszombies.hvz.models.datastructures.GameObject;
+import experis.humansvszombies.hvz.models.datastructures.KillObject;
+import experis.humansvszombies.hvz.models.datastructures.PlayerObject;
+import experis.humansvszombies.hvz.models.datastructures.UserAccountObject;
 import experis.humansvszombies.hvz.models.tables.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +49,7 @@ public class KillTests {
         this.killerId = createTestPlayerKiller();
         this.userAccountVictimId = createTestUserAccount();
         this.victimId = createTestPlayerVictim();
-        ResponseEntity<Kill> response = kc.addKill(new Kill(), this.gameId, this.killerId, this.victimId);
+        ResponseEntity<KillObject> response = kc.addKill(new Kill(), this.gameId, this.killerId, this.victimId);
         this.killId = response.getBody().getKillId();
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
@@ -55,19 +58,19 @@ public class KillTests {
     void cleanTest() {
         ResponseEntity<String> responseKill = kc.deleteKill(this.killId);
         assertEquals(HttpStatus.OK, responseKill.getStatusCode());
-        ResponseEntity<Kill> response2 = kc.getKillById(killId);
+        ResponseEntity<KillObject> response2 = kc.getKillById(killId);
         assertEquals(HttpStatus.NOT_FOUND, response2.getStatusCode());
         ResponseEntity<String> responseKiller = pc.deletePlayer(this.killerId);
         assertEquals(HttpStatus.OK, responseKiller.getStatusCode());
-        ResponseEntity<Player> responseKiller2 = pc.getPlayerById(killerId);
+        ResponseEntity<PlayerObject> responseKiller2 = pc.getPlayerById(killerId);
         assertEquals(HttpStatus.NOT_FOUND, responseKiller2.getStatusCode());
         ResponseEntity<String> responseVictem = pc.deletePlayer(this.victimId);
         assertEquals(HttpStatus.OK, responseVictem.getStatusCode());
-        ResponseEntity<Player> responseVictem2 = pc.getPlayerById(killerId);
+        ResponseEntity<PlayerObject> responseVictem2 = pc.getPlayerById(killerId);
         assertEquals(HttpStatus.NOT_FOUND, responseVictem2.getStatusCode());
         ResponseEntity<String> responseUserAccount = uac.deleteUserAccount(this.userAccountKillerId);
         assertEquals(HttpStatus.OK, responseUserAccount.getStatusCode());
-        ResponseEntity<UserAccount> responseUserAccountFind = uac.getUserById(this.userAccountKillerId);
+        ResponseEntity<UserAccountObject> responseUserAccountFind = uac.getUserById(this.userAccountKillerId);
         assertEquals(HttpStatus.NOT_FOUND, responseUserAccountFind.getStatusCode());
         responseUserAccount = uac.deleteUserAccount(this.userAccountVictimId);
         assertEquals(HttpStatus.OK, responseUserAccount.getStatusCode());
@@ -77,19 +80,19 @@ public class KillTests {
 
     @Test
     void getAllKills() {
-        ResponseEntity<ArrayList<Kill>> response = kc.getAllKills();
+        ResponseEntity<ArrayList<KillObject>> response = kc.getAllKills();
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void getKillById() {
-        ResponseEntity<Kill> response = kc.getKillById(this.killId);
+        ResponseEntity<KillObject> response = kc.getKillById(this.killId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void updateKill() {
-        ResponseEntity<Kill> response = kc.updateKill(new Kill(Timestamp.valueOf("2000-01-10 01:01:01"),new Point(77, 7)), this.killId);
+        ResponseEntity<KillObject> response = kc.updateKill(new Kill(Timestamp.valueOf("2000-01-10 01:01:01"),new Point(77, 7)), this.killId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(new Point(77, 7), response.getBody().getPosition());
         assertEquals(Timestamp.valueOf("2000-01-10 01:01:01"), response.getBody().getTimeOfDeath());
@@ -98,10 +101,10 @@ public class KillTests {
     @Test
     void createKillWithVerifiedBiteCode() {
         //Test with correct code
-        ResponseEntity<Kill> response = kc.addKillVersion2(new RegisterKill(new Kill(), this.gameId, this.killerId, this.victimId, this.victimBiteCode));
+        ResponseEntity<KillObject> response = kc.addKillVersion2(new KillObject(null, null, null, this.gameId, this.killerId, this.victimId, this.victimBiteCode));
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         //Test with faulty code
-        ResponseEntity<Kill> response2 = kc.addKillVersion2(new RegisterKill(new Kill(), this.gameId, this.killerId, this.victimId, "ThisCodeIsWrong"));
+        ResponseEntity<KillObject> response2 = kc.addKillVersion2(new KillObject(null, null, null, this.gameId, this.killerId, this.victimId, "ThisCodeIsWrong"));
         assertEquals(HttpStatus.BAD_REQUEST, response2.getStatusCode());
         // //Delete Kill objects
         ResponseEntity<String> deleteResponse = kc.deleteKill(response.getBody().getKillId());
@@ -109,23 +112,23 @@ public class KillTests {
     }
 
     int createTestGame() {
-        ResponseEntity<Game> response = gc.addGame(new Game());
+        ResponseEntity<GameObject> response = gc.addGame(new Game());
         return response.getBody().getGameId();
     }
 
     int createTestPlayerKiller() {
-        ResponseEntity<Player> response = pc.addPlayer(new Player(), this.userAccountKillerId, this.gameId);
+        ResponseEntity<PlayerObject> response = pc.addPlayer(new Player(), this.userAccountKillerId, this.gameId);
         return response.getBody().getPlayerId();
     }
 
     int createTestPlayerVictim() {
-        ResponseEntity<Player> response = pc.addPlayer(new Player(), this.userAccountVictimId, this.gameId);
+        ResponseEntity<PlayerObject> response = pc.addPlayer(new Player(), this.userAccountVictimId, this.gameId);
         this.victimBiteCode = response.getBody().getBiteCode();
         return response.getBody().getPlayerId();
     }
 
     int createTestUserAccount() {
-        ResponseEntity<UserAccount> response = uac.addUserAccount(new UserAccount());
+        ResponseEntity<UserAccountObject> response = uac.addUserAccount(new UserAccount());
         return response.getBody().getUserAccountId();
     }
 }

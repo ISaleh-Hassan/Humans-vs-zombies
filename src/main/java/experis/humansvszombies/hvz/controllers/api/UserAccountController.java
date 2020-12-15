@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import experis.humansvszombies.hvz.models.datastructures.UserInfo;
+import experis.humansvszombies.hvz.models.datastructures.UserAccountObject;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
 import experis.humansvszombies.hvz.repositories.UserAccountRepository;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,19 +23,23 @@ public class UserAccountController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/useraccount/all")
-    public ResponseEntity<ArrayList<UserAccount>> getAllUsers() {
+    public ResponseEntity<ArrayList<UserAccountObject>> getAllUsers() {
         ArrayList<UserAccount> users = (ArrayList<UserAccount>)userAccountRepository.findAll();
+        ArrayList<UserAccountObject> returnUsers = new ArrayList<UserAccountObject>();
+        for (UserAccount userAccount : users) {
+            returnUsers.add(this.createUserAccountObject(userAccount));            
+        }
         System.out.println("Fetched all useraccounts");
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return new ResponseEntity<>(returnUsers, HttpStatus.OK);
     }
 
     @CrossOrigin()
     @GetMapping("/api/fetch/useraccount/{userAccountId}")
-    public ResponseEntity<UserAccount> getUserById(@PathVariable Integer userAccountId) {
+    public ResponseEntity<UserAccountObject> getUserById(@PathVariable Integer userAccountId) {
         try {
             return userAccountRepository.findById(userAccountId)
-                    .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>((UserAccount) null, HttpStatus.NOT_FOUND));
+                    .map(user -> new ResponseEntity<>(this.createUserAccountObject(user), HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>((UserAccountObject) null, HttpStatus.NOT_FOUND));
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -44,12 +48,12 @@ public class UserAccountController {
 
     @CrossOrigin()
     @PostMapping("/api/create/useraccount")
-    public ResponseEntity<UserAccount> addUserAccount(@RequestBody UserAccount newUserAccount) {
+    public ResponseEntity<UserAccountObject> addUserAccount(@RequestBody UserAccount newUserAccount) {
         try {
             HttpStatus response = HttpStatus.CREATED;
             userAccountRepository.save(newUserAccount);
             System.out.println("UserAccount CREATED with id: " + newUserAccount.getUserAccountId());
-            return new ResponseEntity<>(newUserAccount, response);
+            return new ResponseEntity<>(this.createUserAccountObject(newUserAccount), response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newUserAccount was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -61,7 +65,7 @@ public class UserAccountController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/useraccount/{userAccountId}")
-    public ResponseEntity<UserAccount> updateUser(@RequestBody UserAccount newUser, @PathVariable Integer userAccountId) {
+    public ResponseEntity<UserAccountObject> updateUser(@RequestBody UserAccount newUser, @PathVariable Integer userAccountId) {
         try {
             UserAccount user;
             HttpStatus response;
@@ -93,7 +97,7 @@ public class UserAccountController {
                 user = null;
                 response = HttpStatus.NOT_FOUND;
             }
-            return new ResponseEntity<>(user, response);
+            return new ResponseEntity<>(this.createUserAccountObject(user), response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or user was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -126,9 +130,9 @@ public class UserAccountController {
     //SPECIAL METHODS
     @CrossOrigin()
     @PostMapping("/api/useraccount/login")
-    public ResponseEntity<UserInfo> loginUser(@RequestBody UserAccount userAccount) {
+    public ResponseEntity<UserAccountObject> loginUser(@RequestBody UserAccount userAccount) {
         //Assume the login will fail.
-        UserInfo userInfo = null;
+        UserAccountObject userInfo = null;
         HttpStatus status = HttpStatus.BAD_REQUEST;
         //Check that userAccount isn't null. Then check if the supplied email exists in the database.
         if (userAccount != null) {
@@ -137,11 +141,32 @@ public class UserAccountController {
                 //Compare supplied password to account password and return SUCCESS message if login information is correct.
                 if (user.getPassword().equals(userAccount.getPassword())) {
                     status = HttpStatus.OK;
-                    userInfo = new UserInfo(user.getUserAccountId(), user.getUsername(), user.getUserType());
+                    userInfo = new UserAccountObject(
+                        user.getUserAccountId(), 
+                        null, 
+                        null, 
+                        user.getUserType(), 
+                        user.getUsername(), 
+                        null, 
+                        null
+                    );
                 }
             }  
         }
         return new ResponseEntity<>(userInfo, status);
+    }
+
+    private UserAccountObject createUserAccountObject(UserAccount userAccount) {
+        UserAccountObject userAccountObject = new UserAccountObject(
+            userAccount.getUserAccountId(),
+            userAccount.getFirstName(),
+            userAccount.getLastName(),
+            userAccount.getUserType(),
+            userAccount.getUsername(),
+            userAccount.getPassword(),
+            userAccount.getEmail()
+        );
+        return userAccountObject;
     }
     
 }
