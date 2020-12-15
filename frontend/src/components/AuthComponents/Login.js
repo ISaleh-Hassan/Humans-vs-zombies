@@ -22,7 +22,6 @@ const Login = ({ history }) => {
                         .auth()
                         .signInWithEmailAndPassword(email.value, password.value);
                     history.push("/")
-                    storeUser(email.value);
                 } else {
                     alert("Incorrect email or password!")
                 }

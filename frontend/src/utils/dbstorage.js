@@ -1,3 +1,5 @@
+import { storeUser } from "./localstorage";
+
 export async function storeUserDB(username, firstname, lastname, usertype, password, email) {
     console.log(usertype);
     const response = await fetch("http://localhost:8080/api/create/useraccount", {
@@ -36,6 +38,10 @@ export async function loginUser(email, password) {
         })
     })
     const status = await response.status
+    if (status === 200) {
+        const user = await response.json()
+        storeUser(user.userId);
+    }
     return status;
 }
 

@@ -11,3 +11,4 @@ export const clearUser = (user) => {
 export const getUser = () => {
     return localStorage.getItem(uKey);
 }
+
