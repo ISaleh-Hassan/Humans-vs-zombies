@@ -3,6 +3,9 @@ package experis.humansvszombies.hvz.api;
 import experis.humansvszombies.hvz.controllers.api.GameController;
 import experis.humansvszombies.hvz.controllers.api.PlayerController;
 import experis.humansvszombies.hvz.controllers.api.UserAccountController;
+import experis.humansvszombies.hvz.models.datastructures.GameObject;
+import experis.humansvszombies.hvz.models.datastructures.PlayerObject;
+import experis.humansvszombies.hvz.models.datastructures.UserAccountObject;
 import experis.humansvszombies.hvz.models.enums.Faction;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Player;
@@ -38,7 +41,7 @@ public class PlayerTests {
     void initTest() {
         this.userAccountId= createTestUserAccount();
         this.gameId = createTestGame();
-        ResponseEntity<Player> response = pc.addPlayer(new Player(), this.userAccountId, this.gameId);
+        ResponseEntity<PlayerObject> response = pc.addPlayer(new Player(), this.userAccountId, this.gameId);
         this.playerId = response.getBody().getPlayerId();
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
@@ -47,36 +50,36 @@ public class PlayerTests {
     void cleanTest() {
         ResponseEntity<String> response = pc.deletePlayer(this.playerId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        ResponseEntity<Player> response2 = pc.getPlayerById(this.playerId);
+        ResponseEntity<PlayerObject> response2 = pc.getPlayerById(this.playerId);
         assertEquals(HttpStatus.NOT_FOUND, response2.getStatusCode());
         response = gc.deleteGame(this.gameId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        ResponseEntity<Game> response3 = gc.getGameById(this.gameId);
+        ResponseEntity<GameObject> response3 = gc.getGameById(this.gameId);
         assertEquals(HttpStatus.NOT_FOUND, response3.getStatusCode());
     }
 
     @Test
     void getAllPlayer() {
-        ResponseEntity<ArrayList<Player>> response = pc.getAllPlayers();
+        ResponseEntity<ArrayList<PlayerObject>> response = pc.getAllPlayers();
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void getPlayerById() {
-        ResponseEntity<Player> response = pc.getPlayerById(this.playerId);
+        ResponseEntity<PlayerObject> response = pc.getPlayerById(this.playerId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void createPlayer() {
-        ResponseEntity<Player> response = pc.addPlayer(new Player(Faction.HUMAN,true,false), this.userAccountId , this.gameId);
+        ResponseEntity<PlayerObject> response = pc.addPlayer(new Player(Faction.HUMAN,true,false), this.userAccountId , this.gameId);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         pc.deletePlayer(response.getBody().getPlayerId());
     }
 
     @Test
     void updatePlayer() {
-        ResponseEntity<Player> response = pc.updatePlayer((new Player(Faction.HUMAN,true,false)), this.playerId);
+        ResponseEntity<PlayerObject> response = pc.updatePlayer((new Player(Faction.HUMAN,true,false)), this.playerId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(Faction.HUMAN, response.getBody().getFaction());
         assertEquals(true, response.getBody().isAlive());
@@ -86,19 +89,19 @@ public class PlayerTests {
 
     @Test
     void createPlayerAndCheckBiteCode() {
-        ResponseEntity<Player> response = pc.addPlayer(new Player(Faction.HUMAN,true,false), this.userAccountId , this.gameId);
+        ResponseEntity<PlayerObject> response = pc.addPlayer(new Player(Faction.HUMAN,true,false), this.userAccountId , this.gameId);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(8, response.getBody().getBiteCode().length());
         pc.deletePlayer(response.getBody().getPlayerId());
     }
 
     int createTestUserAccount() {
-        ResponseEntity<UserAccount> response = uac.addUserAccount(new UserAccount());
+        ResponseEntity<UserAccountObject> response = uac.addUserAccount(new UserAccount());
         return response.getBody().getUserAccountId();
     }
 
     int createTestGame() {
-        ResponseEntity<Game> response = gc.addGame(new Game());
+        ResponseEntity<GameObject> response = gc.addGame(new Game());
         return response.getBody().getGameId();
     }
 }

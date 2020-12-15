@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import experis.humansvszombies.hvz.models.datastructures.SquadMemberObject;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Player;
 import experis.humansvszombies.hvz.models.tables.Squad;
@@ -29,19 +30,23 @@ public class SquadMemberController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squadmember/all")
-    public ResponseEntity<ArrayList<SquadMember>> getAllSquadMembers() {
+    public ResponseEntity<ArrayList<SquadMemberObject>> getAllSquadMembers() {
         ArrayList<SquadMember> squadMembers = (ArrayList<SquadMember>)squadMemberRepository.findAll();
+        ArrayList<SquadMemberObject> squadMemberObjects = new ArrayList<SquadMemberObject>();
+        for (SquadMember squadMember : squadMembers) {
+            squadMemberObjects.add(this.createSquadMemberObject(squadMember));            
+        }
         System.out.println("Fetched all squad members");
-        return new ResponseEntity<>(squadMembers, HttpStatus.OK);
+        return new ResponseEntity<>(squadMemberObjects, HttpStatus.OK);
     }
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squadmember/{squadMemberId}")
-    public ResponseEntity<SquadMember> getSquadMemberById(@PathVariable Integer squadMemberId) {
+    public ResponseEntity<SquadMemberObject> getSquadMemberById(@PathVariable Integer squadMemberId) {
         try {
             return squadMemberRepository.findById(squadMemberId)
-            .map(squadMember -> new ResponseEntity<>(squadMember, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>((SquadMember) null, HttpStatus.NOT_FOUND));
+            .map(squadMember -> new ResponseEntity<>(this.createSquadMemberObject(squadMember), HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>((SquadMemberObject) null, HttpStatus.NOT_FOUND));
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadMemberId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -50,7 +55,7 @@ public class SquadMemberController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squadmember/game={gameId}/squad={squadId}")
-    public ResponseEntity<ArrayList<SquadMember>> getSquadMembersByGameIdAndSquadId(@PathVariable Integer gameId, @PathVariable Integer squadId) {
+    public ResponseEntity<ArrayList<SquadMemberObject>> getSquadMembersByGameIdAndSquadId(@PathVariable Integer gameId, @PathVariable Integer squadId) {
         try {
             HttpStatus status = HttpStatus.BAD_REQUEST;
             ArrayList<SquadMember> members = null;
@@ -58,7 +63,11 @@ public class SquadMemberController {
                 members = squadMemberRepository.findByGameAndSquad(new Game(gameId), new Squad(squadId));
                 status = HttpStatus.OK;
             }
-            return new ResponseEntity<>(members, status);
+            ArrayList<SquadMemberObject> squadMemberObjects = new ArrayList<SquadMemberObject>();
+            for (SquadMember squadMember : members) {
+                squadMemberObjects.add(this.createSquadMemberObject(squadMember));
+            }
+            return new ResponseEntity<>(squadMemberObjects, status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -66,8 +75,34 @@ public class SquadMemberController {
     }
 
     @CrossOrigin()
+    @GetMapping("/api/fetch/squadMember/game={gameId}/player={playerId}")
+    public ResponseEntity<SquadMemberObject> getSquadMemberByPlayerId(@PathVariable Integer gameId, @PathVariable Integer playerId) {
+        try {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            SquadMemberObject squadMemberObject = null;
+            if (gameId != null && playerId != null) {
+                SquadMember squadMember = squadMemberRepository.findDistinctByGameAndPlayer(new Game(gameId),new Player(playerId));
+                if (squadMember != null) {
+                    squadMemberObject = this.createSquadMemberObject(squadMember);
+                    status = HttpStatus.OK;
+                } else {
+                    System.out.println("ERROR: a SquadMember that belongs to a Game with id: " + gameId + " and a Player with id: " + playerId + " could not be found.");
+                    status = HttpStatus.NOT_FOUND;
+                }
+            } else {
+                System.out.println("ERROR: gameId and/or playerId was null.");
+                status = HttpStatus.BAD_REQUEST;
+            }       
+            return new ResponseEntity<>(squadMemberObject, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: playerId was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin()
     @PostMapping("/api/create/squadmember/{gameId}/{squadId}/{playerId}")
-    public ResponseEntity<SquadMember> addSquadMember(@RequestBody SquadMember newSquadMember, @PathVariable Integer gameId,
+    public ResponseEntity<SquadMemberObject> addSquadMember(@RequestBody SquadMember newSquadMember, @PathVariable Integer gameId,
         @PathVariable Integer squadId, @PathVariable Integer playerId) {
             try {
                 if (newSquadMember != null) {
@@ -76,7 +111,7 @@ public class SquadMemberController {
                     newSquadMember.setPlayer(new Player(playerId));
                     squadMemberRepository.save(newSquadMember);
                     System.out.println("SquadMember CREATED with id: " + newSquadMember.getSquadMemberId());
-                    return new ResponseEntity<>(newSquadMember, HttpStatus.CREATED);
+                    return new ResponseEntity<>(this.createSquadMemberObject(newSquadMember), HttpStatus.CREATED);
                 } else {
                     System.out.println("Exception thrown: newSquadMember was null.");
                     return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -89,7 +124,7 @@ public class SquadMemberController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/squadmember/{squadMemberId}")
-    public ResponseEntity<SquadMember> updateSquadMember(@RequestBody SquadMember newSquadMember, @PathVariable Integer squadMemberId) {
+    public ResponseEntity<SquadMemberObject> updateSquadMember(@RequestBody SquadMember newSquadMember, @PathVariable Integer squadMemberId) {
         try {
             SquadMember squadMember;
             HttpStatus status;
@@ -106,7 +141,7 @@ public class SquadMemberController {
                 squadMember = null;
                 status = HttpStatus.NOT_FOUND;
             }
-            return new ResponseEntity<>(squadMember, status);
+            return new ResponseEntity<>(this.createSquadMemberObject(squadMember), status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadMemberId or newSquadMember was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -134,5 +169,16 @@ public class SquadMemberController {
             System.out.println("Exception thrown: squadMemberId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private SquadMemberObject createSquadMemberObject(SquadMember squadMember) {
+        SquadMemberObject squadMemberObject = new SquadMemberObject(
+            squadMember.getSquadMemberId(),
+            squadMember.getSquadRank(),
+            (squadMember.getGame() != null) ? squadMember.getGame().getGameId() : null,
+            (squadMember.getSquad() != null) ? squadMember.getSquad().getSquadId() : null,
+            (squadMember.getPlayer() != null) ? squadMember.getPlayer().getPlayerId() : null
+        );
+        return squadMemberObject;
     }
 }
