@@ -1,6 +1,7 @@
 const uKey = 'User ID';
 const userName = 'Username';
 const userType = 'Usertype'
+const pKey = 'Player ID'
 
 export const storeUser = (user, username, usertype) => {
     localStorage.setItem(uKey, user);
@@ -16,3 +17,6 @@ export const getUser = () => {
     return localStorage.getItem(userName);
 }
 
+export const storePlayer = (player) => {
+    localStorage.setItem(pKey, player)
+}
