@@ -111,7 +111,7 @@ public class SquadMemberController {
     }
 
     @CrossOrigin()
-    @GetMapping("/api/fetch/squad/details/squadMember={squadMemberId}")
+    @GetMapping("/api/fetch/squadmember/details/squadMember={squadMemberId}")
     public ResponseEntity<SquadMemberDetails> getSquadMemberDetailsBySquadId(@PathVariable Integer squadMemberId) {
         try {
             HttpStatus status = HttpStatus.BAD_REQUEST;
