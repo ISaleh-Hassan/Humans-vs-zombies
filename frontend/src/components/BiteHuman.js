@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Header from './Stylings/Header';
 
 class BiteHuman extends Component {
 
@@ -19,6 +20,7 @@ class BiteHuman extends Component {
     render() {
         return (
             <div>
+                <Header />
                 <h2>BITE CODE</h2>
                 <div id="biteHuman">{this.state.details.biteCode}</div>
             </div>

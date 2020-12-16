@@ -18,6 +18,7 @@ class LandingPage extends Component {
             .catch(console.log);
     };
 
+    // Need to remove the game id from the current player in the database as well
     handleLeaveGame() {
         localStorage.removeItem('gameId');
     };

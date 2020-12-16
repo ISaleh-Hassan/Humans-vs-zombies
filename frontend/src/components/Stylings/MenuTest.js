@@ -26,7 +26,7 @@ class MenuTest extends Component {
 
     closeMenu(event) {
 
-        if (this.dropdownMenu.contains(event.target)) {
+        if (!this.dropdownMenu.contains(event.target)) {
             this.setState({ showMenu: false }, () => {
                 document.removeEventListener('click', this.closeMenu);
                 console.log(this.state + " hide");
