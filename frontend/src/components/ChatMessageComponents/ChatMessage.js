@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ButtonGroup, Button } from 'react-bootstrap';
-import { GetAllChatMessages, CreateGlobalChatMessage } from '../../utils/chatMessageStorge';
+import { GetAllChatMessages, CreateGlobalChatMessage, GetBundleOfChatMessages } from '../../utils/chatMessageStorge';
 
 const ChatMessage = props => {
 
@@ -15,9 +15,19 @@ const ChatMessage = props => {
 
 
     useEffect(() => {
-        GetAllChatMessages()
+        let request = {
+            gameId: 1,
+            faction: 'ALL',
+            squadId: null
+        }
+
+        GetBundleOfChatMessages(request)
             .then(response => response.json())
-            .then(data => setAllChatMessages(data))
+            .then(data => setAllChatMessages(data));
+
+        // GetAllChatMessages()
+        //     .then(response => response.json())
+        //     .then(data => setAllChatMessages(data))
     }, []);
 
 
@@ -66,6 +76,15 @@ const ChatMessage = props => {
         })
     }
     const sendMessage = () => {
+        let messageData = {
+            gameId: null,
+            playerId: null,
+            squadId: null,
+            message: msgObject.chatMessage,
+            faction: messageData.faction,
+            timestamp: msgObject.timestamp
+            
+        }
         CreateGlobalChatMessage(msgObject, 2, 2);
         getAllChatMessages();
     }
