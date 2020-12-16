@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import experis.humansvszombies.hvz.models.datastructures.SquadObject;
+import experis.humansvszombies.hvz.models.datastructures.custom.SquadDetails;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Squad;
+import experis.humansvszombies.hvz.models.tables.SquadMember;
+import experis.humansvszombies.hvz.repositories.SquadMemberRepository;
 import experis.humansvszombies.hvz.repositories.SquadRepository;
 
 
@@ -24,6 +27,9 @@ import experis.humansvszombies.hvz.repositories.SquadRepository;
 public class SquadController {
     @Autowired
     SquadRepository squadRepository;
+
+    @Autowired
+    SquadMemberRepository squadMemberRepository;
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/all")
@@ -67,6 +73,34 @@ public class SquadController {
             return new ResponseEntity<>(squadObjects, status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId was null");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin()
+    @GetMapping("/api/fetch/squad/details/squad={squadId}")
+    public ResponseEntity<SquadDetails> getSquadDetailsByGameId(@PathVariable Integer squadId) {
+        try {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            SquadDetails details = null;
+            if (squadId != null) {
+                Squad squad = squadRepository.findById(squadId).orElse(null);
+                if (squad != null) {
+                    ArrayList<SquadMember> members = squadMemberRepository.findByGameAndSquad(new Game(squad.getGame().getGameId()), new Squad(squadId));
+                    details = new SquadDetails();
+                    details.setSquadName(squad.getName());
+                    details.setFaction(squad.getFaction());
+                    details.setMaxNumberOfMembers(squad.getMaxNumberOfMembers());
+                    details.setNumberOfRegisteredMembers(members.size());
+                    status = HttpStatus.OK;
+                } else {
+                    System.out.println("ERROR: Squad with id: " + squadId + " could not be found.");
+                    status = HttpStatus.NOT_FOUND;
+                }
+            }
+            return new ResponseEntity<>(details, status);
+        } catch(IllegalArgumentException e) {
+            System.out.println("Exception thrown: squadId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
