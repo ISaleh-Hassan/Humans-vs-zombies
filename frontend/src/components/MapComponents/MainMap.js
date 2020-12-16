@@ -28,10 +28,14 @@ class MainMap extends Component {
       draggable: true
     });
 
-    let missionMarker = new mapboxgl.Marker();
+    let mission = document.createElement('div');
+    mission.className = 'mission';
+    let missionMarker = new mapboxgl.Marker(mission);
     missionMarker.setLngLat([this.state.lng, this.state.lat]).addTo(map);
 
-    let graveStoneMarker = new mapboxgl.Marker();
+    let gravestone = document.createElement('div');
+    gravestone.className = 'gravestone';
+    let graveStoneMarker = new mapboxgl.Marker(gravestone);
     graveStoneMarker.setLngLat([14.1618, 57.7826]).addTo(map);
 
     function onDragEnd() {
@@ -69,8 +73,8 @@ class MainMap extends Component {
         <Header />
         <NavBar />
         <section className="home">
-          <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
           <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
+          <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
           <div className="container">
             <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
             <label>Marker Location: </label>
