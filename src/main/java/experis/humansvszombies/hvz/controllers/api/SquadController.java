@@ -78,27 +78,31 @@ public class SquadController {
     }
 
     @CrossOrigin()
-    @GetMapping("/api/fetch/squad/details/squad={squadId}")
-    public ResponseEntity<SquadDetails> getSquadDetailsByGameId(@PathVariable Integer squadId) {
+    @GetMapping("/api/fetch/squad/details/game={gameId}")
+    public ResponseEntity<ArrayList<SquadDetails>> getSquadDetailsByGameId(@PathVariable Integer gameId) {
         try {
             HttpStatus status = HttpStatus.BAD_REQUEST;
-            SquadDetails details = null;
-            if (squadId != null) {
-                Squad squad = squadRepository.findById(squadId).orElse(null);
-                if (squad != null) {
-                    ArrayList<SquadMember> members = squadMemberRepository.findByGameAndSquad(new Game(squad.getGame().getGameId()), new Squad(squadId));
-                    details = new SquadDetails();
-                    details.setSquadName(squad.getName());
-                    details.setFaction(squad.getFaction());
-                    details.setMaxNumberOfMembers(squad.getMaxNumberOfMembers());
-                    details.setNumberOfRegisteredMembers(members.size());
+            ArrayList<SquadDetails> detailList = null;
+            if (gameId != null) {
+                ArrayList<Squad> squads = squadRepository.findByGame(new Game(gameId));
+                if (squads != null && squads.size() > 0) {
+                    detailList = new ArrayList<SquadDetails>();
+                    for (Squad squad : squads) {
+                        SquadDetails details = new SquadDetails();         
+                        ArrayList<SquadMember> members = squadMemberRepository.findByGameAndSquad(new Game(squad.getGame().getGameId()), new Squad(squad.getSquadId()));
+                        details.setSquadName(squad.getName());
+                        details.setFaction(squad.getFaction());
+                        details.setMaxNumberOfMembers(squad.getMaxNumberOfMembers());
+                        details.setNumberOfRegisteredMembers(members.size());
+                        detailList.add(details);
+                    }  
                     status = HttpStatus.OK;
                 } else {
-                    System.out.println("ERROR: Squad with id: " + squadId + " could not be found.");
+                    System.out.println("Could not find any squads in Game with id: " + gameId);
                     status = HttpStatus.NOT_FOUND;
                 }
             }
-            return new ResponseEntity<>(details, status);
+            return new ResponseEntity<>(detailList, status);
         } catch(IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
