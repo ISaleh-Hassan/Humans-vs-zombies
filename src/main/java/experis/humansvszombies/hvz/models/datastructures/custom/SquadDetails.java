@@ -3,6 +3,7 @@ package experis.humansvszombies.hvz.models.datastructures.custom;
 import experis.humansvszombies.hvz.models.enums.Faction;
 
 public class SquadDetails {
+    private Integer squadId;
     private String squadName;
     private Faction faction;
     private Integer maxNumberOfMembers;
@@ -12,11 +13,20 @@ public class SquadDetails {
 
     }
 
-    public SquadDetails(String squadName, Faction faction, Integer maxNumberOfMembers, Integer numberOfRegisteredMembers) {
+    public SquadDetails(Integer squadId, String squadName, Faction faction, Integer maxNumberOfMembers, Integer numberOfRegisteredMembers) {
+        this.squadId = squadId;
         this.squadName = squadName;
         this.faction = faction;
         this.maxNumberOfMembers = maxNumberOfMembers;
         this.numberOfRegisteredMembers = numberOfRegisteredMembers;
+    }
+
+    public Integer getSquadId() {
+        return squadId;
+    }
+
+    public void setSquadId(Integer squadId) {
+        this.squadId = squadId;
     }
 
     public String getSquadName() {
