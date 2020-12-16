@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
+import Header from '../Stylings/Header';
+import NavBar from '../Stylings/NavBar';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 
@@ -25,6 +27,12 @@ class MainMap extends Component {
     let marker = new mapboxgl.Marker({
       draggable: true
     });
+
+    let missionMarker = new mapboxgl.Marker();
+    missionMarker.setLngLat([this.state.lng, this.state.lat]).addTo(map);
+
+    let graveStoneMarker = new mapboxgl.Marker();
+    graveStoneMarker.setLngLat([14.1618, 57.7826]).addTo(map);
 
     function onDragEnd() {
       let lngLat = marker.getLngLat();
@@ -57,16 +65,21 @@ class MainMap extends Component {
 
   render() {
     return (
-      <section className="home">
-        <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
-        <div className="container">
-          <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
-          <label>Marker Location: </label>
-          <p id="coordinates" className="coordinates"></p>
+      <>
+        <Header />
+        <NavBar />
+        <section className="home">
+          <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
+          <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
+          <div className="container">
+            <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
+            <label>Marker Location: </label>
+            <p id="coordinates" className="coordinates"></p>
             <label>Current Location: </label>
             <p id="current-position"></p>
-        </div>
-      </section>
+          </div>
+        </section>
+      </>
     )
   }
 }
