@@ -131,7 +131,7 @@ public class ChatMessageController {
             System.out.println("Faction: " + request.getFaction());
             System.out.println("SquadId: " + request.getSquadId());
             ArrayList<ChatMessage> messages;
-            if (request.getSquadId() == null) {
+            if (request.getSquadId() == null || request.getSquadId() == 0) {
                 messages = chatMessageRepository.findByGameAndFactionAndSquad(new Game(request.getGameId()), request.getFaction(), null);
             } else {
                 messages = chatMessageRepository.findByGameAndSquad(new Game(request.getGameId()), new Squad(request.getSquadId()));

@@ -79,6 +79,9 @@ public class PlayerController {
     public ResponseEntity<PlayerObject> addPlayer(@RequestBody Player newPlayer, @PathVariable Integer userAccountId,
         @PathVariable Integer gameId) {   
             try {
+                System.out.println("isAlive" + newPlayer.isAlive());
+                System.out.println("isPatientZero" + newPlayer.isPatientZero());
+                System.out.println("Faction" + newPlayer.getFaction());
                 HttpStatus response = HttpStatus.CREATED;
                 StringBuilder bitecode = new StringBuilder();
                 for (int i = 0; i < 8; i++) {
