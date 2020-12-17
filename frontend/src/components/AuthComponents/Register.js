@@ -28,7 +28,6 @@ const Register = ({ history }) => {
                         console.log(err);
                     });
                 history.push("/")
-                storeUser(username.value);
             } else {
                 alert("Username or email already in use!")
             }
