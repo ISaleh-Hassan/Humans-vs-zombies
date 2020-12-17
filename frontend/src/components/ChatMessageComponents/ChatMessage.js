@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { ButtonGroup, Button } from 'react-bootstrap';
+import { ButtonGroup, Button, Form, Container } from 'react-bootstrap';
 import { CreateMessage, GetBundleOfChatMessages } from '../../utils/chatMessageStorge';
+import { ThemeProvider, ChatList, ChatListItem, Avatar, Column, Subtitle, Row, Title, IconButton, SendIcon } from '@livechat/ui-kit'
 
 
 const ChatMessage = props => {
@@ -10,8 +11,8 @@ const ChatMessage = props => {
     const [validInput, setValidInput] = useState(false);
     const [invalidInputMessage, setInvalidInputMessage] = useState('');
     const [playerId, setPlayerId] = useState(localStorage.getItem('Player ID'));
-    const [gameId, setGameId] = useState(localStorage.getItem('gameId'));
-    const [squadId, setSquadId] = useState(null);
+    const [gameId, setGameId] = useState(localStorage.getItem('Game ID'));
+    const [squadId, setSquadId] = useState(0);
     const [msgObject, setMsgObject] = useState(
         {
             gameId: gameId,
@@ -46,8 +47,8 @@ const ChatMessage = props => {
     }
 
     useEffect(() => {
-        if (localStorage.getItem('squadId') !== '') {
-            setSquadId(localStorage.getItem('squadId'))
+        if (localStorage.getItem('Squad ID') !== null) {
+            setSquadId(localStorage.getItem('Squad ID'))
             setMsgObject((prevState) => ({
                 ...prevState,
                 squadId: squadId,
@@ -57,7 +58,7 @@ const ChatMessage = props => {
 
     useInterval(() => {
         getChatMessagesBySelectedChatRoom(msgObject)
-    }, 3000);
+    }, 1000);
 
     function getSelectedChatRoom(ev) {
         let chatRoom = ev.target.value;
@@ -106,13 +107,10 @@ const ChatMessage = props => {
         let currentInput = ev.target.value;
         setMsgText(currentInput);
         createMessageObject(currentInput)
-        if (currentInput.length < 3) {
+        if (currentInput.length < 2) {
             setValidInput(false);
         }
-        else if (currentInput.length > 15) {
-            setValidInput(false);
-            setInvalidInputMessage('Message cannot exceed 15 characters in length.');
-        } else {
+        else {
             setValidInput(true);
         }
     }
@@ -124,33 +122,49 @@ const ChatMessage = props => {
         }));
     }
 
-    const sendMessage = () => {
+    const sendMessage = (ev) => {
         CreateMessage(msgObject)
         getChatMessagesBySelectedChatRoom(msgObject)
     }
 
     return (
         <>
+            <Container >
+                <ButtonGroup >
+                    <Button variant="secondary" onClick={getSelectedChatRoom} value="ALL">Global</Button>
+                    <Button variant="secondary" onClick={getSelectedChatRoom} value="FACTION">faction</Button>
+                    <Button variant="secondary" onClick={getSelectedChatRoom} value="SQUAD">Squad</Button>
+                </ButtonGroup>
+                <br />
+                <ThemeProvider>
+                    <ChatList >
+                        {allChatMessages.map((chatMessage) =>
+                            <ChatListItem key={chatMessage.chatMessageId}>
+                                <Avatar imgUrl="https://livechat.s3.amazonaws.com/default/avatars/male_8.jpg" />
+                                <Column fill>
+                                    <Row justify>
+                                        <Title ellipsis>{'Michael'}</Title>
+                                        <Subtitle nowrap>{'14:31 PM'}</Subtitle>
+                                    </Row>
+                                    <Subtitle >
+                                        {chatMessage.message}
+                                    </Subtitle>
+                                </Column>
+                            </ChatListItem>
+                        )}
+                    </ChatList>
 
-            <ButtonGroup>
-                <Button variant="secondary" onClick={getSelectedChatRoom} value="ALL">Global</Button>
-                <Button variant="secondary" onClick={getSelectedChatRoom} value="FACTION">faction</Button>
-                <Button variant="secondary" disabled={!squadId} onClick={getSelectedChatRoom} value="SQUAD">Squad</Button>
-            </ButtonGroup>
-            <br />
+                    <Form.Group>
+                        <Form.Control type="text" placeholder="Enter a message" onChange={onMsgChanged} />
+                        {!validInput ? <p>{invalidInputMessage}</p> : null}
+                        <IconButton disabled={!validInput} onClick={sendMessage}>
+                            <SendIcon />
+                        </IconButton>
+                    </Form.Group>
+                </ThemeProvider>
+            </Container>
 
-            {allChatMessages.map((chatMessage) =>
-                <div>
-                    <li key={chatMessage.chatMessageId}>
-                        {chatMessage.message}
-                    </li>
-                </div>
-            )}
 
-            <input type="text" placeholder="Enter a message" onChange={onMsgChanged} />
-            <Button disabled={!validInput} onClick={sendMessage}>Send</Button>
-
-            { !validInput ? <p>{invalidInputMessage}</p> : null}
 
 
         </>

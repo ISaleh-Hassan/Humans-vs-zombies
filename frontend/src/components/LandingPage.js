@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import ChatMessage from './ChatMessageComponents/ChatMessage';
 import Header from './Stylings/Header';
 
 class LandingPage extends Component {
@@ -27,6 +28,7 @@ class LandingPage extends Component {
         return (
             <div>
                 <Header />
+                <ChatMessage />
                 <div id="landing">
                     <h2> {this.state.details.name}
                         {console.log(this.state.details)} </h2>
