@@ -18,6 +18,8 @@ export async function storeUserDB(username, firstname, lastname, usertype, passw
         })
     })
     const status = await response.status
+    const user = await response.json()
+    storeUser(user.userAccountId, user.username, user.userType);
     return status;
 }
 
