@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import experis.humansvszombies.hvz.models.datastructures.SquadObject;
 import experis.humansvszombies.hvz.models.datastructures.custom.SquadDetails;
 import experis.humansvszombies.hvz.models.tables.Game;
+import experis.humansvszombies.hvz.models.tables.Player;
 import experis.humansvszombies.hvz.models.tables.Squad;
 import experis.humansvszombies.hvz.models.tables.SquadMember;
 import experis.humansvszombies.hvz.repositories.SquadMemberRepository;
@@ -107,6 +108,34 @@ public class SquadController {
             return new ResponseEntity<>(detailList, status);
         } catch(IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin()
+    @GetMapping("/api/fetch/squad/game={gameId}/player={playerId}")
+    public ResponseEntity<SquadObject> getSquadFromGameIdAndPlayerId(@PathVariable Integer gameId, @PathVariable Integer playerId) {
+        try {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            SquadObject squadObject = null;
+            if (gameId != null && playerId != null) {
+                SquadMember squadMember = squadMemberRepository.findDistinctByGameAndPlayer(new Game(gameId), new Player(playerId));
+                if (squadMember != null) {
+                    Squad squad = squadRepository.findById(squadMember.getSquad().getSquadId()).orElse(null);
+                    if (squad != null) {
+                        squadObject = this.createSquadObject(squad);
+                        status = HttpStatus.OK;
+                    } else {
+                        System.out.println("ERROR: squad not found.");
+                        status = HttpStatus.NOT_FOUND;
+                    }
+                } else {
+                    System.out.println("ERROR: SquadMember not found.");
+                }  
+            }
+            return new ResponseEntity<>(squadObject, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: gameId or playerId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
