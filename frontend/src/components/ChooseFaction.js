@@ -2,6 +2,7 @@ import React from "react";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
 import NavBar from "./Stylings/NavBar";
+import ChatMessage from './ChatMessageComponents/ChatMessage'
 
 const ChooseFaction = (props) => {
 
@@ -18,6 +19,7 @@ const ChooseFaction = (props) => {
             <Header />
             <NavBar />
             <section className="home">
+            <ChatMessage />
                 <div className="container">
                     <h1>Choose your faction!</h1>
                     <br></br>

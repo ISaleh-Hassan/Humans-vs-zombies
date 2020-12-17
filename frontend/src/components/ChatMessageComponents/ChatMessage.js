@@ -1,26 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ButtonGroup, Button } from 'react-bootstrap';
 import { CreateMessage, GetBundleOfChatMessages } from '../../utils/chatMessageStorge';
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        maxWidth: '36ch',
-        backgroundColor: theme.palette.background.paper,
-    },
-    inline: {
-        display: 'inline',
-    },
-}));
 
 
 const ChatMessage = props => {
@@ -28,8 +9,8 @@ const ChatMessage = props => {
     const [chatMessage, setMsgText] = useState('');
     const [validInput, setValidInput] = useState(false);
     const [invalidInputMessage, setInvalidInputMessage] = useState('');
-    const [playerId, setPlayerId] = useState(2);
-    const [gameId, setGameId] = useState(2);
+    const [playerId, setPlayerId] = useState(localStorage.getItem('Player ID'));
+    const [gameId, setGameId] = useState(localStorage.getItem('gameId'));
     const [squadId, setSquadId] = useState(null);
     const [msgObject, setMsgObject] = useState(
         {
@@ -41,11 +22,42 @@ const ChatMessage = props => {
             timestamp: getTime()
         })
     const [allChatMessages, setAllChatMessages] = useState([]);
-    const classes = useStyles();
 
     useEffect(() => {
         getChatMessagesBySelectedChatRoom(msgObject)
     }, [msgObject.faction]);
+
+    function useInterval(callback, delay) {
+        const savedCallback = useRef();
+
+        useEffect(() => {
+            savedCallback.current = callback;
+        }, [callback]);
+
+        useEffect(() => {
+            function tick() {
+                savedCallback.current();
+            }
+            if (delay !== null) {
+                let id = setInterval(tick, delay);
+                return () => clearInterval(id);
+            }
+        }, [delay]);
+    }
+
+    useEffect(() => {
+        if (localStorage.getItem('squadId') !== '') {
+            setSquadId(localStorage.getItem('squadId'))
+            setMsgObject((prevState) => ({
+                ...prevState,
+                squadId: squadId,
+            }));
+        }
+    }, []);
+
+    useInterval(() => {
+        getChatMessagesBySelectedChatRoom(msgObject)
+    }, 3000);
 
     function getSelectedChatRoom(ev) {
         let chatRoom = ev.target.value;
@@ -74,7 +86,7 @@ const ChatMessage = props => {
     function createMessagesObjectByChatRoom(selectedRoom) {
         setMsgObject((prevState) => ({
             ...prevState,
-            faction: selectedRoom,
+            faction: selectedRoom
         }));
     }
 
@@ -123,36 +135,24 @@ const ChatMessage = props => {
             <ButtonGroup>
                 <Button variant="secondary" onClick={getSelectedChatRoom} value="ALL">Global</Button>
                 <Button variant="secondary" onClick={getSelectedChatRoom} value="FACTION">faction</Button>
-                <Button variant="secondary" onClick={getSelectedChatRoom} value="SQUAD">Squad</Button>
+                <Button variant="secondary" disabled={!squadId} onClick={getSelectedChatRoom} value="SQUAD">Squad</Button>
             </ButtonGroup>
             <br />
 
             {allChatMessages.map((chatMessage) =>
-                <li key={chatMessage.chatMessageId}>{chatMessage.message}</li>)}
-            <List className={classes.root}>
-                <ListItem alignItems="flex-start">
-                    <ListItemText
-                        primary="Brunch this weekend?"
-                        secondary={
-                            <React.Fragment>
-                                <Typography
-                                    component="span"
-                                    variant="body2"
-                                    className={classes.inline}
-                                    color="textPrimary"
-                                >
-                                    Ali Connors
-                             </Typography>
-                                {" — I'll be in your neighborhood doing errands this…"}
-                            </React.Fragment>
-                        }
-                    />
-                </ListItem>
-            </List>
+                <div>
+                    <li key={chatMessage.chatMessageId}>
+                        {chatMessage.message}
+                    </li>
+                </div>
+            )}
+
             <input type="text" placeholder="Enter a message" onChange={onMsgChanged} />
+            <Button disabled={!validInput} onClick={sendMessage}>Send</Button>
+
             { !validInput ? <p>{invalidInputMessage}</p> : null}
 
-            <Button disabled={!validInput} onClick={sendMessage}>Send</Button>
+
         </>
     );
 };
