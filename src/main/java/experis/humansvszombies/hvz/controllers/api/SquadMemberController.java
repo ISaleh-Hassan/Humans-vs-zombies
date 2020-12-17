@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import experis.humansvszombies.hvz.models.datastructures.SquadMemberObject;
+import experis.humansvszombies.hvz.models.datastructures.custom.SquadMemberDetails;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Player;
 import experis.humansvszombies.hvz.models.tables.Squad;
 import experis.humansvszombies.hvz.models.tables.SquadMember;
+import experis.humansvszombies.hvz.models.tables.UserAccount;
+import experis.humansvszombies.hvz.repositories.PlayerRepository;
 import experis.humansvszombies.hvz.repositories.SquadMemberRepository;
+import experis.humansvszombies.hvz.repositories.UserAccountRepository;
 
 
 
@@ -27,6 +31,12 @@ import experis.humansvszombies.hvz.repositories.SquadMemberRepository;
 public class SquadMemberController {
     @Autowired
     SquadMemberRepository squadMemberRepository;
+
+    @Autowired
+    PlayerRepository playerRepository;
+
+    @Autowired
+    UserAccountRepository userRepository;
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squadmember/all")
@@ -70,6 +80,75 @@ public class SquadMemberController {
             return new ResponseEntity<>(squadMemberObjects, status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId was null");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin()
+    @GetMapping("/api/fetch/squadMember/game={gameId}/player={playerId}")
+    public ResponseEntity<SquadMemberObject> getSquadMemberByPlayerId(@PathVariable Integer gameId, @PathVariable Integer playerId) {
+        try {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            SquadMemberObject squadMemberObject = null;
+            if (gameId != null && playerId != null) {
+                SquadMember squadMember = squadMemberRepository.findDistinctByGameAndPlayer(new Game(gameId),new Player(playerId));
+                if (squadMember != null) {
+                    squadMemberObject = this.createSquadMemberObject(squadMember);
+                    status = HttpStatus.OK;
+                } else {
+                    System.out.println("ERROR: a SquadMember that belongs to a Game with id: " + gameId + " and a Player with id: " + playerId + " could not be found.");
+                    status = HttpStatus.NOT_FOUND;
+                }
+            } else {
+                System.out.println("ERROR: gameId and/or playerId was null.");
+                status = HttpStatus.BAD_REQUEST;
+            }       
+            return new ResponseEntity<>(squadMemberObject, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: playerId was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin()
+    @GetMapping("/api/fetch/squadmember/details/game={gameId}/squad={squadId}")
+    public ResponseEntity<ArrayList<SquadMemberDetails>> getSquadMemberDetailsBySquadId(@PathVariable Integer gameId, @PathVariable Integer squadId) {
+        try {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            ArrayList<SquadMemberDetails> detailList = null;
+            if (gameId != null && squadId != null) {
+                ArrayList<SquadMember> squadMembers = squadMemberRepository.findByGameAndSquad(new Game(gameId), new Squad(squadId));
+                if (squadMembers != null && squadMembers.size() > 0) {
+                    detailList = new ArrayList<SquadMemberDetails>();
+                    status = HttpStatus.OK;
+                    for (SquadMember squadMember : squadMembers) {
+                        Player playerObject = playerRepository.findById(squadMember.getPlayer().getPlayerId()).orElse(null);
+                        if (playerObject != null) {
+                            UserAccount userObject = userRepository.findById(playerObject.getUserAccount().getUserAccountId()).orElse(null);
+                            if (userObject != null) {
+                                SquadMemberDetails details = new SquadMemberDetails();
+                                details.setUsername(userObject.getUsername());
+                                details.setAlive(playerObject.isAlive());
+                                details.setSquadRank(squadMember.getSquadRank());
+                                detailList.add(details);
+                            } else {
+                                System.out.println("ERROR: userObject could not be found.");
+                                status = HttpStatus.NOT_FOUND;
+                                break;
+                            }
+                        } else {
+                            System.out.print("ERROR: playerObject could not be found.");
+                            status = HttpStatus.NOT_FOUND;
+                            break;
+                        }
+                    }     
+                }   
+            } else {
+                System.out.print("ERROR: squadMemberId was null.");
+            }
+            return new ResponseEntity<>(detailList, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: squadMemberId was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

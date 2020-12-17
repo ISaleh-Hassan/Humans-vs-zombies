@@ -1,6 +1,6 @@
-import React, { useCallback, useContext } from "react";
+import React, { useContext } from "react";
 import { Redirect, withRouter } from "react-router";
-import firebaseConfig from "../../utils/firebase.js";
+import firebase from "../../utils/firebase.js";
 import { AuthContext } from "../../utils/Auth";
 import { Link } from "react-router-dom";
 import { storeUser } from "../../utils/localstorage.js";
@@ -10,7 +10,7 @@ import { loginUser } from "../../utils/dbstorage.js";
 
 const Login = ({ history }) => {
 
-    const handleLogin = useCallback(
+    const handleLogin = 
         async event => {
             
             event.preventDefault();
@@ -18,20 +18,17 @@ const Login = ({ history }) => {
             try {
                 const status = await loginUser(email.value, password.value)
                 if (status === 200) {
-                    await firebaseConfig
+                    await firebase
                         .auth()
                         .signInWithEmailAndPassword(email.value, password.value);
                     history.push("/")
-                    storeUser(email.value);
                 } else {
                     alert("Incorrect email or password!")
                 }
             } catch (error) {
                 alert(error);
             }
-        },
-        [history]
-    );
+        };
 
     const onCancel = () => {
         console.log("You tried to cancel!")
