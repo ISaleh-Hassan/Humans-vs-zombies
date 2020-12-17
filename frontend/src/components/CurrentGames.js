@@ -80,6 +80,7 @@ const CurrentGames = (props) => {
                 localStorage.setItem("Player ID", body.playerId);
                 return true;
             } else {
+                localStorage.setItem("Player ID", null);
                 return false;
             }
     }
