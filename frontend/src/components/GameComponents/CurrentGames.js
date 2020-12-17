@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import firebase from "../utils/firebase";
-import { getPlayerInfo } from "../utils/gamedbstorage";
-import { storePlayer } from "../utils/localstorage";
-import PhoneLogin from "./AuthComponents/PhoneLogin";
+import firebase from "../../utils/firebase";
+import { getPlayerInfo } from "../../utils/gamedbstorage";
+import { storePlayer } from "../../utils/localstorage";
+import PhoneLogin from "../AuthComponents/PhoneLogin";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
 import NavBar from "./Stylings/NavBar";

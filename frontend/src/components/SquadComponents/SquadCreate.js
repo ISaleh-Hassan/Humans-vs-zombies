@@ -2,7 +2,7 @@ import React, { Component, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form'
 import Header from './Stylings/Header';
-import { storeSquadDB } from '../utils/squadstorage';
+import { storeSquadDB } from '../../utils/squadstorage';
 
 const SquadCreate = ({history}) => {
 

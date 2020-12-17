@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import firebase from "../utils/firebase";
-import { clearUser, getUser } from "../utils/localstorage.js";
+import firebase from "../../utils/firebase";
+import { clearUser, getUser } from "../../utils/localstorage.js";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
 import NavBar from "./Stylings/NavBar";
