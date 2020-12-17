@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form'
 import Header from './Stylings/Header';
 import { storeSquadDB } from '../utils/squadstorage';
 
-const SquadCreate = () => {
+const SquadCreate = ({history}) => {
 
     let gameId = localStorage.getItem('Game ID');
     let userId = localStorage.getItem('User ID');
@@ -24,23 +24,24 @@ const SquadCreate = () => {
     localStorage.setItem('squadFaction', currentPlayer.faction);
 
 
-    const handleCreateSquad = async event => {
+    async function handleCreateSquad(event) {
         event.preventDefault();
         const { squadName, squadMemberAmount } = event.target.elements;
+        console.log(squadName.value, squadMemberAmount.value)
         await storeSquadDB(squadName.value, currentPlayer.faction, squadMemberAmount.value);
-        console.log(squadName, squadMemberAmount)
+        history.push("/squads")
     }
 
 
-    function handleSquadName() {
-        console.log(document.getElementById('squadName').value);
-        localStorage.setItem('squadName', (document.getElementById('squadName').value));
-    }
+    // function handleSquadName() {
+    //     console.log(document.getElementById('squadName').value);
+    //     localStorage.setItem('squadName', (document.getElementById('squadName').value));
+    // }
 
-    function handleSquadMemberAmount() {
-        console.log(document.getElementById('squadMemberAmount').value);
-        localStorage.setItem('squadMemberAmount', (document.getElementById('squadMemberAmount').value));
-    }
+    // function handleSquadMemberAmount() {
+    //     console.log(document.getElementById('squadMemberAmount').value);
+    //     localStorage.setItem('squadMemberAmount', (document.getElementById('squadMemberAmount').value));
+    // }
 
 
     return (
@@ -53,22 +54,19 @@ const SquadCreate = () => {
                 <Form onSubmit={handleCreateSquad}>
                     <Form.Group controlId="formSquadName">
                         {/* <Form.Label>Squad Name: </Form.Label> */}
-                        <Form.Control id="squadName" name="squadName" type="text" placeholder="Squad Name" onKeyUp={handleSquadName} required></Form.Control>
+                        <Form.Control id="squadName" name="squadName" type="text" placeholder="Squad Name" required></Form.Control>
                     </Form.Group>
 
                     <Form.Group controlId="formSquadMemberLimit">
                         {/* <Form.Label>Squad Member Amount: </Form.Label> */}
-                        <Form.Control id="squadMemberAmount" name="squadMemberAmount" type="text" placeholder="Squad Members (XX max)" onKeyUp={handleSquadMemberAmount} required></Form.Control>
+                        <Form.Control id="squadMemberAmount" name="squadMemberAmount" type="text" placeholder="Squad Members (XX max)" required></Form.Control>
                     </Form.Group>
 
                     <Form.Group controlId="formSquadFaction">
                         {/* <Form.Label>Squad Faction: </Form.Label> */}
                         <Form.Control name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
                     </Form.Group>
-
-                    <Link to="squads">
-                        <button type="submit">Create</button>
-                    </Link>
+                    <button type="submit">Create</button>
                     <Link to="squads">
                         <button>Cancel</button>
                     </Link>

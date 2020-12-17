@@ -32,7 +32,7 @@ const SquadList = () => {
 
     // Need the current player's playerId in order to push a new squad member to the database
     function handleJoinSquad(id) {
-        localStorage.setItem('squadId', id);
+        localStorage.setItem('Squad ID', id);
         console.log(id);
 
         

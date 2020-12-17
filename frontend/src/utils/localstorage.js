@@ -10,7 +10,7 @@ export const storeUser = (user, username, usertype) => {
 }
 
 export const clearUser = () => {
-    localStorage.removeItem(uKey, userName, userType)
+    localStorage.clear()
 }
 
 export const getUser = () => {
