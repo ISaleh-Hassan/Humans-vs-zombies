@@ -1,0 +1,47 @@
+img {
+    height: 60px;
+    width: 60px;
+    float: left;
+    margin: 10px;
+    margin-right: 20px;
+}
+
+#gameTitle {
+    font-size: 24px;
+    float: left;
+    line-height: 80px;
+    font-weight: bold;
+}
+
+#gameMenu {
+    float: left;
+    height: 60px;
+    width: 60px;
+    background-color: rgb(221, 221, 221);
+    margin: 10px;
+    margin-left: 22px;
+    border-width: 2px;
+    border-color: rgb(46, 46, 46);
+    border-style: solid;
+    border-radius: 12px;
+}
+
+#menuSymbol {
+    font-size: 60px;
+    line-height: 40px;
+    text-align: center;
+    color: rgb(46, 46, 46);
+    font-weight: lighter;
+}
+
+#headerContainer {
+    height: 84px;
+    width: 100%;
+    background-color: rgb(252, 252, 252);
+    border: 0px;
+    border-bottom: 2px;
+    border-top: 2px;
+    border-style: solid;
+    border-color: rgb(46, 46, 46);
+    margin-bottom: 10px;
+}
