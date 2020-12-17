@@ -88,12 +88,14 @@ public class SquadController {
                 if (squads != null && squads.size() > 0) {
                     detailList = new ArrayList<SquadDetails>();
                     for (Squad squad : squads) {
-                        SquadDetails details = new SquadDetails();         
                         ArrayList<SquadMember> members = squadMemberRepository.findByGameAndSquad(new Game(squad.getGame().getGameId()), new Squad(squad.getSquadId()));
-                        details.setSquadName(squad.getName());
-                        details.setFaction(squad.getFaction());
-                        details.setMaxNumberOfMembers(squad.getMaxNumberOfMembers());
-                        details.setNumberOfRegisteredMembers(members.size());
+                        SquadDetails details = new SquadDetails(
+                            squad.getSquadId(),
+                            squad.getName(),
+                            squad.getFaction(),
+                            squad.getMaxNumberOfMembers(),
+                            members.size()
+                        );         
                         detailList.add(details);
                     }  
                     status = HttpStatus.OK;
