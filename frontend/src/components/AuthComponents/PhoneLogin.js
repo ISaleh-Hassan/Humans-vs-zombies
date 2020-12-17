@@ -40,7 +40,7 @@ export class PhoneLogin extends Component {
 
         <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase.js"></script>
 
-        <button onClick={this.handleClick}>Click</button>
+        <button onClick={this.handleClick}>Get code</button>
       </div>
     )
   }
