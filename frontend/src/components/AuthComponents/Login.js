@@ -10,9 +10,9 @@ import { loginUser } from "../../utils/dbstorage.js";
 
 const Login = ({ history }) => {
 
-    const handleLogin = 
+    const handleLogin =
         async event => {
-            
+
             event.preventDefault();
             const { email, password } = event.target.elements;
             try {
@@ -20,8 +20,11 @@ const Login = ({ history }) => {
                 if (status === 200) {
                     await firebase
                         .auth()
-                        .signInWithEmailAndPassword(email.value, password.value);
-                    history.push("/")
+                        .signInWithEmailAndPassword(email.value, password.value)
+                        .catch(err => {
+                            alert(err.message)
+                            history.push("/")
+                        });
                 } else {
                     alert("Incorrect email or password!")
                 }
@@ -45,7 +48,7 @@ const Login = ({ history }) => {
             <section className="login-register">
                 <div className="container">
                     <h1>Log in</h1>
-                    <Form onSubmit={handleLogin}>
+                    <Form onSubmit={handleLogin} name="loginForm">
                         <Form.Group controlId="formEmail">
                             <Form.Label>Email: </Form.Label>
                             <Form.Control name="email" type="email" placeholder="Email" required />

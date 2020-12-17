@@ -16,7 +16,7 @@ export class PhoneLogin extends Component {
       e.confirm(code).then(function (result) {
         console.log(result.user);
 
-        document.querySelector('label').textContent += result.user.phoneNumber + "Number verified";
+        document.querySelector('label').textContent += result.user.phoneNumber + " Number verified";
 
       }).catch(function (error) {
         console.error(error);
