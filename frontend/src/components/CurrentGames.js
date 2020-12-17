@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import firebase from "../utils/firebase";
+import { getPlayerInfo } from "../utils/gamedbstorage";
+import { storePlayer } from "../utils/localstorage";
 import PhoneLogin from "./AuthComponents/PhoneLogin";
 import './Stylings/Components.css';
 import Header from './Stylings/Header';
@@ -9,9 +11,11 @@ const CurrentGames = (props) => {
 
     const isVerified = firebase.auth().currentUser.emailVerified;
     const [games, setGames] = useState([]);
+    const [isPlayer, setIsPlayer] = useState('');
 
     useEffect(() => {
         fetchGames();
+        getPlayerInfo();
     }, []);
 
     async function fetchGames() {
@@ -21,10 +25,10 @@ const CurrentGames = (props) => {
 
     function handleJoin(id) {
         localStorage.setItem("gameId", id);
-        props.history.push("/");
+        storePlayer(id)
+        props.history.push("/choosefaction");
         console.log(id);
     }
-
 
     return (
         <>
@@ -32,7 +36,7 @@ const CurrentGames = (props) => {
             <NavBar />
             <section className="home">
                 <div className="container">
-                    <h1>Curent Games</h1>
+                    <h1>Current Games</h1>
                     <table>
                         <tr>
                             <th>Game</th>
