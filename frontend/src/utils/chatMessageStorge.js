@@ -17,30 +17,6 @@ export async function createSquadChatMessage(messageObj, gameId, playerId, squad
     return status;
 }
 
-export async function CreateGlobalChatMessage(messageObj, gameId, playerId) {
-    console.log(messageObj)
-    let url = "create/chatmessage/" + gameId + "/" + playerId + "/"+0;
-    const response = await fetch(getBaseUrl() + url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            message: messageObj.chatMessage,
-            faction: messageObj.faction,
-            timestamp: messageObj.timestamp,
-        })
-    })
-    const status = await response.status
-    return status;
-}
-
-export async function GetAllChatMessages() {
-    let url = "/fetch/chatmessage/all";
-    const response = await fetch(getBaseUrl() + url)
-    return response;
-}
-
 export async function GetBundleOfChatMessages(request) {
     let url = "fetch/chatmessage/bundle";
     const response = await fetch(getBaseUrl() + url, {
@@ -58,7 +34,8 @@ export async function GetBundleOfChatMessages(request) {
 }
 
 export async function CreateMessage(messageData) {
-    let url = "create/chatmessage/" + messageData.gameId + "/" + messageData.playerId + "/" + messageData.squadId;
+    let url = "create/chatmessage/" + messageData.gameId + "/" + messageData.playerId + "/" +0;
+    
     const response = await fetch(getBaseUrl() + url, {
         method: 'POST',
         headers: {
@@ -68,9 +45,8 @@ export async function CreateMessage(messageData) {
             message: messageData.message,
             faction: messageData.faction,
             timestamp: messageData.timestamp,
-            game: null,
-            player: null,
-            squad: null
+            gameId: messageData.gameId,
+            squadId: messageData.squadId,
         })
     }) 
     return response;
