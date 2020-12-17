@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from './Stylings/Header';
 
 const SquadList = () => {
-    let gameId = localStorage.getItem('gameId');
+    let gameId = localStorage.getItem('Game ID');
     let userId = localStorage.getItem('User ID');
 
     const [squads, setSquads] = useState([]);

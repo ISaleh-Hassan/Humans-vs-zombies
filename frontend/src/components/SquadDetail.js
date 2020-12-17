@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import Header from './Stylings/Header';
 
 const SquadDetail = (props) => {
-    let gameId = localStorage.getItem('gameId');
-    let squadId = localStorage.getItem('squadId');
+    let gameId = localStorage.getItem('Game ID');
+    let squadId = localStorage.getItem('Squad ID');
     let userId = localStorage.getItem('User ID');
 
     const [squadMembers, setSquadMembers] = useState([]);
@@ -56,7 +56,7 @@ const SquadDetail = (props) => {
 
 
     function handleLeaveSquad() {
-        localStorage.removeItem('squadId');
+        localStorage.removeItem('Squad ID');
         props.history.push('/squads');
     }
 

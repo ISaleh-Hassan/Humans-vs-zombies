@@ -3,7 +3,6 @@ import { Redirect, withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import { storeUserDB } from "../../utils/dbstorage";
 import firebase from "../../utils/firebase";
-import { storeUser } from "../../utils/localstorage";
 import Form from 'react-bootstrap/Form'
 import Header from "../Stylings/Header";
 import '../Stylings/Components.css';
