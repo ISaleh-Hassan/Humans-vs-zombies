@@ -51,3 +51,24 @@ export const getUserInfo = () => {
         .then(response => response.json())
         .then(data => console.log(data));
 }
+
+export async function storePhone (phone){
+    const response = await fetch("http://localhost:8080/api/useraccount/login", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            players: [],
+            username: null,
+            firstName: null,
+            lastName: null,
+            userType: null,
+            email: null,
+            password: null,
+            phoneNumber: phone
+        })
+    })
+    const status = await response.status
+    return status;
+}

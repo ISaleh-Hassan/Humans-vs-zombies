@@ -5,6 +5,7 @@ import PrivateRoute from "./utils/PrivateRoute";
 import Login from './components/AuthComponents/Login'
 import Register from './components/AuthComponents/Register'
 import Phone from './components/AuthComponents/Phone'
+import RegisterPhone from './components/AuthComponents/RegisterPhone'
 import Admin from './components/AdminComponents/Admin'
 import EditGame from './components/AdminComponents/EditGame'
 import PlayerState from './components/AdminComponents/PlayerState'
@@ -31,6 +32,7 @@ const App = () => {
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/phone" component={Phone} />
+          <Route exact path="/registerphone" component={RegisterPhone} />
           <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute exact path="/landing" component={LandingPage} />
           <PrivateRoute exact path="/bitehuman" component={BiteHuman} />

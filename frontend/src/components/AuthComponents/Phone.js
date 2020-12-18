@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
+import React from 'react'
 import firebase from '../../utils/firebase'
 
-export class Phone extends Component {
-  handleClick = () => {
+const Phone = ({ history }) => {
+  const handleClick = () => {
     firebase.auth().languageCode = 'se';
     var recaptcha = new firebase.auth.RecaptchaVerifier('recaptcha');
     const phoneNumber = document.getElementById('phone');
     firebase.auth().signInWithPhoneNumber(phoneNumber.value, recaptcha).then(function (e) {
-      var code = prompt('Enter the OTP: ', '');
+      var code = prompt('Enter the OTP Code: ', '');
 
 
       if (code === null) return;
@@ -15,9 +15,8 @@ export class Phone extends Component {
 
       e.confirm(code).then(function (result) {
         console.log(result.user);
-
-        document.querySelector('label').textContent += result.user.phoneNumber + " Number verified";
-
+        document.querySelector('label').textContent += result.user.phoneNumber + " verified";
+        history.push("/")
       }).catch(function (error) {
         console.error(error);
 
@@ -29,9 +28,8 @@ export class Phone extends Component {
 
       });
   }
-  render() {
-    return (
-      <>
+  return (
+    <>
       <section className="login-register">
         <div className="container">
           <div id="recaptcha"></div>
@@ -42,12 +40,11 @@ export class Phone extends Component {
 
           <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase.js"></script>
 
-          <button onClick={this.handleClick}>Get code</button>
+          <button onClick={handleClick}>Get code</button>
         </div>
       </section>
-      </>
-    )
-  }
+    </>
+  )
 }
 
 export default Phone
