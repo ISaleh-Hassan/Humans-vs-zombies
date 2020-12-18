@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import Header from './Stylings/Header';
+import Header from '../StylingComponents/Header';
 
 class BiteHuman extends Component {
 

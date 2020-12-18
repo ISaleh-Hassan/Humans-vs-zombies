@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 import { storeUserDB } from "../../utils/dbstorage";
 import firebase from "../../utils/firebase";
 import Form from 'react-bootstrap/Form'
-import Header from "../Stylings/Header";
-import '../Stylings/Components.css';
 import { AuthContext } from "../../utils/Auth";
 
 const Register = ({ history }) => {
@@ -15,6 +13,9 @@ const Register = ({ history }) => {
     const handleRegister = async event => {
         event.preventDefault();
         let { username, email, password, firstname, lastname } = event.target.elements;
+        if (password.lenght < 6) {
+            alert("Password should be more than 6")
+        }
         try {
             const status = await storeUserDB(username.value, firstname.value, lastname.value, userType, password.value, email.value);
             if (status === 201) {
@@ -22,11 +23,11 @@ const Register = ({ history }) => {
                     .then(userData => {
                         userData.user.sendEmailVerification();
                         console.log(userData);
+                        history.push("/")
                     })
                     .catch(err => {
-                        console.log(err);
+                        alert(err.message);
                     });
-                history.push("/")
             } else {
                 alert("Username or email already in use!")
             }
@@ -34,10 +35,6 @@ const Register = ({ history }) => {
             alert(error);
         }
     }
-
-    const onCancel = () => {
-        console.log("You tried to cancel!")
-    };
 
     const handleCheckbox = e => {
         const target = e.target;
@@ -57,7 +54,6 @@ const Register = ({ history }) => {
 
     return (
         <>
-            <Header />
             <section className="login-register">
                 <div className="container">
                     <h1>Register</h1>
@@ -90,7 +86,10 @@ const Register = ({ history }) => {
                         <Form.Group controlId="formAdminCheckbox">
                             <Form.Check type="checkbox" label="Register as admin?" onChange={handleCheckbox} />
                         </Form.Group>
-                        <button type="submit">Register</button><button name="cancel " onClick={onCancel}>Cancel</button>
+                        <button type="submit">Register</button>
+                        <Link to="/register">
+                            <button>Cancel</button>
+                        </Link>
                     </Form>
                     <Link to="/login">Already have an account? Log in here.</Link>
                 </div>

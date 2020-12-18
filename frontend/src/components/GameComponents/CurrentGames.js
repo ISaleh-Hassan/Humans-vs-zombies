@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
-import firebase from "../utils/firebase";
-import { getPlayerInfo } from "../utils/gamedbstorage";
-import { storePlayer } from "../utils/localstorage";
-import PhoneLogin from "./AuthComponents/PhoneLogin";
-import './Stylings/Components.css';
-import Header from './Stylings/Header';
-import NavBar from "./Stylings/NavBar";
+import firebase from "../../utils/firebase";
+import { getPlayerInfo } from "../../utils/gamedbstorage";
+import Header from '../StylingComponents/Header';
+import NavBar from "../StylingComponents/NavBar";
 
 const CurrentGames = (props) => {
 
-    const isVerified = firebase.auth().currentUser.emailVerified;
     const [games, setGames] = useState([]);
-    const [isPlayer, setIsPlayer] = useState('');
 
     useEffect(() => {
         fetchGames();
@@ -124,10 +119,6 @@ const CurrentGames = (props) => {
                         )}
                     </table>
                     <br></br>
-
-                    {isVerified ?
-                        <PhoneLogin />
-                        : <p>Verify your email to login with phone.</p>}
                 </div>
             </section>
         </>

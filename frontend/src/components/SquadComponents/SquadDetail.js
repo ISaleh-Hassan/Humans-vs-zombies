@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Header from './Stylings/Header';
+import Header from '../StylingComponents/Header';
+import NavBar from '../StylingComponents/NavBar';
 
 const SquadDetail = ({history}) => {
     let gameId = localStorage.getItem('Game ID');
@@ -98,42 +99,45 @@ const SquadDetail = ({history}) => {
     return (
         <div>
             <Header />
-            <section className="squadDetail">
-                <div className="container">
-                    <h1>{squad.name}
-                        {console.log(squad)}
-                        {console.log(squadMembers)}
-                        {console.log(currentPlayer)}</h1>
-                    <br />
+            <NavBar />
+            <div className="container">
+                <section className="squadDetail">
+                    <div className="container">
+                        <h1>{squad.name}
+                            {console.log(squad)}
+                            {console.log(squadMembers)}
+                            {console.log(currentPlayer)}</h1>
+                        <br />
 
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Alive</th>
-                                <th>Rank</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {squadMembers.map((s) =>
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td>{s.username}</td>
-                                    <td>{s.alive.toString()}</td>
-                                    <td>{s.squadRank}</td>
+                                    <th>Name</th>
+                                    <th>Alive</th>
+                                    <th>Rank</th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
-                    <br />
+                            </thead>
+                            <tbody>
+                                {squadMembers.map((s) =>
+                                    <tr>
+                                        <td>{s.username}</td>
+                                        <td>{s.alive.toString()}</td>
+                                        <td>{s.squadRank}</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                        <br />
 
-                    <button onClick={getLocation}>Mark location</button>
-                    <p id="current-location"></p>
-                    <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
+                        <button onClick={getLocation}>Mark location</button>
+                        <p id="current-location"></p>
+                        <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
 
-                    <br />
-                    <button type="button" onClick={() => handleDisbandSquad()}>Disband Squad (only available to the leader)</button>
-                </div>
-            </section>
+                        <br />
+                        <button type="button" /* onClick={() => handleDisbandSquad()} */>Disband Squad (only available to the leader)</button>
+                    </div>
+                </section>
+            </div>
         </div>
     );
 }
