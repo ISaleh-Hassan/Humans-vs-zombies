@@ -13,7 +13,7 @@ const SquadList = () => {
     }, [])
 
     async function fetchSquads() {
-        const response = await (await fetch('http://localhost:8080/api/fetch/squad/details/game=' + gameId)).json();
+        const response = await (await fetch('/api/fetch/squad/details/game=' + gameId)).json();
         setSquads(response);
     }
 
@@ -26,7 +26,7 @@ const SquadList = () => {
 
     // The userId doesn't work properly (it only works with the dummy data), so we can't fetch the current player
     async function fetchCurrentPlayer() {
-        const playerResponse = await (await fetch('http://localhost:8080/api/fetch/player/game=' + gameId + '/user=' + userId));
+        const playerResponse = await (await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId));
         setCurrentPlayer(playerResponse);
     }
 

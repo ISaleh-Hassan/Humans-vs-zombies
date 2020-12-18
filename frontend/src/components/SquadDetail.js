@@ -14,7 +14,7 @@ const SquadDetail = (props) => {
     }, [])
 
     async function fetchSquadMembers() {
-        const response = await (await fetch('http://localhost:8080/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId)).json();
+        const response = await (await fetch('/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId)).json();
         setSquadMembers(response);
     }
 
@@ -37,7 +37,7 @@ const SquadDetail = (props) => {
     }, [])
 
     async function fetchSquad() {
-        const squadResponse = await (await fetch('http://localhost:8080/api/fetch/squad/' + squadId)).json();
+        const squadResponse = await (await fetch('/api/fetch/squad/' + squadId)).json();
         setSquad(squadResponse);
     }
 
@@ -50,7 +50,7 @@ const SquadDetail = (props) => {
 
     // The userId doesn't work properly (it only works with the dummy data), so we can't fetch the current player
     async function fetchCurrentPlayer() {
-        const playerResponse = await (await fetch('http://localhost:8080/api/fetch/player/game=' + gameId + '/user=' + userId));
+        const playerResponse = await (await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId));
         setCurrentPlayer(playerResponse);
     }
 

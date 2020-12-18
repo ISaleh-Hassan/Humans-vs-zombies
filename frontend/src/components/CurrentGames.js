@@ -19,7 +19,7 @@ const CurrentGames = (props) => {
     }, []);
 
     async function fetchGames() {
-        const response = await (await fetch('http://localhost:8080/api/fetch/game/all')).json();
+        const response = await (await fetch('/api/fetch/game/all')).json();
         setGames(response)
     }
 
@@ -55,7 +55,7 @@ const CurrentGames = (props) => {
 
     async function fetchPlayerObjectFromDB(gameId) {
         let userId = localStorage.getItem("User ID");
-        let response = await fetch("http://localhost:8080/api/fetch/player/game=" + gameId + "/user=" + userId);
+        let response = await fetch("/api/fetch/player/game=" + gameId + "/user=" + userId);
         let status = await response.status;
         if (status === 200) {
             let body = await response.json();
@@ -67,7 +67,7 @@ const CurrentGames = (props) => {
     }
 
     async function createPlayerObject(gameId, userId) {
-        let response = await fetch("http://localhost:8080/api/create/player/" + userId + "/" + gameId, {
+        let response = await fetch("/api/create/player/" + userId + "/" + gameId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -90,7 +90,7 @@ const CurrentGames = (props) => {
     }
 
     async function fetchSquadFromDB(gameId, playerId,) {
-        let response = await fetch("http://localhost:8080/api/fetch/squad/game=" + gameId + "/player=" + playerId);
+        let response = await fetch("/api/fetch/squad/game=" + gameId + "/player=" + playerId);
         if (response.status === 200) {
             let body = await response.json();
             localStorage.setItem("Squad ID", body.squadId);

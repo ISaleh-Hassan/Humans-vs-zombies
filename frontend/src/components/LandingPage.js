@@ -10,7 +10,7 @@ class LandingPage extends Component {
 
     componentDidMount() {
         let gameId = localStorage.getItem('gameId');
-        fetch('http://localhost:8080/api/fetch/game/' + gameId)
+        fetch('/api/fetch/game/' + gameId)
             .then(res => res.json())
             .then((data) => {
                 this.setState({details: data})

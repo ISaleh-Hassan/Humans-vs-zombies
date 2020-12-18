@@ -2,7 +2,7 @@ import { storeUser } from "./localstorage";
 
 export async function storeUserDB(username, firstname, lastname, usertype, password, email) {
     console.log(usertype);
-    const response = await fetch("http://localhost:8080/api/create/useraccount", {
+    const response = await fetch("/api/create/useraccount", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -22,7 +22,7 @@ export async function storeUserDB(username, firstname, lastname, usertype, passw
 }
 
 export async function loginUser(email, password) {
-    const response = await fetch("http://localhost:8080/api/useraccount/login", {
+    const response = await fetch("/api/useraccount/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -46,7 +46,7 @@ export async function loginUser(email, password) {
 }
 
 export const getUserInfo = () => {
-    fetch('http://localhost:8080/api/fetch/useraccount/all')
+    fetch('/api/fetch/useraccount/all')
         .then(response => response.json())
         .then(data => console.log(data));
 }

@@ -9,7 +9,7 @@ class BiteHuman extends Component {
     };
 
     componentDidMount() {
-      fetch('http://localhost:8080/api/fetch/player/1')
+      fetch('/api/fetch/player/1')
           .then(res => res.json())
           .then((data) => {
               this.setState({details: data})

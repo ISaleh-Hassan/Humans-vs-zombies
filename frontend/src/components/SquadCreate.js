@@ -16,7 +16,7 @@ const SquadCreate = () => {
 
     // The userId doesn't work properly (it only works with the dummy data), so we can't fetch the current player
     async function fetchCurrentPlayer() {                                                                    // user should be set to userId, not 1
-        const playerResponse = await (await fetch('http://localhost:8080/api/fetch/player/game=' + gameId + '/user=' + 1)).json();
+        const playerResponse = await (await fetch('/api/fetch/player/game=' + gameId + '/user=' + 1)).json();
         setCurrentPlayer(playerResponse);
     }
 
@@ -27,7 +27,7 @@ const SquadCreate = () => {
         squadName = localStorage.getItem('squadName');
         squadFaction = currentPlayer.faction;
         squadMemberAmount = localStorage.getItem('squadMemberAmount');
-        const response = await fetch('http://localhost:8080/api/create/squad/' + gameId, {
+        const response = await fetch('/api/create/squad/' + gameId, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
