@@ -54,7 +54,7 @@ export const getUserInfo = () => {
 }
 
 export async function storePhone (phone){
-    const response = await fetch("http://localhost:8080/api/useraccount/login", {
+    const response = await fetch("/api/useraccount/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
