@@ -9,7 +9,7 @@ class LandingPage extends Component {
     };
 
     componentDidMount() {
-        let gameId = localStorage.getItem('gameId');
+        let gameId = localStorage.getItem('Game ID');
         fetch('http://localhost:8080/api/fetch/game/' + gameId)
             .then(res => res.json())
             .then((data) => {
@@ -20,7 +20,7 @@ class LandingPage extends Component {
 
     // Need to remove the game id from the current player in the database as well
     handleLeaveGame() {
-        localStorage.removeItem('gameId');
+        localStorage.removeItem('Game ID');
     };
 
     render() {
