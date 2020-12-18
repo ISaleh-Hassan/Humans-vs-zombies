@@ -36,10 +36,6 @@ const Register = ({ history }) => {
         }
     }
 
-    const onCancel = () => {
-        console.log("You tried to cancel!")
-    };
-
     const handleCheckbox = e => {
         const target = e.target;
         let isChecked = target.checked;
@@ -90,7 +86,10 @@ const Register = ({ history }) => {
                         <Form.Group controlId="formAdminCheckbox">
                             <Form.Check type="checkbox" label="Register as admin?" onChange={handleCheckbox} />
                         </Form.Group>
-                        <button type="submit">Register</button><button name="cancel " onClick={onCancel}>Cancel</button>
+                        <button type="submit">Register</button>
+                        <Link to="/register">
+                            <button>Cancel</button>
+                        </Link>
                     </Form>
                     <Link to="/login">Already have an account? Log in here.</Link>
                 </div>

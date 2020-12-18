@@ -32,10 +32,6 @@ const Login = ({ history }) => {
             }
         };
 
-    const onCancel = () => {
-        console.log("You tried to cancel!")
-    }
-
     const { currentUser } = useContext(AuthContext);
 
     if (currentUser) {
@@ -57,7 +53,10 @@ const Login = ({ history }) => {
                             <Form.Label>Password: </Form.Label>
                             <Form.Control name="password" type="password" placeholder="Password" required />
                         </Form.Group>
-                        <button type="submit">Log in</button><button name="cancel " onClick={onCancel}>Cancel</button>
+                        <button type="submit">Log in</button>
+                        <Link to="/login">
+                            <button>Cancel</button>
+                        </Link>
                     </Form>
                     <Link to="/register">Don't have an account? Register here.</Link>
                     <p>Or</p>

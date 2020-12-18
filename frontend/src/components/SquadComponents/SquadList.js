@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../StylingComponents/Header';
+import NavBar from '../StylingComponents/NavBar';
 
 const SquadList = () => {
     let gameId = localStorage.getItem('Game ID');
@@ -35,48 +36,51 @@ const SquadList = () => {
         localStorage.setItem('Squad ID', id);
         console.log(id);
 
-        
+
     }
 
     return (
         <div>
             <Header />
-            <section className="squadList">
+            <NavBar />
                 <div className="container">
-                    <h1>Active Squads</h1>
-                    <div>{console.log(squads)}
-                    {console.log(currentPlayer)}</div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Members</th>
-                                <th>Faction</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {squads.map((s) =>
-                                <tr>
-                                    <td>{s.squadName}</td>
-                                    <td>{s.numberOfRegisteredMembers} / {s.maxNumberOfMembers}</td>
-                                    <td>{s.faction}</td>
-                                    <td>
-                                        <Link to="squaddetails">
-                                            <button type="button" onClick={() => handleJoinSquad(s.squadId)}>JOIN</button>
-                                        </Link>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                    <section className="squadList">
+                        <div className="container">
+                            <h1>Active Squads</h1>
+                            <div>{console.log(squads)}
+                                {console.log(currentPlayer)}</div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Members</th>
+                                        <th>Faction</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {squads.map((s) =>
+                                        <tr>
+                                            <td>{s.squadName}</td>
+                                            <td>{s.numberOfRegisteredMembers} / {s.maxNumberOfMembers}</td>
+                                            <td>{s.faction}</td>
+                                            <td>
+                                                <Link to="squaddetails">
+                                                    <button type="button" onClick={() => handleJoinSquad(s.squadId)}>JOIN</button>
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
 
-                    <br/>
-                    <Link to="createsquad">
-                        <button>Create New Squad</button>
-                    </Link>
+                            <br />
+                            <Link to="createsquad">
+                                <button>Create New Squad</button>
+                            </Link>
+                        </div>
+                    </section>
                 </div>
-            </section>
         </div>
     );
 }

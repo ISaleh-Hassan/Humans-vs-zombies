@@ -14,10 +14,6 @@ const RegisterPhone = ({ history }) => {
         storePhone(phone.value);
     }
 
-    const onCancel = () => {
-        console.log("You tried to cancel!")
-    }
-
     const { currentUser } = useContext(AuthContext);
 
     return (
@@ -30,7 +26,10 @@ const RegisterPhone = ({ history }) => {
                             <Form.Label>Phone Number: </Form.Label>
                             <Form.Control name="phone" type="tel" required />
                         </Form.Group>
-                        <button type="submit">Register</button><button name="cancel" onClick={onCancel}>Cancel</button>
+                        <button type="submit">Register</button>
+                        <Link to="/registerphone">
+                            <button>Cancel</button>
+                        </Link>
                     </Form>
                 </div>
             </section>
