@@ -1,5 +1,3 @@
-import { storePlayer } from "./localstorage";
-
 export async function getPlayerInfo() {
     const response = await fetch('/api/fetch/player/all');
 

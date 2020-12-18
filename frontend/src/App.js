@@ -1,26 +1,29 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter, BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Home from "./components/Home";
-import LandingPage from "./components/LandingPage";
-import BiteHuman from "./components/BiteHuman";
-import BiteZombie from "./components/BiteZombie";
-import SquadList from "./components/SquadList";
-import SquadDetail from "./components/SquadDetail";
-import SquadCreate from "./components/SquadCreate";
-import Login from "./components/AuthComponents/Login";
-import Register from "./components/AuthComponents/Register";
-import { AuthProvider } from "./utils/Auth";
 import PrivateRoute from "./utils/PrivateRoute";
-import NotFound from "./components/Stylings/NotFound";
-import CurrentGames from "./components/CurrentGames";
-import Admin from "./components/AuthComponents/Admin";
-import Game from "./components/Game";
-import PlayerState from "./components/PlayerState";
-import MissionMarker from "./components/MissionMarker";
-import MainMap from "./components/MapComponents/MainMap";
-import PhoneLogin from "./components/AuthComponents/PhoneLogin";
-import ChooseFaction from "./components/ChooseFaction";
+import Login from './components/AuthComponents/Login'
+import Register from './components/AuthComponents/Register'
+import Phone from './components/AuthComponents/Phone'
+import RegisterPhone from './components/AuthComponents/RegisterPhone'
+import Admin from './components/AdminComponents/Admin'
+import EditGame from './components/AdminComponents/EditGame'
+import PlayerState from './components/AdminComponents/PlayerState'
+import MissionMarker from './components/AdminComponents/MissionMarker'
+import BiteHuman from './components/GameComponents/BiteHuman'
+import BiteZombie from './components/GameComponents/BiteZombie'
+import ChooseFaction from './components/GameComponents/ChooseFaction'
+import CurrentGames from './components/GameComponents/CurrentGames'
+import Home from './components/HomeComponents/Home'
+import LandingPage from './components/HomeComponents/LandingPage'
+import MainMap from './components/MapComponents/MainMap'
+import SquadCreate from './components/SquadComponents/SquadCreate'
+import SquadDetail from './components/SquadComponents/SquadDetail'
+import SquadList from './components/SquadComponents/SquadList'
+import NotFound from './components/StylingComponents/NotFound'
+import { AuthProvider } from "./utils/Auth";
+import './components/StylingComponents/Components.css'
+import AdminCreateGame from './components/AdminComponents/AdminCreateGame'
 
 const App = () => {
   return (
@@ -29,21 +32,23 @@ const App = () => {
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
+          <Route exact path="/phone" component={Phone} />
+          <Route exact path="/registerphone" component={RegisterPhone} />
           <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute exact path="/landing" component={LandingPage} />
-          <PrivateRoute exakt path="/bitehuman" component={BiteHuman} />
-          <PrivateRoute exakt path="/bitezombie" component={BiteZombie} />
-          <PrivateRoute exakt path="/squads" component={SquadList} />
-          <PrivateRoute exakt path="/squaddetails" component={SquadDetail} />
-          <PrivateRoute exakt path="/createsquad" component={SquadCreate} />
+          <PrivateRoute exact path="/bitehuman" component={BiteHuman} />
+          <PrivateRoute exact path="/bitezombie" component={BiteZombie} />
+          <PrivateRoute exact path="/squads" component={SquadList} />
+          <PrivateRoute exact path="/squaddetails" component={SquadDetail} />
+          <PrivateRoute exact path="/createsquad" component={SquadCreate} />
           <PrivateRoute exact path="/currentgames" component={CurrentGames} />
           <PrivateRoute exact path="/admin" component={Admin} />
-          <PrivateRoute exact path="/game" component={Game} />
+          <PrivateRoute exact path="/game" component={EditGame} />
           <PrivateRoute exact path="/playerstate" component={PlayerState} />
           <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
-          <PrivateRoute exact path="/test" component={PhoneLogin} />
           <PrivateRoute exact path="/map" component={MainMap} />
           <PrivateRoute exact path="/choosefaction" component={ChooseFaction} />
+          <PrivateRoute exact path="/create/game" component={AdminCreateGame} />
           <Route path='*'>
             <NotFound header='Page not found' message='The page you requested does not exist' />
           </Route>
