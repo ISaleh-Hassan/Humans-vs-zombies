@@ -4,6 +4,7 @@ import { BrowserRouter, BrowserRouter as Router, Route, Switch } from "react-rou
 import PrivateRoute from "./utils/PrivateRoute";
 import Login from './components/AuthComponents/Login'
 import Register from './components/AuthComponents/Register'
+import Phone from './components/AuthComponents/Phone'
 import Admin from './components/AdminComponents/Admin'
 import EditGame from './components/AdminComponents/EditGame'
 import PlayerState from './components/AdminComponents/PlayerState'
@@ -42,6 +43,7 @@ const App = () => {
           <PrivateRoute exact path="/playerstate" component={PlayerState} />
           <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
           <PrivateRoute exact path="/map" component={MainMap} />
+          <PrivateRoute exact path="/registerphone" component={Phone} />
           <PrivateRoute exact path="/choosefaction" component={ChooseFaction} />
           <Route path='*'>
             <NotFound header='Page not found' message='The page you requested does not exist' />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import firebase from "../../utils/firebase";
 import { getPlayerInfo } from "../../utils/gamedbstorage";
-import PhoneLogin from "../AuthComponents/PhoneLogin";
+import PhoneLogin from "../AuthComponents/Phone";
 import Header from '../StylingComponents/Header';
 import NavBar from "../StylingComponents/NavBar";
 

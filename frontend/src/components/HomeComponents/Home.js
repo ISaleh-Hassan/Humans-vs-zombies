@@ -10,8 +10,6 @@ const Home = () => {
   const user = getUser();
   const isVerified = firebase.auth().currentUser.emailVerified;
 
-  console.log(firebase.auth().currentUser.emailVerified)
-
   return (
     <>
       <Header />
@@ -20,11 +18,13 @@ const Home = () => {
         <div className="container">
           <h1>Home</h1>
           <p>Welcome, {user}</p>
-          <p>Verified: {isVerified ? <span>true</span> : <span>false</span>}</p>
-          <Link to="/currentgames">Current Games</Link>
+          <p>{isVerified
+            ? <span><Link to="/registerphone">You may now register your phone!</Link></span>
+            : <span>A verification link has been sent to your email. Please verify your email to register your phone.</span>
+          }</p>
         </div>
         <div>
-          <p>{}</p>
+          <p>{ }</p>
         </div>
       </section>
     </>
