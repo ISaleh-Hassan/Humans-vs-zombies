@@ -82,44 +82,44 @@ const SquadDetail = (props) => {
         <div>
             <Header />
             <NavBar />
-                <div className="container">
-                    <section className="squadDetail">
-                        <div className="container">
-                            <h1>{squad.name}
-                                {console.log(squad)}
-                                {console.log(squadMembers)}
-                                {console.log(currentPlayer)}</h1>
-                            <br />
+            <div className="container">
+                <section className="squadDetail">
+                    <div className="container">
+                        <h1>{squad.name}
+                            {console.log(squad)}
+                            {console.log(squadMembers)}
+                            {console.log(currentPlayer)}</h1>
+                        <br />
 
-                            <table>
-                                <thead>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Alive</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {squadMembers.map((s) =>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Alive</th>
-                                        <th>Rank</th>
+                                        <td>{s.username}</td>
+                                        <td>{s.alive.toString()}</td>
+                                        <td>{s.squadRank}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {squadMembers.map((s) =>
-                                        <tr>
-                                            <td>{s.username}</td>
-                                            <td>{s.alive.toString()}</td>
-                                            <td>{s.squadRank}</td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                            <br />
+                                )}
+                            </tbody>
+                        </table>
+                        <br />
 
-                            <button onClick={getLocation}>Mark location</button>
-                            <p id="current-location"></p>
-                            <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
+                        <button onClick={getLocation}>Mark location</button>
+                        <p id="current-location"></p>
+                        <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
 
-                            <br />
-                            <button type="button" /* onClick={() => handleDisbandSquad()} */>Disband Squad (only available to the leader)</button>
-                        </div>
-                    </section>
-                </div>
+                        <br />
+                        <button type="button" /* onClick={() => handleDisbandSquad()} */>Disband Squad (only available to the leader)</button>
+                    </div>
+                </section>
+            </div>
         </div>
     );
 }
