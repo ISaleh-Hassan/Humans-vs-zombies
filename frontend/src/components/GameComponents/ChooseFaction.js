@@ -1,7 +1,6 @@
 import React from "react";
-import './Stylings/Components.css';
-import Header from './Stylings/Header';
-import NavBar from "./Stylings/NavBar";
+import Header from '../StylingComponents/Header';
+import NavBar from "../StylingComponents/NavBar";
 
 const ChooseFaction = (props) => {
 

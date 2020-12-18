@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
-import Header from '../Stylings/Header';
-import NavBar from '../Stylings/NavBar';
+import Header from '../StylingComponents/Header';
+import NavBar from '../StylingComponents/NavBar';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 
