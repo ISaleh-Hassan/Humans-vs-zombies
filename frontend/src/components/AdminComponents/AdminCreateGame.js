@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Header from "../Stylings/Header";
-import NavBar from "../Stylings/NavBar";
+import Header from "../StylingComponents/Header";
+import NavBar from "../StylingComponents/NavBar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button } from 'react-bootstrap';
 import { CreateGame } from "../../utils/AdminDbStorge";
