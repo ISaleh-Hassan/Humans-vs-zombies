@@ -60,6 +60,9 @@ const Login = ({ history }) => {
                         <button type="submit">Log in</button><button name="cancel " onClick={onCancel}>Cancel</button>
                     </Form>
                     <Link to="/register">Don't have an account? Register here.</Link>
+                    <p>Or</p>
+                    <Link to="/phone">Login with your phone!*</Link>
+                    <p><i>* Must be verified first!</i></p>
                 </div>
             </section>
         </>

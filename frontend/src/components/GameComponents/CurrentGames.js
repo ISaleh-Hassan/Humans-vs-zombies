@@ -121,10 +121,6 @@ const CurrentGames = (props) => {
                         )}
                     </table>
                     <br></br>
-
-                    {isVerified ?
-                        <PhoneLogin />
-                        : <p>Verify your email to login with phone.</p>}
                 </div>
             </section>
         </>

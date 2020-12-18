@@ -30,6 +30,7 @@ const App = () => {
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
+          <Route exact path="/phone" component={Phone} />
           <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute exact path="/landing" component={LandingPage} />
           <PrivateRoute exact path="/bitehuman" component={BiteHuman} />
@@ -43,7 +44,6 @@ const App = () => {
           <PrivateRoute exact path="/playerstate" component={PlayerState} />
           <PrivateRoute exact path="/missionmarker" component={MissionMarker} />
           <PrivateRoute exact path="/map" component={MainMap} />
-          <PrivateRoute exact path="/registerphone" component={Phone} />
           <PrivateRoute exact path="/choosefaction" component={ChooseFaction} />
           <Route path='*'>
             <NotFound header='Page not found' message='The page you requested does not exist' />

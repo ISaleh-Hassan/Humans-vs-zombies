@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { storeUserDB } from "../../utils/dbstorage";
 import firebase from "../../utils/firebase";
 import Form from 'react-bootstrap/Form'
-import Header from "../StylingComponents/Header";
 import { AuthContext } from "../../utils/Auth";
 
 const Register = ({ history }) => {
@@ -59,7 +58,6 @@ const Register = ({ history }) => {
 
     return (
         <>
-            <Header />
             <section className="login-register">
                 <div className="container">
                     <h1>Register</h1>
