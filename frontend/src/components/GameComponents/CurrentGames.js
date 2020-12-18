@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import firebase from "../../utils/firebase";
 import { getPlayerInfo } from "../../utils/gamedbstorage";
-import PhoneLogin from "../AuthComponents/Phone";
 import Header from '../StylingComponents/Header';
 import NavBar from "../StylingComponents/NavBar";
 
 const CurrentGames = (props) => {
 
-    const isVerified = firebase.auth().currentUser.emailVerified;
     const [games, setGames] = useState([]);
-    const [isPlayer, setIsPlayer] = useState('');
 
     useEffect(() => {
         fetchGames();
