@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../StylingComponents/Header';
 import NavBar from '../StylingComponents/NavBar';
+import ChatMessage from '../ChatMessageComponents/ChatMessage'
 
 class LandingPage extends Component {
 
@@ -29,6 +30,7 @@ class LandingPage extends Component {
             <div>
                 <Header />
                 <NavBar />
+                <ChatMessage />
                 <section className="home">
                     <div className="container">
                         <div id="landing">
