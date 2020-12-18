@@ -3,9 +3,7 @@ import { Redirect, withRouter } from "react-router";
 import firebase from "../../utils/firebase.js";
 import { AuthContext } from "../../utils/Auth";
 import { Link } from "react-router-dom";
-import { storeUser } from "../../utils/localstorage.js";
 import Form from 'react-bootstrap/Form';
-import '../Stylings/Components.css';
 import { loginUser } from "../../utils/dbstorage.js";
 
 const Login = ({ history }) => {

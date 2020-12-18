@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Header from '../StylingComponent/Header';
+import Header from '../StylingComponents/Header';
 
 const PlayerState = () => {
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Header from "../Stylings/Header";
-import NavBar from "../Stylings/NavBar";
+import Header from "../StylingComponents/Header";
+import NavBar from "../StylingComponents/NavBar";
 
 const Admin = () => {
 

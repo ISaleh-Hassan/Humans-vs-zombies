@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Header from './Stylings/Header';
+import Header from '../StylingComponents/Header';
 
 const SquadList = () => {
     let gameId = localStorage.getItem('Game ID');
