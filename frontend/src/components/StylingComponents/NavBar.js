@@ -18,6 +18,7 @@ const NavBar = () => {
                     <Link to="/currentgames">Current Games</Link>
                     <Link to="/admin">Admin</Link>
                     <Link to="/map">Maps</Link>
+                    <Link to="/squads">Squads</Link>
                     <Link to="/chat">Chat</Link>
                     <button onClick={handleSignOut}>Sign out</button>
                 </div>
