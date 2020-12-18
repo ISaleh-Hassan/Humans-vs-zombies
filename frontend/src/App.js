@@ -14,13 +14,14 @@ import { AuthProvider } from "./utils/Auth";
 import PrivateRoute from "./utils/PrivateRoute";
 import NotFound from "./components/Stylings/NotFound";
 import CurrentGames from "./components/CurrentGames";
-import Admin from "./components/AuthComponents/Admin";
+import Admin from "./components/AdminPageComponents/Admin";
 import Game from "./components/Game";
 import PlayerState from "./components/PlayerState";
 import MissionMarker from "./components/MissionMarker";
 import MainMap from "./components/MapComponents/MainMap";
 import PhoneLogin from "./components/AuthComponents/PhoneLogin";
 import ChooseFaction from "./components/ChooseFaction";
+import AdminCreateGame from './components/AdminPageComponents/AdminCreateGame'
 
 const App = () => {
   return (
@@ -44,6 +45,7 @@ const App = () => {
           <PrivateRoute exact path="/test" component={PhoneLogin} />
           <PrivateRoute exact path="/map" component={MainMap} />
           <PrivateRoute exact path="/choosefaction" component={ChooseFaction} />
+          <PrivateRoute exact path="/create/game" component={AdminCreateGame} />
           <Route path='*'>
             <NotFound header='Page not found' message='The page you requested does not exist' />
           </Route>
