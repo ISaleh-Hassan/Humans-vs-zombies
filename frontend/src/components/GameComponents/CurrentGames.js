@@ -86,6 +86,7 @@ const CurrentGames = (props) => {
 
     async function fetchSquadFromDB(gameId, playerId,) {
         let response = await fetch("http://localhost:8080/api/fetch/squad/game=" + gameId + "/player=" + playerId);
+        console.log(response.status);
         if (response.status === 200) {
             let body = await response.json();
             localStorage.setItem("Squad ID", body.squadId);

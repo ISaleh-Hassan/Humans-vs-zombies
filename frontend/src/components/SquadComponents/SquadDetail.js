@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 import Header from '../StylingComponents/Header';
 import NavBar from '../StylingComponents/NavBar';
 
-const SquadDetail = (props) => {
+const SquadDetail = ({history}) => {
     let gameId = localStorage.getItem('Game ID');
     let squadId = localStorage.getItem('Squad ID');
     let userId = localStorage.getItem('User ID');
+    let playerId = localStorage.getItem('Player ID');
+    let squadMemberId = localStorage.getItem('Squad Member ID');
+    let squadRank = localStorage.getItem('Squad Rank');
 
     const [squadMembers, setSquadMembers] = useState([]);
 
@@ -49,33 +52,48 @@ const SquadDetail = (props) => {
         fetchCurrentPlayer();
     }, [])
 
-    // The userId doesn't work properly (it only works with the dummy data), so we can't fetch the current player
     async function fetchCurrentPlayer() {
         const playerResponse = await (await fetch('http://localhost:8080/api/fetch/player/game=' + gameId + '/user=' + userId));
         setCurrentPlayer(playerResponse);
     }
 
 
-    function handleLeaveSquad() {
-        localStorage.removeItem('Squad ID');
-        props.history.push('/squads');
+    async function handleLeaveSquad() {
+
+        let response = await fetch('http://localhost:8080/api/update/squadmember/' + squadMemberId, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    playerId: playerId,
+                    gameId: gameId,
+                    squadId: null,
+                    squadRank: 1,
+                    squadMemberId: squadMemberId
+                })
+            });
+        let body = await response.json();
+        localStorage.setItem('Squad ID', null);
+        history.push('/squads');
     }
 
 
-    // Need to fetch the current player's id and squad rank in order to make this work properly
-    /*     function handleDisbandSquad() {
-            if (squadRank = "LEADER") {
+        function handleDisbandSquad() {
+            if (squadRank === "LEADER") {
                 fetch('http://localhost:8080/api/delete/squad/' + squadId, {
                 method: 'DELETE',
                 })
                     .then(res => res.json())
                     .then(res => console.log(res));
-                localStorage.removeItem('squadId');
-                props.history.push('/squads');
+                localStorage.setItem('Squad ID', null);
+                localStorage.removeItem('Squad Member ID');
+                localStorage.removeItem('Squad Rank');
+                history.push('/squads');
             } else {
-                prompt("You must be the leader to disband the squad.")
+                alert("You must be a leader to disband the squad.")
             }
-        } */
+        }
 
 
     return (
