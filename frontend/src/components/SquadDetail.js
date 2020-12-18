@@ -57,14 +57,23 @@ const SquadDetail = ({history}) => {
     }
 
 
-    function handleLeaveSquad() {
-        fetch('http://localhost:8080/api/delete/squadmember/' + squadMemberId, {
-            method: 'DELETE'
-        })
-            .then(res => res.json())
-            .then(res => console.log(res));
+    async function handleLeaveSquad() {
+
+        let response = await fetch('http://localhost:8080/api/update/squadmember/' + squadMemberId, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    playerId: playerId,
+                    gameId: gameId,
+                    squadId: null,
+                    squadRank: 1,
+                    squadMemberId: squadMemberId
+                })
+            });
+        let body = await response.json();
         localStorage.setItem('Squad ID', null);
-        localStorage.removeItem('Squad Member ID');
         history.push('/squads');
     }
 

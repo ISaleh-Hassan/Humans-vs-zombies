@@ -7,6 +7,7 @@ const SquadList = ({history}) => {
     let userId = localStorage.getItem('User ID');
     let playerId = localStorage.getItem('Player ID');
     let hasSquad = localStorage.getItem('Squad ID');
+    let hasSquadMemberObject = localStorage.getItem('Squad Member ID');
     let currentFaction = localStorage.getItem('squadFaction');
 
     const [squads, setSquads] = useState([]);
@@ -16,8 +17,8 @@ const SquadList = ({history}) => {
     }, [])
 
     async function fetchSquads() {
-        const response = await (await fetch('http://localhost:8080/api/fetch/squad/details/game=' + gameId)).json();
-        setSquads(response);
+        const squadResponse = await (await fetch('http://localhost:8080/api/fetch/squad/details/game=' + gameId)).json();
+        setSquads(squadResponse);
     }
 
 
@@ -33,25 +34,33 @@ const SquadList = ({history}) => {
     }
 
 
-    /* const [squadMember, setSquadMember] = useState([]);
+    const [squadMember, setSquadMember] = useState([]);
 
     useEffect(() => {
         fetchSquadMember();
     }, [])
 
     async function fetchSquadMember() {
-        const response = await (await fetch('http://localhost:8080/'))
-    } */
+        const response = await (await fetch('http://localhost:8080/api/fetch/squadMember/game=' + gameId + '/player=' + playerId));
+        setSquadMember(response);
+    }
 
     // let faction = squads.map(f => f.faction);
 
-    async function handleJoinSquad(squadId, faction) {
-        if (hasSquad >= 1) {
-            alert("You can only join one squad at a time.");
-        /* } else if (currentFaction !== faction) {
+    // Add condition to stop player ftom joining a full squad
+    async function handleJoinSquad(squadId, faction, registeredMembers, maxMembers, squadName) {
+        if (registeredMembers === maxMembers) {
+            alert(squadName + " appears to be full, try another squad.");
+
+        } else if (hasSquad >= 1) {
+            alert("You can only join one squad at a time. \nIf you wish to join a new squad, you must first leave your current squad.");
+
+        } else if (currentFaction !== faction) {
             console.log(faction);
-            alert("You can only join " + currentFaction + " squads."); */
-        } else {
+            alert("You can only join " + currentFaction + " squads.");
+
+        } else if ((hasSquadMemberObject === null) || (hasSquadMemberObject === undefined)) {
+            console.log("Player does NOT have a squad member object. Creating one now.");
             localStorage.setItem('Squad ID', squadId);
             let response = await fetch('http://localhost:8080/api/create/squadmember/' + gameId + '/' + squadId + '/' + playerId, {
                 method: 'POST',
@@ -70,7 +79,31 @@ const SquadList = ({history}) => {
             localStorage.setItem('Squad Member ID', body.squadMemberId);
             localStorage.setItem('Squad Rank', 'MEMBER');
             history.push('/squaddetails');
+
+        } else {
+            console.log("Player already has a squad member object (squad member id = " + hasSquadMemberObject + ")");
+            localStorage.setItem('Squad ID', squadId);
+            let response = await fetch('http://localhost:8080/api/update/squadmember/' + hasSquadMemberObject, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    playerId: playerId,
+                    gameId: gameId,
+                    squadId: squadId,
+                    squadRank: 1,
+                    squadMemberId: hasSquadMemberObject
+                })
+            });
+            let body = await response.json();
+            localStorage.setItem('Squad Member ID', body.squadMemberId);
+            history.push('/squaddetails');
         }
+    }
+
+    function assignSquadMemberId() {
+        localStorage.setItem('Squad Member ID', null);
     }
 
     return (
@@ -79,8 +112,15 @@ const SquadList = ({history}) => {
             <section className="squadList">
                 <div className="container">
                     <h1>Active Squads</h1>
-                    <div>{console.log(squads)}
-                    {console.log(currentPlayer)}</div>
+                    <div>
+                        {console.log("This is the current player: \n" + currentPlayer)}
+                        {console.log("This is the current squad member: \n" + squadMember)}
+                    </div>
+
+                    <div>
+                        <button type="button" onClick={assignSquadMemberId}>ASSIGN SM ID</button>
+                    </div>
+
                     <table>
                         <thead>
                             <tr>
@@ -97,7 +137,7 @@ const SquadList = ({history}) => {
                                     <td>{s.numberOfRegisteredMembers} / {s.maxNumberOfMembers}</td>
                                     <td>{s.faction}</td>
                                     <td>
-                                        <button type="button" onClick={() => handleJoinSquad(s.squadId, s.faction)}>JOIN</button>
+                                        <button type="button" onClick={() => handleJoinSquad(s.squadId, s.faction, s.numberOfRegisteredMembers, s.maxNumberOfMembers, s.squadName)}>JOIN</button>
                                     </td>
                                 </tr>
                             )}
