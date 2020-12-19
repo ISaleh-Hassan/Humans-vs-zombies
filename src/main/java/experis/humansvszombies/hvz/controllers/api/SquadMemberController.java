@@ -186,6 +186,7 @@ public class SquadMemberController {
                 if (newSquadMember.getSquadRank() != null) {
                     squadMember.setSquadRank(newSquadMember.getSquadRank());
                 }
+                squadMember.setSquad(newSquadMember.getSquad());
                 squadMemberRepository.save(squadMember);
                 status = HttpStatus.OK;
                 System.out.println("Updated SquadMember with id: " + squadMember.getSquadMemberId());

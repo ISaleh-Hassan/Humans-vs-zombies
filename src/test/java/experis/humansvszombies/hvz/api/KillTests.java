@@ -9,6 +9,7 @@ import experis.humansvszombies.hvz.models.datastructures.KillObject;
 import experis.humansvszombies.hvz.models.datastructures.PlayerObject;
 import experis.humansvszombies.hvz.models.datastructures.UserAccountObject;
 import experis.humansvszombies.hvz.models.tables.*;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,6 +77,10 @@ public class KillTests {
         assertEquals(HttpStatus.OK, responseUserAccount.getStatusCode());
         responseUserAccountFind = uac.getUserById(this.userAccountVictimId);
         assertEquals(HttpStatus.NOT_FOUND, responseUserAccountFind.getStatusCode());
+        ResponseEntity<String> responseGame = gc.deleteGame(this.gameId);
+        assertEquals(HttpStatus.OK, responseGame.getStatusCode());
+        ResponseEntity<GameObject> responseGameFind = gc.getGameById(this.gameId);
+        assertEquals(HttpStatus.NOT_FOUND, responseGameFind.getStatusCode());
     }
 
     @Test

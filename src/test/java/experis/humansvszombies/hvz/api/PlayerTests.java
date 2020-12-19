@@ -54,6 +54,10 @@ public class PlayerTests {
         assertEquals(HttpStatus.NOT_FOUND, response2.getStatusCode());
         response = gc.deleteGame(this.gameId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        ResponseEntity<String> userDeleteResponse = uac.deleteUserAccount(this.userAccountId);
+        assertEquals(HttpStatus.OK, userDeleteResponse.getStatusCode());
+        ResponseEntity<UserAccountObject> userFindResponse = uac.getUserById(this.userAccountId);
+        assertEquals(HttpStatus.NOT_FOUND, userFindResponse.getStatusCode());
         ResponseEntity<GameObject> response3 = gc.getGameById(this.gameId);
         assertEquals(HttpStatus.NOT_FOUND, response3.getStatusCode());
     }

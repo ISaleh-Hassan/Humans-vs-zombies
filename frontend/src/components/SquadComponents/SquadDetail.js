@@ -18,8 +18,14 @@ const SquadDetail = ({history}) => {
     }, [])
 
     async function fetchSquadMembers() {
-        const response = await (await fetch('http://localhost:8080/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId)).json();
-        setSquadMembers(response);
+        const response = await fetch('/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId);
+        let body;
+        if (response.status === 200) {
+            body = response.json();
+        } else {
+            body = [];
+        }
+        setSquadMembers(body);
     }
 
     function getLocation() {
@@ -41,7 +47,7 @@ const SquadDetail = ({history}) => {
     }, [])
 
     async function fetchSquad() {
-        const squadResponse = await (await fetch('http://localhost:8080/api/fetch/squad/' + squadId)).json();
+        const squadResponse = await (await fetch('/api/fetch/squad/' + squadId)).json();
         setSquad(squadResponse);
     }
 
@@ -53,14 +59,14 @@ const SquadDetail = ({history}) => {
     }, [])
 
     async function fetchCurrentPlayer() {
-        const playerResponse = await (await fetch('http://localhost:8080/api/fetch/player/game=' + gameId + '/user=' + userId));
+        const playerResponse = await (await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId));
         setCurrentPlayer(playerResponse);
     }
 
 
     async function handleLeaveSquad() {
 
-        let response = await fetch('http://localhost:8080/api/update/squadmember/' + squadMemberId, {
+        let response = await fetch('/api/update/squadmember/' + squadMemberId, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -81,7 +87,7 @@ const SquadDetail = ({history}) => {
 
         function handleDisbandSquad() {
             if (squadRank === "LEADER") {
-                fetch('http://localhost:8080/api/delete/squad/' + squadId, {
+                fetch('/api/delete/squad/' + squadId, {
                 method: 'DELETE',
                 })
                     .then(res => res.json())

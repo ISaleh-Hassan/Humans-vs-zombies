@@ -57,10 +57,19 @@ public class ChatMessageTests {
 
     @AfterEach
     void cleanTest() {
-        ResponseEntity<String> responseChatMessage = cmc.deleteChatMessage(this.chatMessageId);
-        assertEquals(HttpStatus.OK, responseChatMessage.getStatusCode());
-        ResponseEntity<ChatMessageObject> responseChatMessage2 = cmc.getChatMessageById(this.chatMessageId);
-        assertEquals(HttpStatus.NOT_FOUND, responseChatMessage2.getStatusCode());
+        ResponseEntity<String> responseGame = gc.deleteGame(this.gameId);
+        assertEquals(HttpStatus.OK, responseGame.getStatusCode());
+        ResponseEntity<GameObject> responseGame2 = gc.getGameById(this.gameId);
+        assertEquals(HttpStatus.NOT_FOUND, responseGame2.getStatusCode());
+        ResponseEntity<String> responseUserAccount = uac.deleteUserAccount(this.userAccountId);
+        assertEquals(HttpStatus.OK, responseUserAccount.getStatusCode());
+        ResponseEntity<UserAccountObject> responseUserAccount2 = uac.getUserById(this.userAccountId);
+        assertEquals(HttpStatus.NOT_FOUND, responseUserAccount2.getStatusCode());
+
+        // ResponseEntity<String> responseChatMessage = cmc.deleteChatMessage(this.chatMessageId);
+        // assertEquals(HttpStatus.OK, responseChatMessage.getStatusCode());
+        // ResponseEntity<ChatMessageObject> responseChatMessage2 = cmc.getChatMessageById(this.chatMessageId);
+        // assertEquals(HttpStatus.NOT_FOUND, responseChatMessage2.getStatusCode());
         // ResponseEntity<String> responsePlayer = pc.deletePlayer(this.playerId);
         // assertEquals(HttpStatus.OK, responsePlayer.getStatusCode());
         // ResponseEntity<PlayerObject> responsePlayer2 = pc.getPlayerById(this.playerId);
