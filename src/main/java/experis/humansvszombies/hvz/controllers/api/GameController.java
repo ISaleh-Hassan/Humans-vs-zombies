@@ -3,6 +3,7 @@ package experis.humansvszombies.hvz.controllers.api;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,10 +55,14 @@ public class GameController {
     public ResponseEntity<GameObject> addGame(@RequestBody Game newGame) {
         try {
             newGame = gameRepository.save(newGame);
+            System.out.println("GameState: " + newGame.getGameState());
             System.out.println("Game CREATED with id: " + newGame.getGameId());
             return new ResponseEntity<>(this.createGameObject(newGame), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newGame was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Exception thrown: Game name must be unique.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

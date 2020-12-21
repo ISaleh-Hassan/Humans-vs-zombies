@@ -17,8 +17,14 @@ const SquadList = ({history}) => {
     }, [])
 
     async function fetchSquads() {
-        const squadResponse = await (await fetch('http://localhost:8080/api/fetch/squad/details/game=' + gameId)).json();
-        setSquads(squadResponse);
+        const squadResponse = await fetch('/api/fetch/squad/details/game=' + gameId);
+        let body;
+        if (squadResponse.status === 200) {
+            body = await squadResponse.json();       
+        } else {
+            body = [];
+        }
+        setSquads(body);
     }
 
 
@@ -29,7 +35,7 @@ const SquadList = ({history}) => {
     }, [])
 
     async function fetchCurrentPlayer() {
-        const playerResponse = await (await fetch('http://localhost:8080/api/fetch/player/game=' + gameId + '/user=' + userId));
+        const playerResponse = await (await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId));
         setCurrentPlayer(playerResponse);
     }
 
@@ -41,7 +47,7 @@ const SquadList = ({history}) => {
     }, [])
 
     async function fetchSquadMember() {
-        const response = await (await fetch('http://localhost:8080/api/fetch/squadMember/game=' + gameId + '/player=' + playerId));
+        const response = await (await fetch('/api/fetch/squadMember/game=' + gameId + '/player=' + playerId));
         setSquadMember(response);
     }
 
@@ -62,7 +68,7 @@ const SquadList = ({history}) => {
         } else if ((hasSquadMemberObject === null) || (hasSquadMemberObject === undefined)) {
             console.log("Player does NOT have a squad member object. Creating one now.");
             localStorage.setItem('Squad ID', squadId);
-            let response = await fetch('http://localhost:8080/api/create/squadmember/' + gameId + '/' + squadId + '/' + playerId, {
+            let response = await fetch('/api/create/squadmember/' + gameId + '/' + squadId + '/' + playerId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -82,8 +88,9 @@ const SquadList = ({history}) => {
 
         } else {
             console.log("Player already has a squad member object (squad member id = " + hasSquadMemberObject + ")");
+            console.log("SquadID: " + squadId);
             localStorage.setItem('Squad ID', squadId);
-            let response = await fetch('http://localhost:8080/api/update/squadmember/' + hasSquadMemberObject, {
+            let response = await fetch('/api/update/squadmember/' + hasSquadMemberObject, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -91,7 +98,9 @@ const SquadList = ({history}) => {
                 body: JSON.stringify({
                     playerId: playerId,
                     gameId: gameId,
-                    squadId: squadId,
+                    squad: {
+                        squadId: squadId
+                    },
                     squadRank: 1,
                     squadMemberId: hasSquadMemberObject
                 })

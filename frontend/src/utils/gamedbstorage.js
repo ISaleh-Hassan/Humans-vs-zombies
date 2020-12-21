@@ -1,5 +1,5 @@
 export async function getPlayerInfo() {
-    const response = await fetch('http://localhost:8080/api/fetch/player/all');
+    const response = await fetch('/api/fetch/player/all');
 
     const status = await response.status
     if (status === 200) {

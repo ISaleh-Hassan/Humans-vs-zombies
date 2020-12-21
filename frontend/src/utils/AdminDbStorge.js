@@ -11,7 +11,7 @@ export async function CreateGame(gameData) {
         },
         body: JSON.stringify({
             name: gameData.name,
-            gameState: null,
+            gameState: gameData.gameState,
             startTime: gameData.startTime,
             endTime: gameData.endTime,
             maxNumberOfPlayers: gameData.maxNumberOfPlayers,

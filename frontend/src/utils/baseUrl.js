@@ -1,4 +1,4 @@
 export const getBaseUrl = () => {
-    const baseUrl= "http://localhost:8080/api/"
+    const baseUrl= "/api/"
     return baseUrl;
 }

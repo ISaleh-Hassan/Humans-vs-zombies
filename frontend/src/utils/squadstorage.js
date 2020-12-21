@@ -1,6 +1,6 @@
 export async function storeSquadDB(squadName, squadFaction, squadMemberAmount) {
     let gameId = localStorage.getItem('Game ID');
-    const response = await fetch('http://localhost:8080/api/create/squad/' + gameId, {
+    const response = await fetch('/api/create/squad/' + gameId, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
