@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { ButtonGroup, Button, Form, Container } from 'react-bootstrap';
 import { CreateMessage, GetBundleOfChatMessages } from '../../utils/chatMessageStorge';
 import { ThemeProvider, ChatList, ChatListItem, Avatar, Column, Subtitle, Row, Title, IconButton, SendIcon } from '@livechat/ui-kit'
-
+import Header from '../StylingComponents/Header';
 
 const ChatMessage = props => {
 
@@ -129,6 +129,7 @@ const ChatMessage = props => {
 
     return (
         <>
+            <Header />
             <Container >
                 <ButtonGroup >
                     <Button variant="secondary" onClick={getSelectedChatRoom} value="ALL">Global</Button>

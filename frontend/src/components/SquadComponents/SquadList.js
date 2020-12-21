@@ -117,9 +117,9 @@ const SquadList = ({history}) => {
                         {console.log("This is the current squad member: \n" + squadMember)}
                     </div>
 
-                    <div>
+                    {/* <div>
                         <button type="button" onClick={assignSquadMemberId}>ASSIGN SM ID</button>
-                    </div>
+                    </div> */}
 
                     <table>
                         <thead>

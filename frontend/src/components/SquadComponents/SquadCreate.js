@@ -48,7 +48,6 @@ const SquadCreate = ({ history }) => {
     return (
         <div>
             <Header />
-            <NavBar />
             <div className="container">
                 <div id="squadCreateForm">
                     <h2>Create Squad

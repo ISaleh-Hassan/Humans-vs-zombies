@@ -1,5 +1,5 @@
 import React from "react";
-import Header from '../StylingComponents/Header';
+import HeaderOutside from '../StylingComponents/HeaderOutside';
 import NavBar from "../StylingComponents/NavBar";
 import ChatMessage from  '../ChatMessageComponents/ChatMessage'
 
@@ -15,8 +15,7 @@ const ChooseFaction = (props) => {
 
     return (
         <>
-            <Header />
-            <NavBar />
+            <HeaderOutside />
             <section className="home">
             <ChatMessage />
                 <div className="container">

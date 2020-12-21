@@ -99,7 +99,6 @@ const SquadDetail = ({history}) => {
     return (
         <div>
             <Header />
-            <NavBar />
             <div className="container">
                 <section className="squadDetail">
                     <div className="container">

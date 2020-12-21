@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
 import { AuthContext } from "../../utils/Auth.js";
 import { storePhone } from "../../utils/dbstorage.js";
+import HeaderOutside from "../StylingComponents/HeaderOutside";
 
 const RegisterPhone = ({ history }) => {
 
@@ -18,6 +19,7 @@ const RegisterPhone = ({ history }) => {
 
     return (
         <>
+            <HeaderOutside />
             <section className="login-register">
                 <div className="container">
                     <h1>Register Phone</h1>
