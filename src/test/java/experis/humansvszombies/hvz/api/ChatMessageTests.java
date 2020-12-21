@@ -96,8 +96,8 @@ public class ChatMessageTests {
 
     @Test
     void updateChatMessage() {
-        ChatMessage chatMessage = new ChatMessage("This is a test message",Faction.HUMAN, Timestamp.valueOf("2000-01-10 01:01:01"));
-        ResponseEntity<ChatMessageObject> response = cmc.updateChatMessage(chatMessage,this.chatMessageId);
+        ChatMessageObject chatMessageObject = new ChatMessageObject(null, "This is a test message", Faction.HUMAN, Timestamp.valueOf("2000-01-10 01:01:01"), null, null, null);
+        ResponseEntity<ChatMessageObject> response = cmc.updateChatMessage(chatMessageObject, this.chatMessageId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("This is a test message", response.getBody().getMessage());
         assertEquals(Timestamp.valueOf("2000-01-10 01:01:01"), response.getBody().getTimestamp());
