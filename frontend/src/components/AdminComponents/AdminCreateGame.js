@@ -21,55 +21,75 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminCreateGame = () => {
     const [validGameName, setValidGameName] = useState(false);
-    const [validGameDescription, setValidGameDiscription] = useState(false);
+    const [validGameDescription, setValidGameDescription] = useState(false);
     const [gameObject, setGameObject] = useState(
         {
             name: "",
-            gameState: null,
+            gameState: "PREPERATION",
             startTime: "2010-10-10T00:00:00.000+00:00",
             endTime: "2010-11-10T00:00:00.000+00:00",
-            maxNumberOfPlayers: 5,
+            maxNumberOfPlayers: 50,
             description: ""
         })
 
-    function createGame() {
-        CreateGame(gameObject);
+    async function createGame() {
+        if (validGameDescription === true && validGameName === true) {
+            CreateGame(gameObject);
+        }
     }
 
     const onGameNameChange = ev => {
         let currentGameName = ev.target.value;
-        setGameObject((prevState) => ({
-            ...prevState,
-            name: currentGameName
-        }));
-
         if (currentGameName.length < 2) {
             setValidGameName(false);
         }
         else {
+            setGameObject((prevState) => ({
+                ...prevState,
+                name: currentGameName
+            }));
             setValidGameName(true);
         }
     }
 
-    const onGameDiscriptionChange = ev => {
-        let currentGameDiscription = ev.target.value;
-        setGameObject((prevState) => ({
-            ...prevState,
-            description: currentGameDiscription
-        }));
-
-        if (currentGameDiscription.length < 5) {
-            setValidGameDiscription(false);
+    const onGameDescriptionChange = ev => {
+        let currentGameDescription = ev.target.value;
+        if (currentGameDescription.length < 5) {
+            setValidGameDescription(false);
         }
         else {
-            setValidGameDiscription(true);
+            setGameObject((prevState) => ({
+                ...prevState,
+                description: currentGameDescription
+            }));
+            setValidGameDescription(true);
         }
     }
 
-    
-    function handleStartTime(e){
-        console.log(e)
-   
+    const onStartTimeChange = ev => {
+        let time = ev.target.value;
+        setGameObject((prevState) => ({
+            ...prevState,
+            startTime: time
+        }));
+    }
+
+    const onEndTimeChange = ev => {
+        let time = ev.target.value;
+        setGameObject((prevState) => ({
+            ...prevState,
+            endTime: time
+        }));
+    }
+
+    const onSizeChange = ev => {
+        let numPlayers = ev.target.value;
+        if (numPlayers > 0) {
+            setGameObject((prevState) => ({
+                ...prevState,
+                maxNumberOfPlayers: numPlayers
+            }));
+        }
     }
 
     return (
@@ -83,37 +103,34 @@ const AdminCreateGame = () => {
                     <Form.Group>
                         <Form.Control type="text" placeholder="Enter game name..." onChange={onGameNameChange} />
                         <br />
-                        <Form.Control placeholder="Enter game description..." as="textarea" rows={3} onChange={onGameDiscriptionChange} />
+                        <Form.Control placeholder="Enter game description..." as="textarea" rows={3} onChange={onGameDescriptionChange} />
                         <br />
                         <TextField
                             id="datetime-local"
                             label="Start time"
                             type="datetime-local"
-                            defaultValue="2017-05-24T10:30"
+                            defaultValue="2020-01-01T08:00"
                             InputLabelProps={{
                                 shrink: true,
-                            }}
+                            }} 
+                            onChange={onStartTimeChange}
                         />
                         <br />  <br />
                         <TextField
                             id="datetime-local"
                             label="End time"
                             type="datetime-local"
-                            defaultValue="2017-05-24T10:30"
+                            defaultValue="2020-01-02T08:00"
                             InputLabelProps={{
                                 shrink: true,
                             }}
+                            onChange={onEndTimeChange}
                         />
                         <br />
         
                         <br />
-                        <Form.Control as="select" size="sm" custom>
-                            <option>Maximum players</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                        <Form.Control type="number" size="sm" onChange={onSizeChange} placeholder="Max number of players...">
+
                         </Form.Control>
                         <br /> <br />
                         <Button disabled={!validGameName || !validGameDescription} onClick={createGame}>Create</Button>
