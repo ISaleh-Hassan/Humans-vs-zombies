@@ -102,7 +102,6 @@ const AdminCreateGame = (props) => {
     return (
         <>
             <Header />
-            <NavBar />
             <section className="home">
                 <div className="container">
                     <h1>Create game</h1>

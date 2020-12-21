@@ -8,7 +8,6 @@ const Admin = () => {
   return (
     <>
       <Header />
-      <NavBar />
       <section className="home">
         <div className="container">
           <h1>Admin</h1>
