@@ -19,28 +19,35 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const AdminCreateGame = () => {
+const AdminCreateGame = (props) => {
     const [validGameName, setValidGameName] = useState(false);
     const [validGameDescription, setValidGameDescription] = useState(false);
     const [gameObject, setGameObject] = useState(
         {
             name: "",
             gameState: "PREPERATION",
-            startTime: "2010-10-10T00:00:00.000+00:00",
-            endTime: "2010-11-10T00:00:00.000+00:00",
+            startTime: "2021-01-01T08:00:00.000+00:00",
+            endTime: "2021-01-02T08:00:00.000+00:00",
             maxNumberOfPlayers: 50,
             description: ""
         })
 
     async function createGame() {
         if (validGameDescription === true && validGameName === true) {
-            CreateGame(gameObject);
+            let createGameResponse = await CreateGame(gameObject);
+            if (createGameResponse.status === 201) {
+                props.history.push("/currentgames");
+            } else if (createGameResponse.status === 400) {
+                alert("Game name must be unique!");
+            } else {
+                alert("Something went wrong while creating the game.");
+            }
         }
     }
 
     const onGameNameChange = ev => {
         let currentGameName = ev.target.value;
-        if (currentGameName.length < 2) {
+        if (currentGameName.length < 4) {
             setValidGameName(false);
         }
         else {
@@ -54,7 +61,7 @@ const AdminCreateGame = () => {
 
     const onGameDescriptionChange = ev => {
         let currentGameDescription = ev.target.value;
-        if (currentGameDescription.length < 5) {
+        if (currentGameDescription.length < 4) {
             setValidGameDescription(false);
         }
         else {
@@ -109,7 +116,7 @@ const AdminCreateGame = () => {
                             id="datetime-local"
                             label="Start time"
                             type="datetime-local"
-                            defaultValue="2020-01-01T08:00"
+                            defaultValue="2021-01-01T08:00"
                             InputLabelProps={{
                                 shrink: true,
                             }} 
@@ -120,7 +127,7 @@ const AdminCreateGame = () => {
                             id="datetime-local"
                             label="End time"
                             type="datetime-local"
-                            defaultValue="2020-01-02T08:00"
+                            defaultValue="2021-01-02T08:00"
                             InputLabelProps={{
                                 shrink: true,
                             }}

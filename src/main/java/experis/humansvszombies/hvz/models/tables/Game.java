@@ -30,7 +30,7 @@ public class Game {
     @Column(name="game_id")
     private Integer gameId;
 
-    @Column(name="name")
+    @Column(name="name", unique=true)
     private String name;
 
     @Column(name="game_state")
