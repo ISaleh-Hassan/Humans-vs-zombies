@@ -111,6 +111,9 @@ public class GameController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or newGame was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("Exception thrown: Game name must be unique.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
