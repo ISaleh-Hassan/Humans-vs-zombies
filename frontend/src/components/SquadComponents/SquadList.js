@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../StylingComponents/Header';
+import NavBar from '../StylingComponents/NavBar';
 
 const SquadList = ({history}) => {
     let gameId = localStorage.getItem('Game ID');
@@ -77,8 +78,7 @@ const SquadList = ({history}) => {
                     playerId: playerId,
                     gameId: gameId,
                     squadId: squadId,
-                    squadRank: 1,
-                    squadMemberId: null
+                    squadRank: 1
                 })
             });
             let body = await response.json();
@@ -88,7 +88,7 @@ const SquadList = ({history}) => {
 
         } else {
             console.log("Player already has a squad member object (squad member id = " + hasSquadMemberObject + ")");
-            console.log("SquadID: " + squadId);
+            console.log("Squad ID: " + squadId);
             localStorage.setItem('Squad ID', squadId);
             let response = await fetch('/api/update/squadmember/' + hasSquadMemberObject, {
                 method: 'PATCH',
@@ -118,6 +118,7 @@ const SquadList = ({history}) => {
     return (
         <div>
             <Header />
+            <NavBar />
             <section className="squadList">
                 <div className="container">
                     <h1>Active Squads</h1>

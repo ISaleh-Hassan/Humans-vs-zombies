@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import firebase from "../../utils/firebase";
 import { getPlayerInfo } from "../../utils/gamedbstorage";
 import Header from '../StylingComponents/Header';
 import NavBar from "../StylingComponents/NavBar";

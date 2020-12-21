@@ -9,6 +9,9 @@ const SquadCreate = ({ history }) => {
 
     let gameId = localStorage.getItem('Game ID');
     let userId = localStorage.getItem('User ID');
+    let squadId = localStorage.getItem('Squad ID');
+    let playerId = localStorage.getItem('Player ID');
+    let hasSquadMemberObject = localStorage.getItem('Squad Member ID');
 
     const [currentPlayer, setCurrentPlayer] = useState([]);
 
@@ -30,13 +33,58 @@ const SquadCreate = ({ history }) => {
 
     localStorage.setItem('squadFaction', currentPlayer.faction);
 
-
     async function handleCreateSquad(event) {
         event.preventDefault();
+
         const { squadName, squadMemberAmount } = event.target.elements;
         console.log(squadName.value, squadMemberAmount.value)
-        await storeSquadDB(squadName.value, currentPlayer.faction, squadMemberAmount.value);
-        history.push("/squads")
+        let createSquadRepsonse = await storeSquadDB(squadName.value, currentPlayer.faction, squadMemberAmount.value);
+
+        if (createSquadRepsonse === 201) {
+            let squadMemberExists = await fetch('/api/fetch/squadMember/game=' + gameId + '/player=' + playerId);
+            let newSquadId = localStorage.getItem('Squad ID');
+            if (squadMemberExists.status === 200) {
+                let response = await fetch('/api/update/squadmember/' + hasSquadMemberObject, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        playerId: playerId,
+                        gameId: gameId,
+                        squad: {
+                            squadId: newSquadId
+                        },
+                        squadRank: "LEADER",
+                        squadMemberId: hasSquadMemberObject
+                    })
+                });
+                let body = await response.json();
+                localStorage.setItem('Squad Member ID', body.squadMemberId);
+
+                history.push('/squaddetails/');
+            } else if (squadMemberExists.status === 404) {
+                let response = await fetch('/api/create/squadmember/' + gameId + '/' + squadId + '/' + playerId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        playerId: playerId,
+                        gameId: gameId,
+                        squadId: squadId,
+                        squadRank: "LEADER"
+                    })
+                });
+                if (response.status === 201) {
+                    let body = await response.json();
+                    localStorage.setItem('Squad Member ID', body.squadMemberId);
+                    localStorage.setItem('Squad Rank', 'LEADER');
+                } else {
+                    alert("Failed to create squad member!")
+                }
+            }
+        }
     }
 
 
@@ -73,10 +121,7 @@ const SquadCreate = ({ history }) => {
 
                         <Form.Group controlId="formSquadFaction">
                             {/* <Form.Label>Squad Faction: </Form.Label> */}
-                            <Form.Control name="squadFaction" as="select" required>
-                                <option>HUMAN</option>
-                                <option>ZOMBIE</option>
-                            </Form.Control>
+                            <Form.Control name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
                         </Form.Group>
                         <button type="submit">Create</button>
                         <Link to="squads">

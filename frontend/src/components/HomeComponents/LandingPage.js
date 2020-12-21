@@ -29,8 +29,8 @@ class LandingPage extends Component {
         return (
             <div>
                 <Header />
-                {/* <NavBar />
-                <ChatMessage /> */}
+                <NavBar />
+                {/* <ChatMessage /> */}
                 <section className="home">
                     <div className="container">
                         <div id="landing">
