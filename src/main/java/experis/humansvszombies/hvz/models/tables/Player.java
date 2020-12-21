@@ -52,7 +52,7 @@ public class Player {
     @OneToOne(mappedBy="player", cascade=CascadeType.REMOVE)
     private SquadMember squadMember;
 
-    @OneToMany(mappedBy="player", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="player", cascade=CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Collection<ChatMessage> messages = new ArrayList<ChatMessage>();
 
     @OneToMany(mappedBy="killer", cascade=CascadeType.ALL)
