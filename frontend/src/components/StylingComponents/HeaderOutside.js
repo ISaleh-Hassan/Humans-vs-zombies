@@ -1,9 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import './Header.css';
-import GameMenu from './GameMenu';
+import firebase from '../../utils/firebase'
+import { clearUser } from "../../utils/localstorage";
 
-const Header = () => {
+const HeaderOutside = () => {
+
+    const handleSignOut = () => {
+        firebase.auth().signOut()
+        clearUser();
+    }
 
     return (
         <div>
@@ -13,13 +19,9 @@ const Header = () => {
                 </div>
 
                 <div id="gameTitle">Humans vs Zombies</div>
-
-                <div id="gameMenu">
-                    <GameMenu />
-                </div>
             </div>
         </div>
     );
 };
 
-export default Header;
+export default HeaderOutside;

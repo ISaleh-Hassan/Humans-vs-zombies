@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from '../StylingComponents/Header';
 import NavBar from '../StylingComponents/NavBar';
 import ChatMessage from '../ChatMessageComponents/ChatMessage'
+import MenuTest from '../StylingComponents/GameMenu';
 
 class LandingPage extends Component {
 
@@ -29,8 +30,6 @@ class LandingPage extends Component {
         return (
             <div>
                 <Header />
-                {/* <NavBar />
-                <ChatMessage /> */}
                 <section className="home">
                     <div className="container">
                         <div id="landing">

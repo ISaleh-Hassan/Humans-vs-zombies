@@ -154,5 +154,4 @@ const SquadList = ({history}) => {
     );
 }
 
-
 export default SquadList;
