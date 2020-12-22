@@ -100,6 +100,7 @@ const SquadDetail = ({ history }) => {
         if (squadRank === "LEADER") {
             fetch('/api/delete/squad/' + squadId, {
                 method: 'DELETE',
+<<<<<<< Updated upstream
             })
                 .then(res => res.json())
                 .then(res => console.log(res));
@@ -109,6 +110,18 @@ const SquadDetail = ({ history }) => {
             history.push('/squads');
         } else {
             alert("You must be a leader to disband the squad.")
+=======
+                })
+                    .then(res => res.json())
+                    .then(res => console.log(res));
+                localStorage.setItem('Squad ID', null);
+                localStorage.setItem('Squad Member ID', null);
+                localStorage.setItem('Squad Rank', null);
+                history.push('/squads');
+            } else {
+                alert("You must be a leader to disband the squad.")
+            }
+>>>>>>> Stashed changes
         }
     }
 

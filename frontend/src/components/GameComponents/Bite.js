@@ -6,6 +6,10 @@ const Bite = ({ history }) => {
 
     let gameId = localStorage.getItem('Game ID');
     let userId = localStorage.getItem('User ID');
+    let latitude = localStorage.getItem('Latitude');
+    let longitude = localStorage.getItem('Longitude');
+
+    let currentCoordinates = ('Coordinates: \nLatitude: ' + latitude + ' \nLongitude: ' + longitude);
 
     const [currentPlayer, setCurrentPlayer] = useState([]);
 
@@ -19,12 +23,44 @@ const Bite = ({ history }) => {
     }
 
 
-    function handleCurrentCoordinates() {
-
+    async function handleZombie() {
+        console.log('The player was turned into a ZOMBIE');
     }
 
-    function handleBite() {
-        console.log('The player has been bitten')
+    async function handleKill() {
+        console.log('The player was killed');
+        
+    }
+
+    const [validBiteCode, setValidBiteCode] = useState(false);
+    const [victim, setVictim] = useState(
+        {
+            playerId: '',
+            biteCode: '1234ABCD',
+            faction: '',
+            isAlive: true,
+            isPatientZero: false
+        })
+
+    // Need to get the player object through their bite code
+    // if the victimPlayer.biteCode === the bite code input into the form the victim can be either turned or killed
+    let victimBiteCode = '5JEWI9NI';
+
+    const onBiteCodeChange = ev => {
+        let currentBiteCode = ev.target.value;
+        if (currentBiteCode.length < 8 || currentBiteCode.length > 8 || currentBiteCode !== victimBiteCode) {
+            setValidBiteCode(false);
+        } else if (currentBiteCode === victimBiteCode) {
+            console.log('That is a valid bite code');
+            console.log(currentBiteCode);
+            setVictim((prevState) => ({
+                ...prevState,
+                faction: 'ZOMBIE'
+            }));
+            setValidBiteCode(true);
+            console.log(currentPlayer);
+            console.log('You turned them into a zombie');
+        }
     }
 
 
@@ -42,16 +78,19 @@ const Bite = ({ history }) => {
             <div>
                 <Header />
                 <div id="codeEntryContainer">
-                    <h2>BITE CODE ENTRY</h2>
-                    <Form onSubmit={handleBite}>
-                        <Form.Group controlId="formBiteCode">
-                            <Form.Control id="biteCode" name="biteCode" type="text" placeholder="Bite Code" required></Form.Control>
-                        </Form.Group>
-
-                        <Form.Group controlId="formCoordinates">
-                            <Form.Control id="coordinates" name="coordinates" type="text" value={handleCurrentCoordinates} required></Form.Control>
-                        </Form.Group>
+                    <h2>BITE CODE ENTRY
+                        {console.log(currentPlayer)}
+                    </h2>
+                    <Form>
+                        <Form.Control onChange={onBiteCodeChange} id="biteCode" type="text" placeholder="Bite Code" required></Form.Control>
+                        <br/>
+                        <Form.Control id="coordinates" as="textarea" rows={3} value={currentCoordinates} required></Form.Control>
+                        <br/>
+                        <Form.Control id="victimDescription" placeholder="Enter victim description..." as="textarea" rows={3} required></Form.Control>
                     </Form>
+                    <br/>
+                    <button onClick={handleZombie}>Turn into ZOMBIE</button>
+                    <button onClick={handleKill}>Kill victim</button>
                 </div>
             </div>
         )
@@ -59,7 +98,7 @@ const Bite = ({ history }) => {
         return (
             <div>
                 <Header />
-                <h3>Something went wrong...</h3>
+                <h3>***</h3>
             </div>
         )
     }
