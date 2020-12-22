@@ -10,5 +10,6 @@ import experis.humansvszombies.hvz.models.tables.UserAccount;
 
 public interface PlayerRepository extends JpaRepository<Player, Integer> {
     Player findDistinctByGameAndUserAccount(Game game, UserAccount userAccount);
+    Player findDistinctByGameAndBiteCode(Game game, String bitecode);
     ArrayList<Player> findByGame(Game game);
 }
