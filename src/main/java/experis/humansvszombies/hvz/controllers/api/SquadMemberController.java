@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import experis.humansvszombies.hvz.models.datastructures.SquadMemberObject;
@@ -85,13 +87,13 @@ public class SquadMemberController {
     }
 
     @CrossOrigin()
-    @GetMapping("/api/fetch/squadMember/game={gameId}/player={playerId}")
+    @GetMapping("/api/fetch/squadmember/game={gameId}/player={playerId}")
     public ResponseEntity<SquadMemberObject> getSquadMemberByPlayerId(@PathVariable Integer gameId, @PathVariable Integer playerId) {
         try {
             HttpStatus status = HttpStatus.NOT_FOUND;
             SquadMemberObject squadMemberObject = null;
             if (gameId != null && playerId != null) {
-                SquadMember squadMember = squadMemberRepository.findDistinctByGameAndPlayer(new Game(gameId),new Player(playerId));
+                SquadMember squadMember = squadMemberRepository.findDistinctByGameAndPlayer(new Game(gameId), new Player(playerId));
                 if (squadMember != null) {
                     squadMemberObject = this.createSquadMemberObject(squadMember);
                     status = HttpStatus.OK;
@@ -182,7 +184,10 @@ public class SquadMemberController {
     }
 
     @CrossOrigin()
-    @PatchMapping("/api/update/squadmember/{squadMemberId}")
+    @RequestMapping(
+        value = "/api/update/squadmember/{squadMemberId}",
+        produces = "application/json",
+        method = {RequestMethod.GET, RequestMethod.PATCH})
     public ResponseEntity<SquadMemberObject> updateSquadMember(@RequestBody SquadMember newSquadMember, @PathVariable Integer squadMemberId) {
         try {
             SquadMember squadMember;

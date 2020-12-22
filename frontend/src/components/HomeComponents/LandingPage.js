@@ -10,8 +10,6 @@ const LandingPage = (props) => {
 
     const [hasJoined, setHasJoined] = useState(false);
     const [gameDetails, setGameDetails] = useState({});
-    const [playerDetails, setPlayerDetails] = useState(null);
-    const [squadMemberDetails, setSquadMemberDetails] = useState(null);
 
     useEffect(() => {
         let gameId = localStorage.getItem('Game ID');
@@ -26,33 +24,28 @@ const LandingPage = (props) => {
         }).then(() => {
             FetchPlayer(gameId, userId).then(data => {
                 if (data !== null) {
-                    setPlayerDetails(data);
                     setHasJoined(true);
                     localStorage.setItem('Player ID', data.playerId);
                     localStorage.setItem('Faction', data.faction);
-                } else {
-                    localStorage.setItem('Player ID', null);
-                    localStorage.setItem('Faction', null);
-                }
-            }).then(() => {
-                if (playerDetails !== null) {
-                    FetchSquadMember(gameId, playerDetails.playerId).then(data => {
-                        if (data !== null) {
-                            setSquadMemberDetails(data);
-                            localStorage.setItem('SquadMember ID', data.squadMemberId);
+                    FetchSquadMember(gameId, data.playerId).then(data2 => {
+                        if (data2 !== null) {
+                            localStorage.setItem('SquadMember ID', data2.squadMemberId);
+                            localStorage.setItem('Squad ID', data2.squadId);
+                            localStorage.setItem('Squad Rank', data2.squadRank);
                         } else {
                             localStorage.setItem('SquadMember ID', null);
-                        }
-                    }).then(() => {
-                        if (squadMemberDetails !== null) {
-                            localStorage.setItem(squadMemberDetails.squadId);
+                            localStorage.setItem('Squad ID', null);
+                            localStorage.setItem('Squad Rank', null);
                         }
                     });
                 } else {
+                    localStorage.setItem('Player ID', null);
+                    localStorage.setItem('Faction', null);
                     localStorage.setItem('Squad ID', null);
                     localStorage.setItem('SquadMember ID', null);
+                    localStorage.setItem('Squad Rank', null);
                 }
-            });
+            })
         });
     }, []);
 
@@ -67,6 +60,7 @@ const LandingPage = (props) => {
         localStorage.removeItem('Squad ID');
         localStorage.removeItem('SquadMember ID');
         localStorage.removeItem('Faction');
+        localStorage.removeItem('Squad Rank');
         props.history.push('/currentgames');
     };
 

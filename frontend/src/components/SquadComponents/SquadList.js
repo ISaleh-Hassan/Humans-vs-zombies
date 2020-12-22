@@ -1,5 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { CreateSquadMember, UpdateSquadMember } from '../../utils/SquadMemberStorage';
 import Header from '../StylingComponents/Header';
 import NavBar from '../StylingComponents/NavBar';
 
@@ -7,9 +8,9 @@ const SquadList = ({history}) => {
     let gameId = localStorage.getItem('Game ID');
     let userId = localStorage.getItem('User ID');
     let playerId = localStorage.getItem('Player ID');
-    let hasSquad = localStorage.getItem('Squad ID');
-    let hasSquadMemberObject = localStorage.getItem('Squad Member ID');
-    let currentFaction = localStorage.getItem('squadFaction');
+    let storageSquadId = localStorage.getItem('Squad ID');
+    let squadMemberId = localStorage.getItem('SquadMember ID');
+    let currentFaction = localStorage.getItem('Faction');
 
     const [squads, setSquads] = useState([]);
 
@@ -52,67 +53,34 @@ const SquadList = ({history}) => {
         setSquadMember(response);
     }
 
-    // let faction = squads.map(f => f.faction);
-
-    // Add condition to stop player ftom joining a full squad
-    async function handleJoinSquad(squadId, faction, registeredMembers, maxMembers, squadName) {
-        if (registeredMembers === maxMembers) {
-            alert(squadName + " appears to be full, try another squad.");
-
-        } else if (hasSquad >= 1) {
-            alert("You can only join one squad at a time. \nIf you wish to join a new squad, you must first leave your current squad.");
-
-        } else if (currentFaction !== faction) {
-            console.log(faction);
-            alert("You can only join " + currentFaction + " squads.");
-
-        } else if ((hasSquadMemberObject === null) || (hasSquadMemberObject === undefined)) {
-            console.log("Player does NOT have a squad member object. Creating one now.");
-            localStorage.setItem('Squad ID', squadId);
-            let response = await fetch('/api/create/squadmember/' + gameId + '/' + squadId + '/' + playerId, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    playerId: playerId,
-                    gameId: gameId,
-                    squadId: squadId,
-                    squadRank: 1
-                })
-            });
-            let body = await response.json();
-            localStorage.setItem('Squad Member ID', body.squadMemberId);
-            localStorage.setItem('Squad Rank', 'MEMBER');
-            history.push('/squaddetails');
-
+    async function handleJoinSquad(squadId) {
+        if (squadMemberId === 'null') {
+            //Player do not have a SquadMember Object yet. Create one.
+            let response = await CreateSquadMember(gameId, squadId, playerId, 'MEMBER');
+            if (response !== null) {
+                localStorage.setItem('Squad ID', response.squadId);
+                localStorage.setItem('SquadMember ID', response.squadMemberId);
+                localStorage.setItem('Squad Rank', 'MEMBER');
+                history.push('squaddetails');
+            } else {
+                alert('Failed to join squad! Post failed.');
+            }
+        }  else if (storageSquadId === 'null') {
+            //Player has a SquadMember Object but is not assigned to a squad yet. Patch it.
+            let response = await UpdateSquadMember(squadMemberId, squadId);
+            if (response !== null) {
+                localStorage.setItem('Squad ID', response.squadId);
+                localStorage.setItem('SquadMember ID', response.squadMemberId);
+                localStorage.setItem('Squad Rank', 'MEMBER');
+                history.push('/squaddetails');
+            } else {
+                alert('Failed to join squad! Patch failed.');
+                console.log(response);
+            }
         } else {
-            console.log("Player already has a squad member object (squad member id = " + hasSquadMemberObject + ")");
-            console.log("Squad ID: " + squadId);
-            localStorage.setItem('Squad ID', squadId);
-            let response = await fetch('/api/update/squadmember/' + hasSquadMemberObject, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    playerId: playerId,
-                    gameId: gameId,
-                    squad: {
-                        squadId: squadId
-                    },
-                    squadRank: 1,
-                    squadMemberId: hasSquadMemberObject
-                })
-            });
-            let body = await response.json();
-            localStorage.setItem('Squad Member ID', body.squadMemberId);
-            history.push('/squaddetails');
+            //Player is already a member of a squad. Prompt them to leave squad before trying again.
+            alert('You are already in a squad. Leave current squad and try again.');
         }
-    }
-
-    function assignSquadMemberId() {
-        localStorage.setItem('Squad Member ID', null);
     }
 
     return (
@@ -147,7 +115,7 @@ const SquadList = ({history}) => {
                                     <td>{s.numberOfRegisteredMembers} / {s.maxNumberOfMembers}</td>
                                     <td>{s.faction}</td>
                                     <td>
-                                        <button type="button" onClick={() => handleJoinSquad(s.squadId, s.faction, s.numberOfRegisteredMembers, s.maxNumberOfMembers, s.squadName)}>JOIN</button>
+                                        <button type="button" disabled={s.faction !== currentFaction || s.numberOfRegisteredMembers >= s.maxNumberOfMembers} onClick={() => handleJoinSquad(s.squadId)}>JOIN</button>
                                     </td>
                                 </tr>
                             )}
