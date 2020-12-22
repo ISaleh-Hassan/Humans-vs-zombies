@@ -92,6 +92,14 @@ const EditGame = (props) => {
     }
   }
 
+  const onGameStateChange = ev => {
+    let currentState = ev.target.value;
+    setGameObject((prevState) => ({
+      ...prevState,
+      gameState: currentState
+    }));
+  }
+
   const onGameDescriptionChange = ev => {
     let currentGameDescription = ev.target.value;
     if (currentGameDescription.length < 4) {
@@ -147,8 +155,8 @@ const EditGame = (props) => {
           <Form.Group>
             <Form.Control type="text" placeholder={gameObject.name} onChange={onGameNameChange} />
             <br />
-            <Form.Control as="select" placeholder={gameObject.gameState}>
-              <option>PREPERATION</option>
+            <Form.Control as="select" placeholder="Gamestate" onChange={onGameStateChange}>
+              <option>PREPARATION</option>
               <option>IN_PROGRESS</option>
               <option>COMPLETED</option>
             </Form.Control>
