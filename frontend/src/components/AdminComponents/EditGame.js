@@ -71,7 +71,7 @@ const EditGame = (props) => {
 
   async function onDeteleClicked() {
     let deleteGameResponse = await DeleteGame(gameObject.gameId);
-    if (deleteGameResponse.status === 200) {
+    if (deleteGameResponse === 200) {
       props.history.push("/currentgames");
     } else {
       console.log("Something went wrong when trying to delete the game.");

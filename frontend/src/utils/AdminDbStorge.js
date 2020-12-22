@@ -52,6 +52,11 @@ export async function UpdateGame(gameData) {
 
 export async function DeleteGame(gameId) {
     let url = getBaseUrl() + "delete/game/" + gameId;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-type': 'application/json'
+        }
+        });
     return response.status;
 }

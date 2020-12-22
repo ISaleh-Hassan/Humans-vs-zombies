@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import experis.humansvszombies.hvz.models.datastructures.GameObject;
@@ -118,7 +120,10 @@ public class GameController {
     }
 
     @CrossOrigin()
-    @DeleteMapping("/api/delete/game/{gameId}")
+    @RequestMapping(
+        value = "/api/delete/game/{gameId}",
+        produces = "application/json",
+        method = {RequestMethod.GET, RequestMethod.DELETE})
     public ResponseEntity<String> deleteGame(@PathVariable Integer gameId) {
         try {
             String message = "";
