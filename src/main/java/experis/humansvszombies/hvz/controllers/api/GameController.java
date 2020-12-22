@@ -7,7 +7,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,12 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 import experis.humansvszombies.hvz.models.datastructures.GameObject;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.repositories.GameRepository;
+import experis.humansvszombies.hvz.repositories.PlayerRepository;
 
 
 @RestController
 public class GameController {
     @Autowired
     GameRepository gameRepository;
+
+    @Autowired
+    PlayerRepository playerRepository;
 
     @CrossOrigin()
     @GetMapping("/api/fetch/game/all")
@@ -145,7 +148,11 @@ public class GameController {
         }    
     }
 
+    @CrossOrigin
     private GameObject createGameObject(Game game) {
+        int numberOfPlayers = playerRepository.findByGame(new Game(game.getGameId())).size();
+        String start = game.getStartTime().toString();
+        String end = game.getStartTime().toString();
         GameObject gameObject = new GameObject(
             game.getGameId(),
             game.getName(), 
@@ -156,8 +163,11 @@ public class GameController {
             game.getEndTime(), 
             game.getMaxNumberOfPlayers(), 
             game.getDescription(), 
-            0
+            numberOfPlayers,
+            start,
+            end
         );
+
         return gameObject;
     }
 }
