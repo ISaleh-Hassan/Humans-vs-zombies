@@ -91,7 +91,7 @@ class HvzApplicationTests {
 		GameState state;
 		for (int i = 0; i < numberOfGames; i++) {		
 			if (i == 0) {
-				state = GameState.PREPERATION;
+				state = GameState.PREPARATION;
 			} else if (i==1) {
 				state = GameState.IN_PROGRESS;
 			} else {
