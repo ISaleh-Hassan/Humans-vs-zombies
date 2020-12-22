@@ -10,12 +10,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.repositories.ChatMessageRepository;
+import experis.humansvszombies.hvz.repositories.PlayerRepository;
+import experis.humansvszombies.hvz.repositories.UserAccountRepository;
 
 
 @RestController
 public class ChatMessageController {
     @Autowired
     ChatMessageRepository chatMessageRepository;
+
+    @Autowired
+    PlayerRepository playerRepository;
+
+    @Autowired
+    UserAccountRepository userAccountRepository;
 
     @CrossOrigin()
     @GetMapping("/api/fetch/chatmessage/all")
@@ -148,15 +156,30 @@ public class ChatMessageController {
     }
 
     private ChatMessageObject createChatMessageObject(ChatMessage msg) {
-        ChatMessageObject msgObject = new ChatMessageObject(
-            msg.getChatMessageId(), 
-            msg.getMessage(), 
-            msg.getFaction(), 
-            msg.getTimestamp(),
-            (msg.getGame() != null) ? msg.getGame().getGameId() : null,
-            (msg.getPlayer() != null) ? msg.getPlayer().getPlayerId() : null,
-            (msg.getSquad() != null) ? msg.getSquad().getSquadId() : null
-        );   
-        return msgObject;
+        try {
+            String stringTime = msg.getTimestamp().toString();
+            ChatMessageObject msgObject = null;
+            Player tempPlayer = playerRepository.findById(msg.getPlayer().getPlayerId()).orElse(null);
+            if (tempPlayer != null) {
+                UserAccount tempUser = userAccountRepository.findById(tempPlayer.getUserAccount().getUserAccountId()).orElse(null);
+                if (tempUser != null) {
+                        msgObject = new ChatMessageObject(
+                        msg.getChatMessageId(), 
+                        msg.getMessage(), 
+                        msg.getFaction(), 
+                        msg.getTimestamp(),
+                        (msg.getGame() != null) ? msg.getGame().getGameId() : null,
+                        (msg.getPlayer() != null) ? msg.getPlayer().getPlayerId() : null,
+                        (msg.getSquad() != null) ? msg.getSquad().getSquadId() : null,
+                        tempUser.getUsername(),
+                        stringTime
+                    );   
+                }
+            }
+            return msgObject;
+        } catch (IllegalArgumentException e) {
+            System.out.println("PlayerId or UserAccountId not set.");
+            return null;
+        } 
     }
 }

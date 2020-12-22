@@ -3,30 +3,46 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { ButtonGroup, Button, Form, Container } from 'react-bootstrap';
 import { CreateMessage, GetBundleOfChatMessages } from '../../utils/chatMessageStorge';
 import { ThemeProvider, ChatList, ChatListItem, Avatar, Column, Subtitle, Row, Title, IconButton, SendIcon } from '@livechat/ui-kit'
-import Header from '../StylingComponents/Header';
+import { makeStyles } from '@material-ui/core';
+import { GetPlayerData } from '../../utils/PlayerStorage';
+
+const useStyles = makeStyles((theme) => ({
+    container: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 200,
+    },
+  }));
 
 const ChatMessage = props => {
 
-    const [chatMessage, setMsgText] = useState('');
     const [validInput, setValidInput] = useState(false);
-    const [invalidInputMessage, setInvalidInputMessage] = useState('');
-    const [playerId, setPlayerId] = useState(localStorage.getItem('Player ID'));
-    const [gameId, setGameId] = useState(localStorage.getItem('Game ID'));
-    const [squadId, setSquadId] = useState(0);
+    const [refresh, setRefresh] = useState(false);
+    const [timestamp, setTimeStamp] = useState(getTime());
+    const [playerData, setPlayerData] = useState(null);
     const [msgObject, setMsgObject] = useState(
         {
-            gameId: gameId,
-            playerId: playerId,
-            squadId: squadId,
-            message: chatMessage,
+            gameId: localStorage.getItem('Game ID'),
+            playerId: localStorage.getItem('Player ID'),
+            squadId: localStorage.getItem('Squad ID'),
+            message: '',
             faction: 'ALL',
-            timestamp: getTime()
+            timestamp: timestamp
         })
     const [allChatMessages, setAllChatMessages] = useState([]);
 
     useEffect(() => {
+        setPlayerData(GetPlayerData(localStorage.getItem('Player ID')));
         getChatMessagesBySelectedChatRoom(msgObject)
     }, [msgObject.faction]);
+
+    useEffect(() => {
+        getChatMessagesBySelectedChatRoom(msgObject)
+    }, [refresh]);
 
     function useInterval(callback, delay) {
         const savedCallback = useRef();
@@ -48,7 +64,7 @@ const ChatMessage = props => {
 
     useEffect(() => {
         if (localStorage.getItem('Squad ID') !== null) {
-            setSquadId(localStorage.getItem('Squad ID'))
+            let squadId = localStorage.getItem('Squad ID')
             setMsgObject((prevState) => ({
                 ...prevState,
                 squadId: squadId,
@@ -57,38 +73,42 @@ const ChatMessage = props => {
     }, []);
 
     useInterval(() => {
+        getTime();
         getChatMessagesBySelectedChatRoom(msgObject)
-    }, 1000);
+    }, 10000);
 
     function getSelectedChatRoom(ev) {
         let chatRoom = ev.target.value;
-        let selectedRoom;
         switch (chatRoom) {
             case 'ALL':
-                selectedRoom = 'ALL'
+                setMsgObject((prevState) => ({
+                    ...prevState,
+                    faction: 'ALL',
+                    squadId: 'null'
+                }));
                 break;
 
             case 'SQUAD':
-                selectedRoom = 'ZOMBIE'
+                setMsgObject((prevState) => ({
+                    ...prevState,
+                    faction: playerData.faction,
+                    squadId: localStorage.getItem('Squad ID')
+                }));
                 break
 
             case 'FACTION':
-                selectedRoom = 'HUMAN'
+                setMsgObject((prevState) => ({
+                    ...prevState,
+                    faction: 'HUMAN',
+                    squadId: 'null'
+                }));
                 break;
             default:
                 console.log("Default")
         }
-        createMessagesObjectByChatRoom(selectedRoom);
         getChatMessagesBySelectedChatRoom(msgObject)
-
+        setRefresh(!refresh);
         return chatRoom;
-    }
-
-    function createMessagesObjectByChatRoom(selectedRoom) {
-        setMsgObject((prevState) => ({
-            ...prevState,
-            faction: selectedRoom
-        }));
     }
 
     function getChatMessagesBySelectedChatRoom(request) {
@@ -98,15 +118,15 @@ const ChatMessage = props => {
     }
 
     function getTime() {
-        let today = new Date();
-        let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-        return date;
+        let time = new Date().getTime();
+        return time;
     }
 
     const onMsgChanged = ev => {
         let currentInput = ev.target.value;
-        setMsgText(currentInput);
-        createMessageObject(currentInput)
+        let time = getTime();
+        setTimeStamp(getTime());
+        createMessageObject(currentInput, time)
         if (currentInput.length < 2) {
             setValidInput(false);
         }
@@ -115,26 +135,26 @@ const ChatMessage = props => {
         }
     }
 
-    function createMessageObject(msg) {
+    function createMessageObject(msg, time) {
         setMsgObject((prevState) => ({
             ...prevState,
             message: msg,
+            timestamp: time
         }));
     }
 
-    const sendMessage = (ev) => {
+    const sendMessage =(ev) => {
         CreateMessage(msgObject)
         getChatMessagesBySelectedChatRoom(msgObject)
     }
 
     return (
         <>
-            <Header />
             <Container >
                 <ButtonGroup >
                     <Button variant="secondary" onClick={getSelectedChatRoom} value="ALL">Global</Button>
                     <Button variant="secondary" onClick={getSelectedChatRoom} value="FACTION">faction</Button>
-                    <Button variant="secondary" onClick={getSelectedChatRoom} value="SQUAD">Squad</Button>
+                    <Button variant="secondary" disabled={msgObject.squadId === 'null'} onClick={getSelectedChatRoom} value="SQUAD">Squad</Button>
                 </ButtonGroup>
                 <br />
                 <ThemeProvider>
@@ -144,8 +164,8 @@ const ChatMessage = props => {
                                 <Avatar imgUrl="https://livechat.s3.amazonaws.com/default/avatars/male_8.jpg" />
                                 <Column fill>
                                     <Row justify>
-                                        <Title ellipsis>{'Michael'}</Title>
-                                        <Subtitle nowrap>{'14:31 PM'}</Subtitle>
+                                        <Title ellipsis>{chatMessage.username}</Title>
+                                        <Subtitle nowrap>{chatMessage.stringTimestamp}</Subtitle>
                                     </Row>
                                     <Subtitle >
                                         {chatMessage.message}
@@ -157,17 +177,12 @@ const ChatMessage = props => {
 
                     <Form.Group>
                         <Form.Control type="text" placeholder="Enter a message" onChange={onMsgChanged} />
-                        {!validInput ? <p>{invalidInputMessage}</p> : null}
                         <IconButton disabled={!validInput} onClick={sendMessage}>
                             <SendIcon />
                         </IconButton>
                     </Form.Group>
                 </ThemeProvider>
             </Container>
-
-
-
-
         </>
     );
 };

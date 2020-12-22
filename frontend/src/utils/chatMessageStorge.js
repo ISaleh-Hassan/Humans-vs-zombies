@@ -1,7 +1,6 @@
 import { getBaseUrl } from "./baseUrl";
 
 export async function GetBundleOfChatMessages(request) {
-    console.log(request)
     let url = "fetch/chatmessage/bundle";
     const response = await fetch(getBaseUrl() + url, {
         method: 'POST',
