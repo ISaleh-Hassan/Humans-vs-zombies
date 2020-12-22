@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button } from 'react-bootstrap';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { DeleteGame, FetchGame, UpdateGame } from "../../utils/AdminDbStorge";
+import { DeleteGame, FetchGame, UpdateGame } from "../../utils/GameStorage";
 
 const useStyles = makeStyles((theme) => ({
   container: {

@@ -22,11 +22,10 @@ const CurrentGames = (props) => {
         setGames(response)
     }
 
-    function handleJoin(id) {
+    function handlePreview(id) {
         localStorage.setItem("Game ID", id);
-        loadPlayerInformationToLocalStorage(id);
-        props.history.push("/choosefaction");
-        console.log(id);
+        // loadPlayerInformationToLocalStorage(id);
+        props.history.push("/landing");
     }
 
     async function loadPlayerInformationToLocalStorage(gameId) {
@@ -37,7 +36,7 @@ const CurrentGames = (props) => {
         } else {
             console.log("User did not have a Player object. Attempting to create one.");
             status = await createPlayerObject(gameId, userId);
-            if(status === true) {
+            if (status === true) {
                 console.log("Player object created successfully.");
             } else {
                 console.log("Failed to create Player Object.");
@@ -49,7 +48,7 @@ const CurrentGames = (props) => {
             console.log("Player belongs to a Squad.")
         } else {
             console.log("Player does not belong to a Squad.");
-        }  
+        }
     }
 
     async function fetchPlayerObjectFromDB(gameId) {
@@ -67,25 +66,25 @@ const CurrentGames = (props) => {
 
     async function createPlayerObject(gameId, userId) {
         let response = await fetch("/api/create/player/" + userId + "/" + gameId, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    playerId: null,
-                    faction: 'HUMAN',
-                    alive: true,
-                    patientZero: false
-                })
-            });
-            if (response.status === 201) {
-                let body = await response.json();
-                localStorage.setItem("Player ID", body.playerId);
-                return true;
-            } else {
-                localStorage.setItem("Player ID", null);
-                return false;
-            }
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                playerId: null,
+                faction: 'HUMAN',
+                alive: true,
+                patientZero: false
+            })
+        });
+        if (response.status === 201) {
+            let body = await response.json();
+            localStorage.setItem("Player ID", body.playerId);
+            return true;
+        } else {
+            localStorage.setItem("Player ID", null);
+            return false;
+        }
     }
 
     async function fetchSquadFromDB(gameId, playerId,) {
@@ -97,7 +96,7 @@ const CurrentGames = (props) => {
         } else {
             localStorage.setItem("Squad ID", null);
             return false;
-        }   
+        }
     }
 
     const onFilterButtonClicked = ev => {
@@ -118,26 +117,30 @@ const CurrentGames = (props) => {
                         <Button type="button" variant="dark" onClick={onFilterButtonClicked} value="COMPLETED" size="sm">COMPLETED</Button>
                     </span>
                     <table>
-                        <tr>
-                            <th>Game</th>
-                            <th>Start</th>
-                            <th>End</th>
-                            <th>Players</th>
-                            <th>Status</th>
-                        </tr>
-                        {games.map((g) =>
+                        <thead>
                             <tr>
-                                {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.name}</td> : null}
-                                {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.stringStart}</td> : null}
-                                {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.stringEnd}</td> : null}
-                                {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.numberOfRegisteredPlayers}/{g.maxNumberOfPlayers}</td> : null}
-                                {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>
-                                                                    {g.gameState === 'PREPARATION' ? <Button type="button" variant="warning"  disabled={g.gameState === 'COMPLETED'} onClick={() => handleJoin(g.gameId)}>Join</Button> : null}
-                                                                    {g.gameState === 'IN_PROGRESS' ? <Button type="button" variant="success" disabled={g.gameState === 'COMPLETED'} onClick={() => handleJoin(g.gameId)}>Join</Button> : null}
-                                                                    {g.gameState === 'COMPLETED' ? <Button type="button" variant="dark" disabled={g.gameState === 'COMPLETED'} onClick={() => handleJoin(g.gameId)}>Join</Button> : null}
-                                                                </td> : null} 
+                                <th>Game</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Players</th>
+                                <th>Status</th>
                             </tr>
-                        )}
+                        </thead>
+                        <tbody>
+                            {games.map((g) =>
+                                <tr key={g.gameId}>
+                                    {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.name}</td> : null}
+                                    {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.stringStart}</td> : null}
+                                    {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.stringEnd}</td> : null}
+                                    {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.numberOfRegisteredPlayers}/{g.maxNumberOfPlayers}</td> : null}
+                                    {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>
+                                        {g.gameState === 'PREPARATION' ? <Button type="button" variant="warning" disabled={g.gameState === 'COMPLETED'} onClick={() => handlePreview(g.gameId)}>Preview</Button> : null}
+                                        {g.gameState === 'IN_PROGRESS' ? <Button type="button" variant="success" disabled={g.gameState === 'COMPLETED'} onClick={() => handlePreview(g.gameId)}>Preview</Button> : null}
+                                        {g.gameState === 'COMPLETED' ? <Button type="button" variant="dark" disabled={g.gameState === 'COMPLETED'} onClick={() => handlePreview(g.gameId)}>Preview</Button> : null}
+                                    </td> : null}
+                                </tr>
+                            )}
+                        </tbody>
                     </table>
                     <br></br>
                 </div>

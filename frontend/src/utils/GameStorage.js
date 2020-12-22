@@ -7,7 +7,7 @@ export async function FetchGame(gameId) {
         let body = await response.json();
         return body;
     } else {
-        return false;
+        return null;
     }
 }
 
