@@ -8,12 +8,11 @@ const Admin = () => {
   return (
     <>
       <Header />
-      <NavBar />
       <section className="home">
         <div className="container">
           <h1>Admin</h1>
           <Link to="/create/game">Create Game</Link>
-          <Link to="#">Edit Game</Link>
+          <Link to="/edit/game">Edit Game</Link>
           <Link to="#">Edit Player State</Link>
           <Link to="/create/missionmarker">Create Mission Marker</Link>
           <Link to="#">Edit Mission Marker</Link>

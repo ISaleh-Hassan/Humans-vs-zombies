@@ -49,6 +49,7 @@ const App = () => {
           <PrivateRoute exact path="/choosefaction" component={ChooseFaction} />
           <PrivateRoute exact path="/create/game" component={AdminCreateGame} />
           <PrivateRoute exact path="/create/missionmarker" component={CreateMissionMarker} />
+          <PrivateRoute exact path="/edit/game" component={EditGame} />
           <Route path='*'>
             <NotFound header='Page not found' message='The page you requested does not exist' />
           </Route>

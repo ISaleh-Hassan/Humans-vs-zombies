@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import firebase from "../../utils/firebase";
 import { getUser } from "../../utils/localstorage.js";
-import Header from '../StylingComponents/Header';
+import HeaderOutside from '../StylingComponents/HeaderOutside';
 import NavBar from "../StylingComponents/NavBar";
 
 const Home = () => {
@@ -12,7 +12,7 @@ const Home = () => {
 
   return (
     <>
-      <Header />
+      <HeaderOutside />
       <NavBar />
       <section className="home">
         <div className="container">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getPlayerInfo } from "../../utils/gamedbstorage";
-import Header from '../StylingComponents/Header';
+import HeaderOutside from '../StylingComponents/HeaderOutside';
 import NavBar from "../StylingComponents/NavBar";
 
 const CurrentGames = (props) => {
@@ -97,8 +97,7 @@ const CurrentGames = (props) => {
 
     return (
         <>
-            <Header />
-            <NavBar />
+            <HeaderOutside />
             <section className="home">
                 <div className="container">
                     <h1>Current Games</h1>

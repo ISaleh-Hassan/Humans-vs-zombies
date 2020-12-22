@@ -1,5 +1,6 @@
 import React from 'react'
 import firebase from '../../utils/firebase'
+import HeaderOutside from '../StylingComponents/HeaderOutside';
 
 const Phone = ({ history }) => {
   const handleClick = () => {
@@ -30,6 +31,7 @@ const Phone = ({ history }) => {
   }
   return (
     <>
+        <HeaderOutside />
       <section className="login-register">
         <div className="container">
           <div id="recaptcha"></div>
