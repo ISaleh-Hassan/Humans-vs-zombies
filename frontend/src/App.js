@@ -10,6 +10,7 @@ import Admin from './components/AdminComponents/Admin'
 import EditGame from './components/AdminComponents/EditGame'
 import PlayerState from './components/AdminComponents/PlayerState'
 import MissionMarker from './components/AdminComponents/MissionMarker'
+import Bite from './components/GameComponents/Bite'
 import BiteHuman from './components/GameComponents/BiteHuman'
 import BiteZombie from './components/GameComponents/BiteZombie'
 import ChooseFaction from './components/GameComponents/ChooseFaction'
@@ -36,6 +37,7 @@ const App = () => {
           <Route exact path="/registerphone" component={RegisterPhone} />
           <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute exact path="/landing" component={LandingPage} />
+          <PrivateRoute exact path="/bite" component={Bite} />
           <PrivateRoute exact path="/bitehuman" component={BiteHuman} />
           <PrivateRoute exact path="/bitezombie" component={BiteZombie} />
           <PrivateRoute exact path="/squads" component={SquadList} />
