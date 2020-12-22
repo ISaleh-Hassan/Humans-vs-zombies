@@ -1,23 +1,47 @@
 import React from "react";
 import HeaderOutside from '../StylingComponents/HeaderOutside';
-import NavBar from "../StylingComponents/NavBar";
-import ChatMessage from  '../ChatMessageComponents/ChatMessage'
 
-const ChooseFaction = (props) => {
+const ChooseFaction = ({ history }) => {
 
-    const joinHumans = () => {
-        console.log("Joined humans!")
+    let playerId = localStorage.getItem('Player ID');
+
+    async function joinHumans() {
+        let response = await fetch('/api/update/player/' + playerId, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                playerId: playerId,
+                faction: "HUMAN",
+            })
+        });
+        let body = await response.json();
+        localStorage.setItem("squadFaction", body.faction)
+        history.push('/landing');
     }
 
-    const joinZombies = () => {
-        console.log("Joined zombies!")
+    async function joinZombies() {
+        let response = await fetch('/api/update/player/' + playerId, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                playerId: playerId,
+                faction: "ZOMBIE",
+            })
+        });
+        let body = await response.json();
+        console.log(body.faction)
+        localStorage.setItem("squadFaction", body.faction)
+        history.push('/landing');
     }
 
     return (
         <>
             <HeaderOutside />
             <section className="home">
-            <ChatMessage />
                 <div className="container">
                     <h1>Choose your faction!</h1>
                     <br></br>
