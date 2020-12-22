@@ -17,16 +17,23 @@ const SquadDetail = ({history}) => {
         fetchSquadMembers();
     }, [])
 
+    // A check should be added depending on response code, see function below this one
     async function fetchSquadMembers() {
-        const response = await fetch('/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId);
-        let body;
-        if (response.status === 200) {
-            body = response.json();
-        } else {
-            body = [];
-        }
-        setSquadMembers(body);
+        const memberResponse = await (await fetch('/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId)).json();
+        setSquadMembers(memberResponse);
     }
+
+        // The below function doesn't work as is, but should be implemented instead of the one above
+    // async function fetchSquadMembers() {
+    //     const response = await (await fetch('/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId)).json();
+    //     let body;
+    //     if (response.status === 200) {
+    //         body = response.json();
+    //     } else {
+    //         body = [];
+    //     }
+    //     setSquadMembers(body);
+    // }
 
     function getLocation() {
         if (navigator.geolocation) {
@@ -47,8 +54,14 @@ const SquadDetail = ({history}) => {
     }, [])
 
     async function fetchSquad() {
-        const squadResponse = await (await fetch('/api/fetch/squad/' + squadId)).json();
-        setSquad(squadResponse);
+        const response = await fetch('/api/fetch/squad/' + squadId);
+        let body;
+        if (response.status === 200) {
+            body = response.json();
+        } else {
+            body = [];
+        }
+        setSquad(body);
     }
 
 
