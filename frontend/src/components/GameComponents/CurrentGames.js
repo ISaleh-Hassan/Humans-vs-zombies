@@ -20,7 +20,7 @@ const CurrentGames = (props) => {
     function handleJoin(id) {
         localStorage.setItem("Game ID", id);
         loadPlayerInformationToLocalStorage(id);
-        props.history.push("/landing");
+        props.history.push("/choosefaction");
         console.log(id);
     }
 
