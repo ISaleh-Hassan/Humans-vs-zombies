@@ -34,3 +34,4 @@ build/
 frontend/.eslintcache
 frontend/.eslintcache
 frontend/.eslintcache
+frontend/debug.log

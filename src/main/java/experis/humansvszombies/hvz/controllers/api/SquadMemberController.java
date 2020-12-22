@@ -158,17 +158,23 @@ public class SquadMemberController {
     public ResponseEntity<SquadMemberObject> addSquadMember(@RequestBody SquadMember newSquadMember, @PathVariable Integer gameId,
         @PathVariable Integer squadId, @PathVariable Integer playerId) {
             try {
-                if (newSquadMember != null) {
-                    newSquadMember.setGame(new Game(gameId));
-                    newSquadMember.setSquad(new Squad(squadId));
-                    newSquadMember.setPlayer(new Player(playerId));
-                    squadMemberRepository.save(newSquadMember);
-                    System.out.println("SquadMember CREATED with id: " + newSquadMember.getSquadMemberId());
-                    return new ResponseEntity<>(this.createSquadMemberObject(newSquadMember), HttpStatus.CREATED);
+                SquadMember tempSquadMember = squadMemberRepository.findDistinctByGameAndPlayer(new Game(gameId), new Player(playerId));
+                if (tempSquadMember == null) {
+                    if (newSquadMember != null) {
+                        newSquadMember.setGame(new Game(gameId));
+                        newSquadMember.setSquad(new Squad(squadId));
+                        newSquadMember.setPlayer(new Player(playerId));
+                        squadMemberRepository.save(newSquadMember);
+                        System.out.println("SquadMember CREATED with id: " + newSquadMember.getSquadMemberId());
+                        return new ResponseEntity<>(this.createSquadMemberObject(newSquadMember), HttpStatus.CREATED);
+                    } else {
+                        System.out.println("Exception thrown: newSquadMember was null.");
+                        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+                    }
                 } else {
-                    System.out.println("Exception thrown: newSquadMember was null.");
+                    System.out.println("Squadmember already exists for Player: " + playerId + " Game: " + gameId);
                     return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-                }
+                }       
             } catch (IllegalArgumentException e) {
                 System.out.println("Exception thrown: newSquadMember was null.");
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

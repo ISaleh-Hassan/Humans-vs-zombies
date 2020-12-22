@@ -1,17 +1,21 @@
+import { Button } from 'react-bootstrap';
 import React, { useEffect, useState } from "react";
-import firebase from "../../utils/firebase";
 import { getPlayerInfo } from "../../utils/gamedbstorage";
 import HeaderOutside from '../StylingComponents/HeaderOutside';
-import NavBar from "../StylingComponents/NavBar";
 
 const CurrentGames = (props) => {
 
     const [games, setGames] = useState([]);
+    const [gameFilter, setGameFilter] = useState('ALL');
 
     useEffect(() => {
         fetchGames();
         getPlayerInfo();
     }, []);
+
+    useEffect(() => {
+
+    }, [gameFilter])
 
     async function fetchGames() {
         const response = await (await fetch('/api/fetch/game/all')).json();
@@ -96,23 +100,42 @@ const CurrentGames = (props) => {
         }   
     }
 
+    const onFilterButtonClicked = ev => {
+        let filter = ev.target.value;
+        setGameFilter(filter);
+    }
+
     return (
         <>
             <HeaderOutside />
             <section className="home">
                 <div className="container">
                     <h1>Current Games</h1>
+                    <span>
+                        <Button type="button" variant="primary" onClick={onFilterButtonClicked} value="ALL" size="sm">ALL</Button>
+                        <Button type="button" variant="warning" onClick={onFilterButtonClicked} value="PREPARATION" size="sm">PREPARATION</Button>
+                        <Button type="button" variant="success" onClick={onFilterButtonClicked} value="IN_PROGRESS" size="sm">IN PROGRESS</Button>
+                        <Button type="button" variant="dark" onClick={onFilterButtonClicked} value="COMPLETED" size="sm">COMPLETED</Button>
+                    </span>
                     <table>
                         <tr>
                             <th>Game</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Players</th>
                             <th>Status</th>
-                            <th></th>
                         </tr>
                         {games.map((g) =>
                             <tr>
-                                <td>{g.name}</td>
-                                <td>{g.gameState}</td>
-                                <th><button type="button" onClick={() => handleJoin(g.gameId)}>Join</button></th>
+                                {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.name}</td> : null}
+                                {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.stringStart}</td> : null}
+                                {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.stringEnd}</td> : null}
+                                {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.numberOfRegisteredPlayers}/{g.maxNumberOfPlayers}</td> : null}
+                                {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>
+                                                                    {g.gameState === 'PREPARATION' ? <Button type="button" variant="warning"  disabled={g.gameState === 'COMPLETED'} onClick={() => handleJoin(g.gameId)}>Join</Button> : null}
+                                                                    {g.gameState === 'IN_PROGRESS' ? <Button type="button" variant="success" disabled={g.gameState === 'COMPLETED'} onClick={() => handleJoin(g.gameId)}>Join</Button> : null}
+                                                                    {g.gameState === 'COMPLETED' ? <Button type="button" variant="dark" disabled={g.gameState === 'COMPLETED'} onClick={() => handleJoin(g.gameId)}>Join</Button> : null}
+                                                                </td> : null} 
                             </tr>
                         )}
                     </table>
