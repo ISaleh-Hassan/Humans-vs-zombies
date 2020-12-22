@@ -156,7 +156,7 @@ const EditGame = (props) => {
             <Form.Control type="text" placeholder={gameObject.name} onChange={onGameNameChange} />
             <br />
             <Form.Control as="select" placeholder="Gamestate" onChange={onGameStateChange}>
-              <option>PREPERATION</option>
+              <option>PREPARATION</option>
               <option>IN_PROGRESS</option>
               <option>COMPLETED</option>
             </Form.Control>

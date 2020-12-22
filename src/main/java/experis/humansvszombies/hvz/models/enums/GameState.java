@@ -1,5 +1,5 @@
 package experis.humansvszombies.hvz.models.enums;
 
 public enum GameState {
-    PREPERATION, IN_PROGRESS, COMPLETED
+    PREPARATION, IN_PROGRESS, COMPLETED
 }

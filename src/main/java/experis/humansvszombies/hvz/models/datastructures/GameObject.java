@@ -17,13 +17,16 @@ public class GameObject {
     private Integer maxNumberOfPlayers;
     private String description;
     private Integer numberOfRegisteredPlayers;
+    private String stringStart;
+    private String stringEnd;
 
     public GameObject() {
         
     }
 
     public GameObject(Integer gameId, String name, GameState gameState, Point nwPoint, Point sePoint,
-            Timestamp startTime, Timestamp endTime, Integer maxNumberOfPlayers, String description, Integer numberOfRegisteredPlayers) {
+            Timestamp startTime, Timestamp endTime, Integer maxNumberOfPlayers, String description, 
+            Integer numberOfRegisteredPlayers, String start, String end) {
         this.gameId = gameId;
         this.name= name;
         this.gameState = gameState;
@@ -34,6 +37,8 @@ public class GameObject {
         this.maxNumberOfPlayers = maxNumberOfPlayers;
         this.description = description;
         this.numberOfRegisteredPlayers = numberOfRegisteredPlayers;
+        this.stringStart = start;
+        this.stringEnd = end;
     }
 
     public Integer getGameId() {
@@ -114,5 +119,21 @@ public class GameObject {
 
     public void setNumberOfRegisteredPlayers(Integer numberOfRegisteredPlayers) {
         this.numberOfRegisteredPlayers = numberOfRegisteredPlayers;
+    }
+
+    public String getStringStart() {
+        return stringStart;
+    }
+
+    public void setStringStart(String stringStart) {
+        this.stringStart = stringStart;
+    }
+
+    public String getStringEnd() {
+        return stringEnd;
+    }
+
+    public void setStringEnd(String stringEnd) {
+        this.stringEnd = stringEnd;
     }
 }

@@ -25,7 +25,7 @@ const AdminCreateGame = (props) => {
     const [gameObject, setGameObject] = useState(
         {
             name: "",
-            gameState: "PREPERATION",
+            gameState: "PREPARATION",
             startTime: "2021-01-01T08:00:00.000+00:00",
             endTime: "2021-01-02T08:00:00.000+00:00",
             maxNumberOfPlayers: 50,
