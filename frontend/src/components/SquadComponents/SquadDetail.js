@@ -1,9 +1,8 @@
 import React, { Component, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import Header from '../StylingComponents/Header';
 import NavBar from '../StylingComponents/NavBar';
 
-const SquadDetail = ({history}) => {
+const SquadDetail = ({ history }) => {
     let gameId = localStorage.getItem('Game ID');
     let squadId = localStorage.getItem('Squad ID');
     let userId = localStorage.getItem('User ID');
@@ -21,7 +20,7 @@ const SquadDetail = ({history}) => {
         const response = await fetch('/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId);
         let body;
         if (response.status === 200) {
-            body = response.json();
+            body = await response.json();
         } else {
             body = [];
         }
@@ -47,8 +46,12 @@ const SquadDetail = ({history}) => {
     }, [])
 
     async function fetchSquad() {
-        const squadResponse = await (await fetch('/api/fetch/squad/' + squadId)).json();
-        setSquad(squadResponse);
+        const squadResponse = await fetch('/api/fetch/squad/' + squadId);
+        let body = null;
+        if (squadResponse.status === 200) {
+            body = squadResponse.json();
+        }
+        setSquad(body);
     }
 
 
@@ -67,39 +70,38 @@ const SquadDetail = ({history}) => {
     async function handleLeaveSquad() {
 
         let response = await fetch('/api/update/squadmember/' + squadMemberId, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    playerId: playerId,
-                    gameId: gameId,
-                    squadId: null,
-                    squadRank: 1,
-                    squadMemberId: squadMemberId
-                })
-            });
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                playerId: playerId,
+                gameId: gameId,
+                squadId: null,
+                squadRank: 1,
+            })
+        });
         let body = await response.json();
         localStorage.setItem('Squad ID', null);
         history.push('/squads');
     }
 
 
-        function handleDisbandSquad() {
-            if (squadRank === "LEADER") {
-                fetch('/api/delete/squad/' + squadId, {
+    function handleDisbandSquad() {
+        if (squadRank === "LEADER") {
+            fetch('/api/delete/squad/' + squadId, {
                 method: 'DELETE',
-                })
-                    .then(res => res.json())
-                    .then(res => console.log(res));
-                localStorage.setItem('Squad ID', null);
-                localStorage.removeItem('Squad Member ID');
-                localStorage.removeItem('Squad Rank');
-                history.push('/squads');
-            } else {
-                alert("You must be a leader to disband the squad.")
-            }
+            })
+                .then(res => res.json())
+                .then(res => console.log(res));
+            localStorage.setItem('Squad ID', null);
+            localStorage.removeItem('Squad Member ID');
+            localStorage.removeItem('Squad Rank');
+            history.push('/squads');
+        } else {
+            alert("You must be a leader to disband the squad.")
         }
+    }
 
 
     return (
@@ -139,7 +141,7 @@ const SquadDetail = ({history}) => {
                         <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
 
                         <br />
-                        <button type="button" /* onClick={() => handleDisbandSquad()} */>Disband Squad (only available to the leader)</button>
+                        <button type="button" onClick={() => handleDisbandSquad()}>Disband Squad (only available to the leader)</button>
                     </div>
                 </section>
             </div>

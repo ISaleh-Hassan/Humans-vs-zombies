@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
-import Header from '../StylingComponents/Header';
-import NavBar from '../StylingComponents/NavBar';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 
@@ -70,18 +68,13 @@ class MainMap extends Component {
   render() {
     return (
       <>
-        <Header />
-        <section className="home">
           <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
           <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
-          <div className="container">
             <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
             <label>Marker Location: </label>
             <p id="coordinates" className="coordinates"></p>
             <label>Current Location: </label>
             <p id="current-position"></p>
-          </div>
-        </section>
       </>
     )
   }
