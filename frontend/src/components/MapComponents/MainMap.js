@@ -40,15 +40,19 @@ class MainMap extends Component {
       let lngLat = marker.getLngLat();
       coordinates.innerHTML =
         'Longitude: ' + lngLat.lng + '<br />Latitude: ' + lngLat.lat;
+        localStorage.setItem('Marker Lng: ', lngLat.lng);
+        localStorage.setItem('Marker Lat: ', lngLat.lat);
     }
 
     marker.on('dragend', onDragEnd);
 
     function showPosition(position) {
       let currentPosition = document.getElementById("current-position");
-      currentPosition.innerHTML = "Longitude: " + position.coords.longitude +
-        "<br>Latitude: " + position.coords.latitude;
+      // currentPosition.innerHTML = "Longitude: " + position.coords.longitude +
+      //   "<br>Latitude: " + position.coords.latitude;
       marker.setLngLat([position.coords.longitude, position.coords.latitude]).addTo(map)
+      localStorage.setItem('Current Position Lng: ', position.coords.longitude)
+      localStorage.setItem('Current Position Lat: ', position.coords.latitude)
     }
 
     if (navigator.geolocation) {
@@ -62,19 +66,18 @@ class MainMap extends Component {
         navigator.geolocation.getCurrentPosition(showPosition)
       );
     }
-
   }
 
   render() {
     return (
       <>
-          <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
-          <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
-            <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
-            <label>Marker Location: </label>
-            <p id="coordinates" className="coordinates"></p>
-            <label>Current Location: </label>
-            <p id="current-position"></p>
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
+        <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
+        <label>Marker Location: </label>
+        <p id="coordinates"></p>
+        {/* <label>Current Location: </label> */}
+        <p id="current-position"></p>
       </>
     )
   }
