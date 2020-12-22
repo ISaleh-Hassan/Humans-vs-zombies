@@ -17,8 +17,8 @@ const ChooseFaction = ({ history }) => {
             })
         });
         let body = await response.json();
-        localStorage.setItem("Faction: ", body.faction)
-        history.push('/squads');
+        localStorage.setItem("squadFaction", body.faction)
+        history.push('/landing');
     }
 
     async function joinZombies() {
@@ -33,7 +33,9 @@ const ChooseFaction = ({ history }) => {
             })
         });
         let body = await response.json();
-        history.push('/squads');
+        console.log(body.faction)
+        localStorage.setItem("squadFaction", body.faction)
+        history.push('/landing');
     }
 
     return (
