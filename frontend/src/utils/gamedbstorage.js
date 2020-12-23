@@ -4,7 +4,6 @@ export async function getPlayerInfo() {
     const status = await response.status
     if (status === 200) {
         const user = await response.json()
-        console.log(user)
     }
     return status;
 }

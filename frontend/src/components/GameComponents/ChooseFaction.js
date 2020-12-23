@@ -1,41 +1,26 @@
 import React from "react";
+import { CreatePlayer } from "../../utils/PlayerStorage";
 import HeaderOutside from '../StylingComponents/HeaderOutside';
 
-const ChooseFaction = ({ history }) => {
+const ChooseFaction = (props) => {
 
-    let playerId = localStorage.getItem('Player ID');
+    let gameId = localStorage.getItem('Game ID');
+    let userId = localStorage.getItem('User ID');
 
     async function joinHumans() {
-        let response = await fetch('/api/update/player/' + playerId, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                playerId: playerId,
-                faction: "HUMAN",
-            })
-        });
-        let body = await response.json();
-        localStorage.setItem("squadFaction", body.faction)
-        history.push('/landing');
+        let response = await CreatePlayer(gameId, userId, 'HUMAN');
+        if (response === null) {
+            alert("Failed to create player!");
+        }
+        props.history.push('/landing');
     }
 
     async function joinZombies() {
-        let response = await fetch('/api/update/player/' + playerId, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                playerId: playerId,
-                faction: "ZOMBIE",
-            })
-        });
-        let body = await response.json();
-        console.log(body.faction)
-        localStorage.setItem("squadFaction", body.faction)
-        history.push('/landing');
+        let response = await CreatePlayer(gameId, userId, 'ZOMBIE');
+        if (response === null) {
+            alert("Failed to create player!");
+        }
+        props.history.push('/landing');
     }
 
     return (

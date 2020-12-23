@@ -4,7 +4,6 @@ import './Header.css';
 import GameMenu from './GameMenu';
 
 const Header = () => {
-
     return (
         <div>
             <div id="headerContainer">
@@ -14,9 +13,7 @@ const Header = () => {
 
                 <div id="gameTitle">Humans vs Zombies</div>
 
-                <div id="gameMenu">
-                    <GameMenu />
-                </div>
+                <div id="gameMenu"><GameMenu /></div>
             </div>
         </div>
     );

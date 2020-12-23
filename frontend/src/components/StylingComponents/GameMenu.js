@@ -3,6 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import Modal from './Modal';
 import firebase from '../../utils/firebase'
 import { clearUser } from "../../utils/localstorage";
+import { Button } from 'react-bootstrap';
 
 const BUTTON_WRAPPER_STYLES = {
     position: 'relative',
@@ -48,7 +49,7 @@ const GameMenu = ({history}) => {
     return (
         <div>
             <div onClick={() => console.log("clicked")}>
-                <div style={BUTTON_WRAPPER_STYLES} onClick={() => setIsOpen(true)}>Menu</div>
+                <Button variant="dark" onClick={() => setIsOpen(true)}>Menu</Button>
             
                 <Modal open={isOpen} onClose={() => setIsOpen(false)}>
                     <Link to="landing">
