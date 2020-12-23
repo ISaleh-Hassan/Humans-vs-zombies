@@ -3,7 +3,6 @@ import { Form, Button } from 'react-bootstrap';
 import React, { useEffect, useState } from "react";
 import Header from '../StylingComponents/Header';
 import NavBar from "../StylingComponents/NavBar";
-import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { DeleteMission, UpdateMission, FetchMission } from '../../utils/missionStorage'
 import MainMap from "../MapComponents/MainMap";
