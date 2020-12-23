@@ -151,8 +151,14 @@ public class GameController {
     @CrossOrigin
     private GameObject createGameObject(Game game) {
         int numberOfPlayers = playerRepository.findByGame(new Game(game.getGameId())).size();
-        String start = game.getStartTime().toString();
-        String end = game.getStartTime().toString();
+        String start = null;
+        if (game.getStartTime() != null) {
+            start = game.getStartTime().toString();
+        }
+        String end = null; 
+        if (game.getEndTime() != null) {
+            end = game.getEndTime().toString();
+        }
         GameObject gameObject = new GameObject(
             game.getGameId(),
             game.getName(), 
