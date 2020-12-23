@@ -108,7 +108,7 @@ const SquadDetail = ({ history }) => {
                 .then(res => res.json())
                 .then(res => console.log(res));
             localStorage.setItem('Squad ID', null);
-            localStorage.removeItem('Squad Member ID');
+            localStorage.removeItem('SquadMember ID');
             localStorage.removeItem('Squad Rank');
             history.push('/squads');
         } else {

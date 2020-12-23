@@ -50,7 +50,7 @@ const SquadList = ({ history }) => {
     }, [])
 
     async function fetchSquadMember() {
-        const response = await (await fetch('/api/fetch/squadMember/game=' + gameId + '/player=' + playerId));
+        const response = await (await fetch('/api/fetch/squadmember/game=' + gameId + '/player=' + playerId));
         setSquadMember(response);
     }
 
