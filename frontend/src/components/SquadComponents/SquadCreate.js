@@ -31,7 +31,7 @@ const SquadCreate = ({ history }) => {
         setCurrentPlayer(body);
     }
 
-    localStorage.setItem('squadFaction', currentPlayer.faction);
+    localStorage.setItem('Faction', currentPlayer.faction);
 
     async function handleCreateSquad(event) {
         event.preventDefault();
