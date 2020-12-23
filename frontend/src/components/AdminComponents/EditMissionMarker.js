@@ -31,7 +31,8 @@ const EditMissionMarker = (props) => {
             faction: null,
             missionState: null,
             startTime: null,
-            endTime: null
+            endTime: null,
+            gameId: null
         })
     let markerLng = localStorage.getItem('Marker Lng: ')
     let markerLat = localStorage.getItem('Marker Lat: ')
@@ -50,7 +51,8 @@ const EditMissionMarker = (props) => {
                 faction: mission.faction,
                 missionState: mission.missionState,
                 startTime: mission.startTime,
-                endTime: mission.endTime
+                endTime: mission.endTime,
+                gameId: mission.gameId
             })
         } else {
             alert("Mission ID is null.");
@@ -60,7 +62,7 @@ const EditMissionMarker = (props) => {
     async function editMission() {
         if (validMissionName === true) {
             let updateMissionResponse = await UpdateMission(missionObject);
-            if (updateMissionResponse.status === 201) {
+            if (updateMissionResponse.status === 200) {
                 props.history.push("/missions");
             } else if (updateMissionResponse.status === 400) {
                 alert("Mission name must be unique!");
@@ -109,6 +111,14 @@ const EditMissionMarker = (props) => {
         }
     }
 
+    const onMissionStateChange = ev => {
+        let currentState = ev.target.value;
+        setMissionObject((prevState) => ({
+            ...prevState,
+            missionState: currentState
+        }));
+    }
+
     const onCheckBoxChanged = ev => {
         setDeleteMission(!deleteMission);
     }
@@ -141,6 +151,12 @@ const EditMissionMarker = (props) => {
                         <input id="markerLng" type="text" value={markerLng} hidden />
                         <input id="markerLat" type="text" value={markerLat} hidden />
                         <button onClick={clicked}>Click</button>
+                        <br />
+                        <Form.Control as="select" placeholder="MissionState" onChange={onMissionStateChange}>
+                            <option>PREPARATION</option>
+                            <option>IN_PROGRESS</option>
+                            <option>COMPLETED</option>
+                        </Form.Control>
                         <br />
                         <TextField
                             id="datetime-local"

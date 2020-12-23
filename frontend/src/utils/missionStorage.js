@@ -34,11 +34,12 @@ export async function CreateMission(missionData) {
         body: JSON.stringify({
             name: missionData.name,
             faction: missionData.faction,
-            missionState: "IN_PROGRESS",
+            missionState: missionData.missionState,
             startTime: missionData.startTime,
             endTime: missionData.endTime
         })
     })
+    console.log(response)
     return response;
 }
 
@@ -54,7 +55,8 @@ export async function UpdateMission(missionData) {
             faction: missionData.faction,
             missionState: missionData.missionState,
             startTime: missionData.startTime,
-            endTime: missionData.endTime
+            endTime: missionData.endTime,
+            gameId: missionData.gameId
         })
     })
     return response;

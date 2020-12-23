@@ -1,6 +1,6 @@
 import { TextField } from "@material-ui/core";
 import { Form, Button } from 'react-bootstrap';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from '../StylingComponents/Header';
 import NavBar from "../StylingComponents/NavBar";
 import { Link } from "react-router-dom";
@@ -22,17 +22,38 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateMissionMarker = (props) => {
 
-  let faction = localStorage.getItem("Faction")
+  let gameId = localStorage.getItem("Game ID")
+  let userId = localStorage.getItem("User ID")
+
+  const [currentPlayer, setCurrentPlayer] = useState([]);
+
+  useEffect(() => {
+    fetchCurrentPlayer();
+  }, [])
+
+  async function fetchCurrentPlayer() {                                                                    // user should be set to userId, not 1
+    const playerResponse = await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId);
+    let body;
+    if (playerResponse.status === 200) {
+      body = await playerResponse.json();
+    } else {
+      body = null;
+    }
+    setCurrentPlayer(body);
+  }
+
+  localStorage.setItem('Faction', currentPlayer.faction);
 
   const [validMissionName, setValidMissionName] = useState(false);
   const [missionObject, setMissionObject] = useState(
     {
       name: "",
-      faction: faction,
-      missionState: "IN_PROGRESS",
+      faction: currentPlayer.faction,
+      missionState: "PREPARATION",
       startTime: "2021-01-01T08:00:00.000+00:00",
       endTime: "2021-01-02T08:00:00.000+00:00"
     })
+
   let markerLng = localStorage.getItem('Marker Lng: ')
   let markerLat = localStorage.getItem('Marker Lat: ')
 
