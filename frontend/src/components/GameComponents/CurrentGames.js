@@ -43,6 +43,7 @@ const CurrentGames = (props) => {
                 <div className="container">
                     <HeaderOutside />
                     <Button variant="dark" onClick={() => props.history.push("/")}>Profile</Button>
+                    <Button variant="dark" onClick={() => props.history.push("/creategame")}>Create New Game</Button>
 
                     <h1>Current Games</h1>
                     <span>
