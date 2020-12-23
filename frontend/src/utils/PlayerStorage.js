@@ -1,5 +1,20 @@
 import { getBaseUrl } from "./baseUrl";
 
+export async function GetPlayerData(playerId) {
+    let url = getBaseUrl() + "fetch/player/" + playerId;
+    const response = await fetch(getBaseUrl() + url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }) 
+    if (response.status === 200) {
+        let body = await response.json();
+        return body;
+    } else {
+        return null;
+    }
+}
 export async function FetchPlayer(gameId, userId) {
     let url = getBaseUrl() + "fetch/player/game=" + gameId + "/user=" + userId;
     const response = await fetch(url);

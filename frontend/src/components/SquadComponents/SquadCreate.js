@@ -11,7 +11,7 @@ const SquadCreate = ({ history }) => {
     let userId = localStorage.getItem('User ID');
     let squadId = localStorage.getItem('Squad ID');
     let playerId = localStorage.getItem('Player ID');
-    let hasSquadMemberObject = localStorage.getItem('Squad Member ID');
+    let hasSquadMemberObject = localStorage.getItem('SquadMember ID');
 
     const [currentPlayer, setCurrentPlayer] = useState([]);
 
@@ -41,7 +41,7 @@ const SquadCreate = ({ history }) => {
         let createSquadRepsonse = await storeSquadDB(squadName.value, currentPlayer.faction, squadMemberAmount.value);
 
         if (createSquadRepsonse === 201) {
-            let squadMemberExists = await fetch('/api/fetch/squadMember/game=' + gameId + '/player=' + playerId);
+            let squadMemberExists = await fetch('/api/fetch/squadmember/game=' + gameId + '/player=' + playerId);
             let newSquadId = localStorage.getItem('Squad ID');
             if (squadMemberExists.status === 200) {
                 let response = await fetch('/api/update/squadmember/' + hasSquadMemberObject, {
@@ -60,11 +60,12 @@ const SquadCreate = ({ history }) => {
                     })
                 });
                 let body = await response.json();
-                localStorage.setItem('Squad Member ID', body.squadMemberId);
+                localStorage.setItem('SquadMember ID', body.squadMemberId);
 
                 history.push('/squaddetails/');
             } else if (squadMemberExists.status === 404) {
-                let response = await fetch('/api/create/squadmember/' + gameId + '/' + squadId + '/' + playerId, {
+                let newSquadId = localStorage.getItem('Squad ID');
+                let response = await fetch('/api/create/squadmember/' + gameId + '/' + newSquadId + '/' + playerId, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -78,7 +79,7 @@ const SquadCreate = ({ history }) => {
                 });
                 if (response.status === 201) {
                     let body = await response.json();
-                    localStorage.setItem('Squad Member ID', body.squadMemberId);
+                    localStorage.setItem('SquadMember ID', body.squadMemberId);
                     localStorage.setItem('Squad Rank', 'LEADER');
                 } else {
                     alert("Failed to create squad member!")

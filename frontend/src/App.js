@@ -27,6 +27,7 @@ import { AuthProvider } from "./utils/Auth";
 import './components/StylingComponents/Components.css'
 import AdminCreateGame from './components/AdminComponents/AdminCreateGame'
 import Missions from "./components/GameComponents/Missions";
+import Chat from "./components/ChatMessageComponents/Chat";
 
 const App = () => {
   return (
@@ -55,6 +56,7 @@ const App = () => {
           <PrivateRoute exact path="/edit/missionmarker" component={EditMissionMarker} />
           <PrivateRoute exact path="/editgame" component={EditGame} />
           <PrivateRoute exact path="/missions" component={Missions} />
+          <PrivateRoute exact path="/chat" component={Chat} />
           <Route path='*'>
             <NotFound header='Page not found' message='The page you requested does not exist' />
           </Route>
