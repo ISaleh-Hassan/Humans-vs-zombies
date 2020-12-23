@@ -2,6 +2,17 @@ import { getBaseUrl } from "./baseUrl";
 
 let gameId = localStorage.getItem("Game ID");
 
+export async function FetchAllMissions() {
+    let url = getBaseUrl() + "fetch/mission/all";
+    const response = await fetch(url);
+    if (response.status === 200) {
+        let body = await response.json();
+        return body;
+    } else {
+        return null;
+    }
+}
+
 export async function FetchMission(missionId) {
     let url = getBaseUrl() + "fetch/mission/" + missionId;
     const response = await fetch(url);
@@ -22,6 +33,8 @@ export async function CreateMission(missionData) {
         },
         body: JSON.stringify({
             name: missionData.name,
+            faction: missionData.faction,
+            missionState: "IN_PROGRESS",
             startTime: missionData.startTime,
             endTime: missionData.endTime
         })
@@ -38,6 +51,8 @@ export async function UpdateMission(missionData) {
         },
         body: JSON.stringify({
             name: missionData.name,
+            faction: missionData.faction,
+            missionState: missionData.missionState,
             startTime: missionData.startTime,
             endTime: missionData.endTime
         })

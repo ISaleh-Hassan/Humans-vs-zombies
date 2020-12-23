@@ -22,10 +22,14 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateMissionMarker = (props) => {
 
+  let faction = localStorage.getItem("Faction")
+
   const [validMissionName, setValidMissionName] = useState(false);
   const [missionObject, setMissionObject] = useState(
     {
       name: "",
+      faction: faction,
+      missionState: "IN_PROGRESS",
       startTime: "2021-01-01T08:00:00.000+00:00",
       endTime: "2021-01-02T08:00:00.000+00:00"
     })
@@ -76,18 +80,6 @@ const CreateMissionMarker = (props) => {
     }));
   }
 
-  function clicked() {
-    console.log("Hello")
-    let lng = document.getElementById("markerLng");
-    
-    lng.select();
-    lng.setSelectionRange(0, 99999); /* For mobile devices */
-
-    document.execCommand('copy');
-
-    alert("Copied the text: " + lng.value);
-  }
-
   return (
     <>
       <Header />
@@ -103,7 +95,6 @@ const CreateMissionMarker = (props) => {
             <MainMap />
             <input id="markerLng" type="text" value={markerLng} hidden />
             <input id="markerLat" type="text" value={markerLat} hidden />
-            <button onClick={clicked}>Click</button>
             <br />
             <TextField
               id="datetime-local"
@@ -128,7 +119,7 @@ const CreateMissionMarker = (props) => {
             />
             <br />
             <br /><br />
-            <Button disabled={!validMissionName} onClick={createMission}>Create</Button><Link to="admin"><Button>Cancel</Button></Link>
+            <Button disabled={!validMissionName} onClick={createMission}>Create</Button><Link to="/admin"><Button>Cancel</Button></Link>
           </Form.Group>
         </div>
       </section>
