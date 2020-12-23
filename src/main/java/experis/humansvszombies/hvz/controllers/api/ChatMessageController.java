@@ -154,6 +154,7 @@ public class ChatMessageController {
     private ChatMessageObject createChatMessageObject(ChatMessage msg) {
         try {
             String stringTime = msg.getTimestamp().toString();
+            stringTime = stringTime.substring(0, stringTime.length() - 4); //remove the miliseconds
             ChatMessageObject msgObject = null;
             Player tempPlayer = playerRepository.findById(msg.getPlayer().getPlayerId()).orElse(null);
             if (tempPlayer != null) {
