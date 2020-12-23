@@ -6,6 +6,7 @@ import { Form, Button } from 'react-bootstrap';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { DeleteGame, FetchGame, UpdateGame } from "../../utils/GameStorage";
+import GameMenu from "../StylingComponents/GameMenu";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -146,10 +147,10 @@ const EditGame = (props) => {
 
   return (
     <>
-      <Header />
-      <NavBar />
       <section className="home">
         <div className="container">
+          <Header />
+          <GameMenu />
           <h1>Edit Game</h1>
           <br />
           <Form.Group>

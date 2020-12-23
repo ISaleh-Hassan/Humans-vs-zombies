@@ -13,7 +13,7 @@ const Header = () => {
 
                 <div id="gameTitle">Humans vs Zombies</div>
 
-                {/* <div id="gameMenu"><GameMenu /></div> */}
+                <div id="gameMenu"><GameMenu /></div>
             </div>
         </div>
     );

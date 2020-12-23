@@ -1,10 +1,11 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CreateSquadMember, UpdateSquadMember } from '../../utils/SquadMemberStorage';
+import GameMenu from '../StylingComponents/GameMenu';
 import Header from '../StylingComponents/Header';
 import NavBar from '../StylingComponents/NavBar';
 
-const SquadList = ({history}) => {
+const SquadList = ({ history }) => {
     let gameId = localStorage.getItem('Game ID');
     let userId = localStorage.getItem('User ID');
     let playerId = localStorage.getItem('Player ID');
@@ -22,7 +23,7 @@ const SquadList = ({history}) => {
         const squadResponse = await fetch('/api/fetch/squad/details/game=' + gameId);
         let body;
         if (squadResponse.status === 200) {
-            body = await squadResponse.json();       
+            body = await squadResponse.json();
         } else {
             body = [];
         }
@@ -65,7 +66,7 @@ const SquadList = ({history}) => {
             } else {
                 alert('Failed to join squad! Post failed.');
             }
-        }  else if (storageSquadId === 'null') {
+        } else if (storageSquadId === 'null') {
             //Player has a SquadMember Object but is not assigned to a squad yet. Patch it.
             let response = await UpdateSquadMember(squadMemberId, squadId);
             if (response !== null) {
@@ -85,10 +86,9 @@ const SquadList = ({history}) => {
 
     return (
         <div>
-            <Header />
-            <NavBar />
-            <section className="squadList">
+            <section className="home">
                 <div className="container">
+                    <Header />
                     <h1>Active Squads</h1>
                     <div>
                         {console.log("This is the current player: \n" + currentPlayer)}
@@ -122,7 +122,7 @@ const SquadList = ({history}) => {
                         </tbody>
                     </table>
 
-                    <br/>
+                    <br />
                     <Link to="createsquad">
                         <button>Create New Squad</button>
                     </Link>

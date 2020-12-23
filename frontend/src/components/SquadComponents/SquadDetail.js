@@ -1,5 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
 import { UpdateSquadMember } from '../../utils/SquadMemberStorage';
+import GameMenu from '../StylingComponents/GameMenu';
 import Header from '../StylingComponents/Header';
 import NavBar from '../StylingComponents/NavBar';
 
@@ -118,45 +119,44 @@ const SquadDetail = ({ history }) => {
 
     return (
         <div>
-            <Header />
-            <div className="container">
-                <section className="squadDetail">
-                    <div className="container">
-                        <h1>{squad.name}
-                            {console.log(squad)}
-                            {console.log(squadMembers)}
-                            {console.log(currentPlayer)}</h1>
-                        <br />
+            <section className="home">
+                <div className="container">
+                    <Header />
 
-                        <table>
-                            <thead>
+                    <h1>{squad.name}
+                        {console.log(squad)}
+                        {console.log(squadMembers)}
+                        {console.log(currentPlayer)}</h1>
+                    <br />
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Alive</th>
+                                <th>Rank</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {squadMembers.map((s) =>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Alive</th>
-                                    <th>Rank</th>
+                                    <td>{s.username}</td>
+                                    <td>{s.alive.toString()}</td>
+                                    <td>{s.squadRank}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {squadMembers.map((s) =>
-                                    <tr>
-                                        <td>{s.username}</td>
-                                        <td>{s.alive.toString()}</td>
-                                        <td>{s.squadRank}</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                        <br />
+                            )}
+                        </tbody>
+                    </table>
+                    <br />
 
-                        <button onClick={getLocation}>Mark location</button>
-                        <p id="current-location"></p>
-                        <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
+                    <button onClick={getLocation}>Mark location</button>
+                    <p id="current-location"></p>
+                    <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
 
-                        <br />
-                        <button type="button" onClick={() => handleDisbandSquad()}>Disband Squad (only available to the leader)</button>
-                    </div>
-                </section>
-            </div>
+                    <br />
+                    <button type="button" onClick={() => handleDisbandSquad()}>Disband Squad (only available to the leader)</button>
+                </div>
+            </section>
         </div>
     );
 }

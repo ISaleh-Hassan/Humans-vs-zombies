@@ -5,6 +5,7 @@ import { FetchGame } from '../../utils/GameStorage';
 import { FetchPlayer } from '../../utils/PlayerStorage';
 import { FetchSquadMember } from '../../utils/SquadMemberStorage';
 import GameMenu from '../StylingComponents/GameMenu';
+import HeaderOutside from '../StylingComponents/HeaderOutside';
 
 const LandingPage = (props) => {
 
@@ -67,11 +68,10 @@ const LandingPage = (props) => {
 
     return (
         <div>
-            <Header />
             <section className="home">
                 <div className="container">
+                    {hasJoined ? <Header /> : <HeaderOutside />}
                     <div id="landing">
-                        {hasJoined ? <GameMenu /> : null}
                         <h2> {gameDetails.name}</h2>
                         <div id="description">
                             <br />
