@@ -1,23 +1,32 @@
 import React from "react";
+import { CreatePlayer } from "../../utils/PlayerStorage";
 import HeaderOutside from '../StylingComponents/HeaderOutside';
-import NavBar from "../StylingComponents/NavBar";
-import ChatMessage from  '../ChatMessageComponents/ChatMessage'
 
 const ChooseFaction = (props) => {
 
-    const joinHumans = () => {
-        console.log("Joined humans!")
+    let gameId = localStorage.getItem('Game ID');
+    let userId = localStorage.getItem('User ID');
+
+    async function joinHumans() {
+        let response = await CreatePlayer(gameId, userId, 'HUMAN');
+        if (response === null) {
+            alert("Failed to create player!");
+        }
+        props.history.push('/landing');
     }
 
-    const joinZombies = () => {
-        console.log("Joined zombies!")
+    async function joinZombies() {
+        let response = await CreatePlayer(gameId, userId, 'ZOMBIE');
+        if (response === null) {
+            alert("Failed to create player!");
+        }
+        props.history.push('/landing');
     }
 
     return (
         <>
             <HeaderOutside />
             <section className="home">
-            <ChatMessage />
                 <div className="container">
                     <h1>Choose your faction!</h1>
                     <br></br>

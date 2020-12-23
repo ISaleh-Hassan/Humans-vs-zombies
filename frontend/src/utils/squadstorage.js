@@ -12,5 +12,9 @@ export async function storeSquadDB(squadName, squadFaction, squadMemberAmount) {
         })
     })
     const status = await response.status;
+    if (status === 201){
+        let body = await response.json();
+        localStorage.setItem('Squad ID', body.squadId)
+    }   
     return status;
 }

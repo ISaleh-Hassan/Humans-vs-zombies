@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Header from "../StylingComponents/Header";
-import NavBar from "../StylingComponents/NavBar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button } from 'react-bootstrap';
-import { CreateGame } from "../../utils/AdminDbStorge";
+import { CreateGame } from "../../utils/GameStorage";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import GameMenu from "../StylingComponents/GameMenu";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -101,9 +101,10 @@ const AdminCreateGame = (props) => {
 
     return (
         <>
-            <Header />
             <section className="home">
                 <div className="container">
+                    <Header />
+                    <GameMenu />
                     <h1>Create game</h1>
                     <br />
                     <Form.Group>
@@ -118,7 +119,7 @@ const AdminCreateGame = (props) => {
                             defaultValue="2021-01-01T08:00"
                             InputLabelProps={{
                                 shrink: true,
-                            }} 
+                            }}
                             onChange={onStartTimeChange}
                         />
                         <br />  <br />
@@ -133,7 +134,7 @@ const AdminCreateGame = (props) => {
                             onChange={onEndTimeChange}
                         />
                         <br />
-        
+
                         <br />
                         <Form.Control type="number" size="sm" onChange={onSizeChange} placeholder="Max number of players...">
 

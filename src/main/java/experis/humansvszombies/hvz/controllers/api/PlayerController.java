@@ -75,6 +75,32 @@ public class PlayerController {
     }
 
     @CrossOrigin()
+    @GetMapping("/api/fetch/player/{gameId}/{bitecode}")
+    public ResponseEntity<PlayerObject> getPlayerByBitecode(@PathVariable Integer gameId, @PathVariable String bitecode) {
+        try {
+            HttpStatus status;
+            PlayerObject playerObject = null;
+            if (gameId != null && bitecode != null) {
+                Player player = playerRepository.findDistinctByGameAndBiteCode(new Game(gameId), bitecode);
+                if (player != null) {
+                    playerObject = this.createPlayerObject(player);
+                    status = HttpStatus.OK;
+                } else {
+                    System.out.println("ERROR: could not find player based on gamId and bitecode.");
+                    status = HttpStatus.NOT_FOUND;
+                }
+            } else {
+                System.out.println("ERROR: gameId or bitecode was null");
+                status = HttpStatus.BAD_REQUEST;
+            }
+            return new ResponseEntity<>(playerObject, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: gameId or bitecode was null");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);            
+        }
+    }
+
+    @CrossOrigin()
     @PostMapping("/api/create/player/{userAccountId}/{gameId}")
     public ResponseEntity<PlayerObject> addPlayer(@RequestBody Player newPlayer, @PathVariable Integer userAccountId,
         @PathVariable Integer gameId) {   
