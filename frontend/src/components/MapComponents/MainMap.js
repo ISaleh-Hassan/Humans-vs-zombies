@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
+import { setCoords } from '../../utils/markerStorage';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 
@@ -22,6 +23,8 @@ class MainMap extends Component {
       zoom: this.state.zoom
     });
 
+    let coords = [];
+
     let marker = new mapboxgl.Marker({
       draggable: true
     });
@@ -40,8 +43,8 @@ class MainMap extends Component {
       let lngLat = marker.getLngLat();
       coordinates.innerHTML =
         'Longitude: ' + lngLat.lng + '<br />Latitude: ' + lngLat.lat;
-        localStorage.setItem('Marker Lng: ', lngLat.lng);
-        localStorage.setItem('Marker Lat: ', lngLat.lat);
+        coords = [lngLat.lng, lngLat.lat]
+        setCoords(coords)
     }
 
     marker.on('dragend', onDragEnd);

@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { CreateMission } from '../../utils/missionStorage'
 import MainMap from "../MapComponents/MainMap";
+import { getCoords } from "../../utils/markerStorage";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -57,7 +58,6 @@ const CreateMissionMarker = (props) => {
   let markerLng = localStorage.getItem('Marker Lng: ')
   let markerLat = localStorage.getItem('Marker Lat: ')
 
-
   async function createMission() {
     if (validMissionName === true) {
       let createMissionResponse = await CreateMission(missionObject);
@@ -101,6 +101,11 @@ const CreateMissionMarker = (props) => {
     }));
   }
 
+  async function getCoordinates() {
+    let pcoordinates = document.getElementById('pcoordinates');
+    getCoords()
+  }
+
   return (
     <>
       <Header />
@@ -114,8 +119,7 @@ const CreateMissionMarker = (props) => {
             <Form.Control type="text" placeholder="Coordinates" />
             <br />
             <MainMap />
-            <input id="markerLng" type="text" value={markerLng} hidden />
-            <input id="markerLat" type="text" value={markerLat} hidden />
+            <p id="pcoordinates">Coords</p>
             <br />
             <TextField
               id="datetime-local"
@@ -141,6 +145,8 @@ const CreateMissionMarker = (props) => {
             <br />
             <br /><br />
             <Button disabled={!validMissionName} onClick={createMission}>Create</Button><Link to="/admin"><Button>Cancel</Button></Link>
+            <br></br>
+            <Button onClick={getCoordinates}>Get Coords</Button>
           </Form.Group>
         </div>
       </section>
