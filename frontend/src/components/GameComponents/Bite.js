@@ -43,32 +43,53 @@ const Bite = ({ history }) => {
         let biteCodeInput = ev.target.value;
         if (biteCodeInput.length < 8 || biteCodeInput.length > 8 /* || currentBiteCode !== victimBiteCode */) {
             setValidBiteCode(false);
-        } else /* (currentBiteCode === victimBiteCode) */ {
+        } else /* (currentBiteCode === currentVictim.biteCode) */ {
             console.log('That is a valid bite code');
-            setCurrentBiteCode(biteCodeInput);
+            
             setValidBiteCode(true);
+            
             /* fetchCurrentVictim().then(data => {
                 console.log('Look here at this cool data: ' + data);
             }) */
         }
+        setCurrentBiteCode(biteCodeInput);
+        // The function call below doesn't work properly... It doesn't setCurrentVictim correctly, but it DOES log the final message to the console...
+        fetchCurrentVictim();
+        return currentVictim;
     }
 
 
     async function fetchCurrentVictim() {
         const response = await (await fetch('/api/fetch/player/' + gameId + '/' + currentBiteCode)).json();
-        setCurrentVictim(response);
-        console.log('You did a victim fetch')
+        setCurrentVictim(await response);
+        console.log('You did a victim fetch');
+        console.log('Check this data yo: ' + response.playerId);
+        return currentVictim;
     }
 
 
     async function testVictim() {
         console.log('This is the bite code input from the form: ' + currentBiteCode);
         console.log('This is the current player object: ' + currentPlayer.playerId);
-        await fetchCurrentVictim (console.log('This is the victim\'s bite code according to victim fetch: ' + currentVictim.biteCode));
+        console.log('This is the victim\'s bite code according to victim fetch: ' + currentVictim.biteCode);
     }
+
+
+    const [currentVictimSquadMember, setCurrentVictimSquadMember] = useState([]);
+
+    useEffect(() => {
+        fetchCurrentVictimSquadMember();
+    }, [])
+
+    async function fetchCurrentVictimSquadMember() {
+        const response = await (await fetch('/api/fetch/squadmember/game=' + gameId + '/player=' + currentVictim.playerId)).json();
+        setCurrentVictimSquadMember(response);
+    }
+
 
     // I need to pause the testVictim function, so it doesn't get called until the fetchCurrentVictim function has finished running.
     // How the frick do I do that? HELP ON MONDAY.
+
 /*     async function victimMaster() {
         const fetchVictim = await fetchCurrentVictim();
         console.log(fetchVictim);
@@ -79,13 +100,67 @@ const Bite = ({ history }) => {
 
 
     async function handleZombie() {
+        // Need to add a function that creates a grave stone on the map, using the auto fetched coordinates
+        // and the victim description from the form
         console.log('The player was turned into a ZOMBIE');
+        if (validBiteCode === true) {
+            let playerResponse = await fetch('/api/update/player/' + currentVictim.playerId, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    faction: 'ZOMBIE'
+                })
+            });
+            if (playerResponse.status === 200) {
+                let body = await playerResponse.json();
+                console.log(body);
+                return body;
+            } else {
+                return null;
+            }
+        }
+        // Need to find a way to update the player's squad member object as well... It currently doesn't work.
+        let squadMemberResponse = await fetch ('/api/update/squadmember/' + currentVictimSquadMember.squadMemberId, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                squadId: null
+            })
+        });
+        if (squadMemberResponse.status === 200) {
+            let body = await squadMemberResponse.json();
+            console.log(body);
+            return body;
+        } else {
+            return null;
+        }
     }
 
+    // Need a check on other pages that limits access if the player's isAlive = false
     async function handleKill() {
         console.log('The player was killed');
-
-        
+        if (validBiteCode === true) {
+            let response = await fetch('/api/update/player/' + currentVictim.playerId, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    isAlive: false
+                })
+            });
+            if (response.status === 200) {
+                let body = await response.json();
+                console.log(body);
+                return body;
+            } else {
+                return null;
+            }
+        }
     }
 
 
