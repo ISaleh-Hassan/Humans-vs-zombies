@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import GameMenu from "../StylingComponents/GameMenu";
 import Header from "../StylingComponents/Header";
 import NavBar from "../StylingComponents/NavBar";
 
@@ -7,9 +8,10 @@ const Admin = () => {
 
   return (
     <>
-      <Header />
       <section className="home">
         <div className="container">
+          <Header />
+          <GameMenu />
           <h1>Admin</h1>
           <Link to="/creategame">Create Game</Link>
           <Link to="/editgame">Edit Game</Link>
