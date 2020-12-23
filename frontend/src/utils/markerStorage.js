@@ -3,6 +3,5 @@ export async function setCoords(coords) {
 }
 
 export async function getCoords() {
-    localStorage.getItem("Coords: ")
     console.log(localStorage.getItem("Coords: "))
 }

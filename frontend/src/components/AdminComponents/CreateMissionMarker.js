@@ -101,9 +101,21 @@ const CreateMissionMarker = (props) => {
     }));
   }
 
-  async function getCoordinates() {
+  function getCoordinates() {
+    let coordsValue = localStorage.getItem("Coords: ")
     let pcoordinates = document.getElementById('pcoordinates');
-    getCoords()
+    pcoordinates.value = coordsValue;
+  }
+
+  function myFunction() {
+    var copyText = document.getElementById("pcoordinates");
+
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); 
+
+    document.execCommand("copy");
+
+    alert("Copied the text: " + copyText.value);
   }
 
   return (
@@ -119,7 +131,8 @@ const CreateMissionMarker = (props) => {
             <Form.Control type="text" placeholder="Coordinates" />
             <br />
             <MainMap />
-            <p id="pcoordinates">Coords</p>
+            <input id="pcoordinates" />
+            <button onClick={myFunction}>Copy</button>
             <br />
             <TextField
               id="datetime-local"
