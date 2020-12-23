@@ -22,6 +22,61 @@ const Bite = ({ history }) => {
         setCurrentPlayer(response);
     }
 
+    const [validBiteCode, setValidBiteCode] = useState(false);
+    // const [victim, setVictim] = useState(
+    //     {
+    //         playerId: '',
+    //         biteCode: '1234ABCD',
+    //         faction: '',
+    //         isAlive: true,
+    //         isPatientZero: false
+    //     })
+
+    // Need to get the player object through their bite code
+    // if the victimPlayer.biteCode === the bite code input into the form the victim can be either turned or killed
+
+    const [currentBiteCode, setCurrentBiteCode] = useState([]);
+    const [currentVictim, setCurrentVictim] = useState([]);
+    
+
+    const onBiteCodeChange = ev => {
+        let biteCodeInput = ev.target.value;
+        if (biteCodeInput.length < 8 || biteCodeInput.length > 8 /* || currentBiteCode !== victimBiteCode */) {
+            setValidBiteCode(false);
+        } else /* (currentBiteCode === victimBiteCode) */ {
+            console.log('That is a valid bite code');
+            setCurrentBiteCode(biteCodeInput);
+            setValidBiteCode(true);
+            /* fetchCurrentVictim().then(data => {
+                console.log('Look here at this cool data: ' + data);
+            }) */
+        }
+    }
+
+
+    async function fetchCurrentVictim() {
+        const response = await (await fetch('/api/fetch/player/' + gameId + '/' + currentBiteCode)).json();
+        setCurrentVictim(response);
+        console.log('You did a victim fetch')
+    }
+
+
+    async function testVictim() {
+        console.log('This is the bite code input from the form: ' + currentBiteCode);
+        console.log('This is the current player object: ' + currentPlayer.playerId);
+        await fetchCurrentVictim (console.log('This is the victim\'s bite code according to victim fetch: ' + currentVictim.biteCode));
+    }
+
+    // I need to pause the testVictim function, so it doesn't get called until the fetchCurrentVictim function has finished running.
+    // How the frick do I do that? HELP ON MONDAY.
+/*     async function victimMaster() {
+        const fetchVictim = await fetchCurrentVictim();
+        console.log(fetchVictim);
+
+        const testBiteCode = await testVictim();
+        console.log(testBiteCode);
+    } */
+
 
     async function handleZombie() {
         console.log('The player was turned into a ZOMBIE');
@@ -29,38 +84,8 @@ const Bite = ({ history }) => {
 
     async function handleKill() {
         console.log('The player was killed');
+
         
-    }
-
-    const [validBiteCode, setValidBiteCode] = useState(false);
-    const [victim, setVictim] = useState(
-        {
-            playerId: '',
-            biteCode: '1234ABCD',
-            faction: '',
-            isAlive: true,
-            isPatientZero: false
-        })
-
-    // Need to get the player object through their bite code
-    // if the victimPlayer.biteCode === the bite code input into the form the victim can be either turned or killed
-    let victimBiteCode = '5JEWI9NI';
-
-    const onBiteCodeChange = ev => {
-        let currentBiteCode = ev.target.value;
-        if (currentBiteCode.length < 8 || currentBiteCode.length > 8 || currentBiteCode !== victimBiteCode) {
-            setValidBiteCode(false);
-        } else if (currentBiteCode === victimBiteCode) {
-            console.log('That is a valid bite code');
-            console.log(currentBiteCode);
-            setVictim((prevState) => ({
-                ...prevState,
-                faction: 'ZOMBIE'
-            }));
-            setValidBiteCode(true);
-            console.log(currentPlayer);
-            console.log('You turned them into a zombie');
-        }
     }
 
 
@@ -89,6 +114,9 @@ const Bite = ({ history }) => {
                         <Form.Control id="victimDescription" placeholder="Enter victim description..." as="textarea" rows={3} required></Form.Control>
                     </Form>
                     <br/>
+                    <button onClick={fetchCurrentVictim}>FETCH VICTIM</button>
+                    <button onClick={testVictim}>TEST VICTIM</button>
+                    {/* <button onClick={victimMaster}>VICTIM MASTER</button> */}
                     <button onClick={handleZombie}>Turn into ZOMBIE</button>
                     <button onClick={handleKill}>Kill victim</button>
                 </div>
