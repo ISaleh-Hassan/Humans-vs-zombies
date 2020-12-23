@@ -11,6 +11,7 @@ import EditGame from './components/AdminComponents/EditGame'
 import PlayerState from './components/AdminComponents/PlayerState'
 import Bite from './components/GameComponents/Bite'
 import CreateMissionMarker from './components/AdminComponents/CreateMissionMarker'
+import EditMissionMarker from './components/AdminComponents/EditMissionMarker'
 import BiteHuman from './components/GameComponents/BiteHuman'
 import BiteZombie from './components/GameComponents/BiteZombie'
 import ChooseFaction from './components/GameComponents/ChooseFaction'
@@ -51,6 +52,7 @@ const App = () => {
           <PrivateRoute exact path="/choosefaction" component={ChooseFaction} />
           <PrivateRoute exact path="/creategame" component={AdminCreateGame} />
           <PrivateRoute exact path="/create/missionmarker" component={CreateMissionMarker} />
+          <PrivateRoute exact path="/edit/missionmarker" component={EditMissionMarker} />
           <PrivateRoute exact path="/editgame" component={EditGame} />
           <Route path='*'>
             <NotFound header='Page not found' message='The page you requested does not exist' />
