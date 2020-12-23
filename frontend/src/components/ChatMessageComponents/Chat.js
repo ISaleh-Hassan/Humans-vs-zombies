@@ -18,21 +18,13 @@ const useStyles = makeStyles((theme) => ({
 
 const Chat = (props) => {
 
-
-    useEffect(() => {
-        loadMessages();
-    }, []);
-
-    async function loadMessages() {
-
-    }
-
-
     return (
         <>
-            <Header />
             <section className="home">
+                <div className="container">
+                    <Header />
                     <ChatMessage />
+                </div>
             </section>
         </>
     );

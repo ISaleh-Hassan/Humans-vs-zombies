@@ -12,14 +12,23 @@ export async function GetBundleOfChatMessages(request) {
             faction: request.faction,
             squadId: request.squadId,
         })
-    }) 
-    return response;
+    });
+    if (response.status === 200) {
+        let body = await response.json();
+        return body;
+    } else {
+        return null;
+    }
 }
 
 export async function CreateMessage(messageData) {
-    let url = "create/chatmessage/" + messageData.gameId + "/" + messageData.playerId + "/" +messageData.squadId;
+    let squadId = messageData.squadId;
+    if (squadId === 'null') {
+        squadId = 0;
+    }
+    let url = getBaseUrl() + "create/chatmessage/" + messageData.gameId + "/" + messageData.playerId + "/" + squadId;
     
-    const response = await fetch(getBaseUrl() + url, {
+    const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

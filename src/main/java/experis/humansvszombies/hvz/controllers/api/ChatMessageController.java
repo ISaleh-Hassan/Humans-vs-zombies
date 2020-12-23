@@ -134,10 +134,6 @@ public class ChatMessageController {
     @PostMapping("/api/fetch/chatmessage/bundle")
     public ResponseEntity<ArrayList<ChatMessageObject>> fetchBundleOfChatMessages(@RequestBody ChatMessageObject request) {
         try {
-            System.out.println("Hello from bundle messages.");
-            System.out.println("GameId: " + request.getGameId());
-            System.out.println("Faction: " + request.getFaction());
-            System.out.println("SquadId: " + request.getSquadId());
             ArrayList<ChatMessage> messages;
             if (request.getSquadId() == null || request.getSquadId() == 0) {
                 messages = chatMessageRepository.findByGameAndFactionAndSquad(new Game(request.getGameId()), request.getFaction(), null);
