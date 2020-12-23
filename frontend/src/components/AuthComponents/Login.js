@@ -5,7 +5,6 @@ import { AuthContext } from "../../utils/Auth";
 import { Link } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
 import { loginUser } from "../../utils/dbstorage.js";
-import Phone from "./Phone.js";
 import HeaderOutside from "../StylingComponents/HeaderOutside";
 
 const Login = ({ history }) => {

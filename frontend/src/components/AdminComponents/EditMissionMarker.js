@@ -5,7 +5,7 @@ import Header from '../StylingComponents/Header';
 import NavBar from "../StylingComponents/NavBar";
 import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
-import { CreateMission } from '../../utils/markerStorage'
+import { CreateMission } from '../../utils/missionStorage'
 import MainMap from "../MapComponents/MainMap";
 
 const useStyles = makeStyles((theme) => ({
