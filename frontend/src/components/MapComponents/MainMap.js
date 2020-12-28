@@ -41,6 +41,11 @@ class MainMap extends Component {
     let graveStoneMarker = new mapboxgl.Marker(gravestone);
     graveStoneMarker.setLngLat([14.1618, 57.7826]).addTo(map);
 
+    let squad = document.createElement('div');
+    squad.className = 'squad';
+    let squadMarker = new mapboxgl.Marker(squad);
+    squadMarker.setLngLat([localStorage.getItem("Squad Lng: "), localStorage.getItem("Squad Lat: ")]).addTo(map);
+
     function onDragEnd() {
       let lngLat = marker.getLngLat();
       let lngValue = lngLat.lng.toFixed(4);

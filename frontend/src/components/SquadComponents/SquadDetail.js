@@ -49,9 +49,13 @@ const SquadDetail = ({ history }) => {
     }
 
     function showPosition(position) {
+        let squadLng = position.coords.longitude.toFixed(4);
+        let squadLat = position.coords.latitude.toFixed(4);
         let currentPosition = document.getElementById("current-location");
-        currentPosition.innerHTML = "Latitude: " + position.coords.latitude.toFixed(4) +
-            "<br>Longitude: " + position.coords.longitude.toFixed(4);
+        currentPosition.innerHTML = "Longitude: " + squadLng +
+            "<br>Latitude: " + squadLat;
+        localStorage.setItem("Squad Lng: ", squadLng)
+        localStorage.setItem("Squad Lat: ", squadLat)
     }
 
     const [squad, setSquad] = useState([]);
