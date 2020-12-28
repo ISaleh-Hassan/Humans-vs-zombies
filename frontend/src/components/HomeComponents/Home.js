@@ -16,6 +16,21 @@ const Home = (props) => {
     clearUser();
   }
 
+
+  // The usertype should be determined by calling the database, not by using local storage as that can be edited.
+  // This should be updated ASAP.
+  const userType = localStorage.getItem('Usertype');
+
+  function handleAdminAccess() {
+    if (userType === 'Admin') {
+        props.history.push('/admin')
+    } else {
+        alert('You do not have access to the admin menu')
+    }
+  }
+
+
+
   return (
     <>
       <section className="home">
@@ -28,6 +43,8 @@ const Home = (props) => {
             : <span>A verification link has been sent to your email. Please verify your email to register your phone.</span>
           }</p>
           <Button variant="dark" onClick={()=> props.history.push("/currentgames") }>Browse Games</Button>
+          <br/>
+          <Button variant="dark" onClick={handleAdminAccess}>ADMIN</Button>
           <br/>
           <Button variant="dark" onClick={handleSignOut}>Sign out</Button>
         </div>
