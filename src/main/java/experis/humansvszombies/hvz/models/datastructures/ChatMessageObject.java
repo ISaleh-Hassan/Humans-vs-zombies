@@ -12,12 +12,14 @@ public class ChatMessageObject {
     private Integer gameId;
     private Integer playerId;
     private Integer squadId;
+    private String username;
+    private String stringTimestamp;
 
     public ChatMessageObject() {
 
     }
 
-    public ChatMessageObject(Integer chatMessageId, String message, Faction faction, Timestamp timestamp, Integer gameId, Integer playerId, Integer squadId) {
+    public ChatMessageObject(Integer chatMessageId, String message, Faction faction, Timestamp timestamp, Integer gameId, Integer playerId, Integer squadId, String username, String sTimestamp) {
         this.chatMessageId = chatMessageId;
         this.message = message;
         this.faction = faction;
@@ -25,6 +27,8 @@ public class ChatMessageObject {
         this.gameId = gameId;
         this.playerId = playerId;
         this.squadId = squadId;
+        this.username = username;
+        this.stringTimestamp = sTimestamp;
     }
 
     public Integer getChatMessageId() {
@@ -81,5 +85,21 @@ public class ChatMessageObject {
 
     public void setSquadId(Integer squadId) {
         this.squadId = squadId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getStringTimestamp() {
+        return stringTimestamp;
+    }
+
+    public void setStringTimestamp(String stringTimestamp) {
+        this.stringTimestamp = stringTimestamp;
     }
 }

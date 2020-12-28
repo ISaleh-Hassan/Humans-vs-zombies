@@ -1,32 +1,87 @@
 import React, { useEffect, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { ButtonGroup, Button, Form, Container } from 'react-bootstrap';
-import { CreateMessage, GetBundleOfChatMessages } from '../../utils/chatMessageStorge';
+import { ButtonGroup, Button, Form } from 'react-bootstrap';
+import { CreateMessage, GetBundleOfChatMessages } from '../../utils/ChatMessageStorage';
 import { ThemeProvider, ChatList, ChatListItem, Avatar, Column, Subtitle, Row, Title, IconButton, SendIcon } from '@livechat/ui-kit'
-import Header from '../StylingComponents/Header';
+import { makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 200,
+    },
+}));
 
 const ChatMessage = props => {
 
-    const [chatMessage, setMsgText] = useState('');
+    let userId = localStorage.getItem('User ID');
+    let gameId = localStorage.getItem('Game ID');
+    let playerId = localStorage.getItem('Player ID');
+    let squadId = localStorage.getItem('Squad ID');
+    let playerFaction = localStorage.getItem('Faction');
+
+    const [chatRoom, setChatRoom] = useState('ALL');
+    const [refresh, setRefresh] = useState(false);
+    const [message, setMessage] = useState('');
+    const [chatMessages, setChatMessages] = useState([]);
     const [validInput, setValidInput] = useState(false);
-    const [invalidInputMessage, setInvalidInputMessage] = useState('');
-    const [playerId, setPlayerId] = useState(localStorage.getItem('Player ID'));
-    const [gameId, setGameId] = useState(localStorage.getItem('Game ID'));
-    const [squadId, setSquadId] = useState(0);
-    const [msgObject, setMsgObject] = useState(
-        {
-            gameId: gameId,
-            playerId: playerId,
-            squadId: squadId,
-            message: chatMessage,
-            faction: 'ALL',
-            timestamp: getTime()
-        })
-    const [allChatMessages, setAllChatMessages] = useState([]);
+
+
+    // const [timestamp, setTimeStamp] = useState(getTime());
+    // const [playerData, setPlayerData] = useState(null);
+    // const [playerSquadId, setPlayerSquadId] = useState(localStorage.getItem('Squad ID'));
+    // const [msgObject, setMsgObject] = useState(
+    //     {
+    //         gameId: localStorage.getItem('Game ID'),
+    //         playerId: localStorage.getItem('Player ID'),
+    //         squadId: localStorage.getItem('Squad ID'),
+    //         message: '',
+    //         faction: 'ALL',
+    //         timestamp: timestamp
+    //     })
 
     useEffect(() => {
-        getChatMessagesBySelectedChatRoom(msgObject)
-    }, [msgObject.faction]);
+        if (userId !== 'null' && userId !== null) {
+            if (playerId !== 'null' && playerId !== null) {
+                if (gameId !== 'null' && gameId !== null) {
+                    if (playerFaction !== 'null' && playerFaction !== null) {
+                        let request = {
+                            gameId: gameId,
+                            playerId: playerId,
+                            squadId: null,
+                            faction: chatRoom
+                        }
+                        fetchMessages(request);
+                    } else {
+                        alert('Faction missing.');
+                        props.history.push("/landing");
+                    }
+                } else {
+                    alert('Game ID missing.');
+                    props.history.push("/landing");
+                }
+            } else {
+                alert('Player ID missing.');
+                props.history.push("/landing");
+            }
+        } else {
+            alert('User ID missing.');
+            props.history.push("/landing");
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchMessages();
+    }, [refresh])
+
+    useInterval(() => {
+        fetchMessages()
+    }, 5000);
 
     function useInterval(callback, delay) {
         const savedCallback = useRef();
@@ -46,128 +101,146 @@ const ChatMessage = props => {
         }, [delay]);
     }
 
-    useEffect(() => {
-        if (localStorage.getItem('Squad ID') !== null) {
-            setSquadId(localStorage.getItem('Squad ID'))
-            setMsgObject((prevState) => ({
-                ...prevState,
-                squadId: squadId,
-            }));
-        }
-    }, []);
-
-    useInterval(() => {
-        getChatMessagesBySelectedChatRoom(msgObject)
-    }, 1000);
-
-    function getSelectedChatRoom(ev) {
-        let chatRoom = ev.target.value;
-        let selectedRoom;
+    async function fetchMessages() {
+        let request;
         switch (chatRoom) {
             case 'ALL':
-                selectedRoom = 'ALL'
+                request = {
+                    gameId: gameId,
+                    playerId: playerId,
+                    squadId: null,
+                    faction: 'ALL'
+                }
                 break;
-
-            case 'SQUAD':
-                selectedRoom = 'ZOMBIE'
-                break
-
             case 'FACTION':
-                selectedRoom = 'HUMAN'
+                request = {
+                    gameId: gameId,
+                    playerId: playerId,
+                    squadId: null,
+                    faction: playerFaction
+                }
+                break;
+            case 'SQUAD':
+                request = {
+                    gameId: gameId,
+                    playerId: playerId,
+                    squadId: squadId,
+                    faction: playerFaction
+                }
                 break;
             default:
-                console.log("Default")
+                break;
         }
-        createMessagesObjectByChatRoom(selectedRoom);
-        getChatMessagesBySelectedChatRoom(msgObject)
-
-        return chatRoom;
+        let messages = await GetBundleOfChatMessages(request);
+        if (messages !== null) {
+            setChatMessages(messages);
+        } else {
+            alert('Failed to fetch messages');
+            setChatMessages([]);
+        }
     }
 
-    function createMessagesObjectByChatRoom(selectedRoom) {
-        setMsgObject((prevState) => ({
-            ...prevState,
-            faction: selectedRoom
-        }));
-    }
-
-    function getChatMessagesBySelectedChatRoom(request) {
-        GetBundleOfChatMessages(request)
-            .then(response => response.json())
-            .then(data => setAllChatMessages(data));
-    }
-
-    function getTime() {
-        let today = new Date();
-        let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-        return date;
+    function selectChatRoom(ev) {
+        let room = ev.target.value;
+        setChatRoom(room);
+        setRefresh(!refresh);
     }
 
     const onMsgChanged = ev => {
         let currentInput = ev.target.value;
-        setMsgText(currentInput);
-        createMessageObject(currentInput)
-        if (currentInput.length < 2) {
+        if (currentInput.length < 1) {
             setValidInput(false);
         }
         else {
             setValidInput(true);
         }
+        setMessage(currentInput);
     }
 
-    function createMessageObject(msg) {
-        setMsgObject((prevState) => ({
-            ...prevState,
-            message: msg,
-        }));
+    const prepareMessageObject = (ev) => {
+        let msgObject;
+        let time = new Date().getTime();
+        switch (chatRoom) {
+            case 'ALL':
+                msgObject = {
+                    message: message,
+                    faction: 'ALL',
+                    gameId: gameId,
+                    playerId: playerId,
+                    squadId: 'null',
+                    timestamp: time
+                }
+                break;
+            case 'FACTION':
+                msgObject = {
+                    message: message,
+                    faction: playerFaction,
+                    gameId: gameId,
+                    playerId: playerId,
+                    squadId: 'null',
+                    timestamp: time
+                }
+                break;
+            case 'SQUAD':
+                msgObject = {
+                    message: message,
+                    faction: playerFaction,
+                    gameId: gameId,
+                    playerId: playerId,
+                    squadId: squadId,
+                    timestamp: time
+                }
+                break;
+            default:
+                break;
+        }
+        sendMessage(msgObject);
     }
 
-    const sendMessage = (ev) => {
-        CreateMessage(msgObject)
-        getChatMessagesBySelectedChatRoom(msgObject)
+    async function sendMessage(msg) {
+        const response = await CreateMessage(msg);
+        if (response !== null) {
+            setRefresh(!refresh);
+        } else {
+            alert("Failed to send message! Failed to create.")
+        }
     }
+
+
 
     return (
         <>
-            <Header />
-            <Container >
-                <ButtonGroup >
-                    <Button variant="secondary" onClick={getSelectedChatRoom} value="ALL">Global</Button>
-                    <Button variant="secondary" onClick={getSelectedChatRoom} value="FACTION">faction</Button>
-                    <Button variant="secondary" onClick={getSelectedChatRoom} value="SQUAD">Squad</Button>
-                </ButtonGroup>
-                <br />
-                <ThemeProvider>
-                    <ChatList >
-                        {allChatMessages.map((chatMessage) =>
-                            <ChatListItem key={chatMessage.chatMessageId}>
-                                <Avatar imgUrl="https://livechat.s3.amazonaws.com/default/avatars/male_8.jpg" />
-                                <Column fill>
-                                    <Row justify>
-                                        <Title ellipsis>{'Michael'}</Title>
-                                        <Subtitle nowrap>{'14:31 PM'}</Subtitle>
-                                    </Row>
-                                    <Subtitle >
-                                        {chatMessage.message}
-                                    </Subtitle>
-                                </Column>
-                            </ChatListItem>
-                        )}
-                    </ChatList>
+            <ButtonGroup >
+                <Button variant="dark" onClick={selectChatRoom} value="ALL" >Global</Button>
+                <Button variant="dark" onClick={selectChatRoom} value="FACTION">Faction</Button>
+                <Button variant="dark" disabled={squadId === 'null'} onClick={selectChatRoom} value="SQUAD">Squad</Button>
+            </ButtonGroup>
+            <br />
+            <ThemeProvider>
+                <ChatList >
+                    {chatMessages.map((chatMessage) =>
+                        <ChatListItem key={chatMessage.chatMessageId}>
+                            <Avatar imgUrl="https://livechat.s3.amazonaws.com/default/avatars/male_8.jpg" />
+                            <Column fill>
+                                <Row justify>
+                                    <Title ellipsis>{chatMessage.username}</Title>
+                                    <Subtitle nowrap>{chatMessage.stringTimestamp}</Subtitle>
+                                </Row>
+                                <Subtitle >
+                                    {chatMessage.message}
+                                </Subtitle>
+                            </Column>
+                        </ChatListItem>
+                    )}
+                </ChatList>
 
-                    <Form.Group>
-                        <Form.Control type="text" placeholder="Enter a message" onChange={onMsgChanged} />
-                        {!validInput ? <p>{invalidInputMessage}</p> : null}
-                        <IconButton disabled={!validInput} onClick={sendMessage}>
-                            <SendIcon />
-                        </IconButton>
-                    </Form.Group>
-                </ThemeProvider>
-            </Container>
-
-
-
-
+                <Form.Group>
+                    <Form.Control type="text" placeholder="Enter a message" onChange={onMsgChanged} />
+                    <IconButton disabled={!validInput} onClick={prepareMessageObject}>
+                        <SendIcon />
+                    </IconButton>
+                </Form.Group>
+            </ThemeProvider>
         </>
     );
 };

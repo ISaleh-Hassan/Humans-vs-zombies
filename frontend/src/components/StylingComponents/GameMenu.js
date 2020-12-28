@@ -32,8 +32,14 @@ const GameMenu = ({history}) => {
     }, [])
 
     async function fetchCurrentPlayer() {
-        const response = await (await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId)).json();
-        setCurrentPlayer(response);
+        const response = await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId);
+        if (response.status === 200) {
+            let body = await response.json();
+            setCurrentPlayer(body);
+        }else {
+            alert('Could not fetch current player.');
+            setCurrentPlayer({});
+        }
     }
 
 
