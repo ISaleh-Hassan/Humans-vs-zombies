@@ -1,5 +1,9 @@
 import { getBaseUrl } from "./baseUrl";
 
+let lng = localStorage.getItem('Current Position Lng: ')
+let lat = localStorage.getItem('Current Position Lat: ')
+
+
 export async function FetchAllGames() {
     let url = getBaseUrl() + "fetch/game/all";
     const response = await fetch(url);
@@ -34,13 +38,21 @@ export async function CreateGame(gameData) {
             name: gameData.name,
             gameState: gameData.gameState,
             startTime: gameData.startTime,
+            nwPoint: {
+                "x": lng,
+                "y": lat
+            },
+            sePoint: {
+                "x": lng,
+                "y": lat
+            },
             endTime: gameData.endTime,
             maxNumberOfPlayers: gameData.maxNumberOfPlayers,
             description: gameData.description
         })
     })
     return response;
-} 
+}
 
 export async function UpdateGame(gameData) {
     let url = getBaseUrl() + "/update/game/" + gameData.gameId;
@@ -68,6 +80,6 @@ export async function DeleteGame(gameId) {
         headers: {
             'Content-type': 'application/json'
         }
-        });
+    });
     return response.status;
 }
