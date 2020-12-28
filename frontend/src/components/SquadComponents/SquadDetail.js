@@ -50,8 +50,8 @@ const SquadDetail = ({ history }) => {
 
     function showPosition(position) {
         let currentPosition = document.getElementById("current-location");
-        currentPosition.innerHTML = "Latitude: " + position.coords.latitude +
-            "<br>Longitude: " + position.coords.longitude;
+        currentPosition.innerHTML = "Latitude: " + position.coords.latitude.toFixed(4) +
+            "<br>Longitude: " + position.coords.longitude.toFixed(4);
     }
 
     const [squad, setSquad] = useState([]);
