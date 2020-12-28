@@ -1,21 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ButtonGroup, Button, Form } from 'react-bootstrap';
-import { CreateMessage, GetBundleOfChatMessages } from '../../utils/ChatMessageStorage';
+import { CreateMessage, GetBundleOfChatMessages, DeleteChatMessage } from '../../utils/ChatMessageStorage';
 import { ThemeProvider, ChatList, ChatListItem, Avatar, Column, Subtitle, Row, Title, IconButton, SendIcon } from '@livechat/ui-kit'
-import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
-    container: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        width: 200,
-    },
-}));
 
 const ChatMessage = props => {
 
@@ -30,6 +18,7 @@ const ChatMessage = props => {
     const [message, setMessage] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const [validInput, setValidInput] = useState(false);
+    const [updateMessage, setUpdateMessage] = useState(false);
 
 
     // const [timestamp, setTimeStamp] = useState(getTime());
@@ -206,8 +195,24 @@ const ChatMessage = props => {
         }
     }
 
+    async function handleDeleteMessage(msgId) {
+        const response = await DeleteChatMessage(msgId);
+        if (response !== null) {
+            setRefresh(!refresh);
+        } else {
+            alert("Failed to send message! Failed to delete.")
+        }
 
+    }
 
+    function handleEditMessage(msgId) {
+        setUpdateMessage(true);
+        console.log(msgId)
+    }
+
+    function onEditedMsgChanged(ev) {
+        console.log(ev.target.value)
+    }
     return (
         <>
             <ButtonGroup >
@@ -227,7 +232,20 @@ const ChatMessage = props => {
                                     <Subtitle nowrap>{chatMessage.stringTimestamp}</Subtitle>
                                 </Row>
                                 <Subtitle >
-                                    {chatMessage.message}
+                                    <div>
+                                        {!updateMessage ? chatMessage.message :
+                                            <Form.Group>
+                                                <Form.Control type="text"
+                                                 placeholder="edit your message"
+                                                  onChange={onEditedMsgChanged}
+                                                   />                 
+                                            </Form.Group>
+                                        }
+                                    </div>
+                                </Subtitle>
+                                <Subtitle >
+                                    <button onClick={() => handleEditMessage(chatMessage.chatMessageId)}> Edit</button>
+                                    <button onClick={() => handleDeleteMessage(chatMessage.chatMessageId)}>Delete</button>
                                 </Subtitle>
                             </Column>
                         </ChatListItem>
