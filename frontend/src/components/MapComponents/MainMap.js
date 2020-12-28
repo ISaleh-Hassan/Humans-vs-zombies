@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
+import { FetchAllGames, FetchGame } from '../../utils/GameStorage';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 
@@ -29,12 +30,26 @@ class MainMap extends Component {
     let missionName = localStorage.getItem("Mission Name: ")
 
     let popup = new mapboxgl.Popup({ offset: 25 })
-    .setText('Name: ' + missionName);
+      .setText('Name: ' + missionName);
+
+    let gameId = localStorage.getItem("Game ID")
+
+    let games = FetchAllGames();
 
     let mission = document.createElement('div');
     mission.className = 'mission';
     let missionMarker = new mapboxgl.Marker(mission);
-    missionMarker.setLngLat([localStorage.getItem("Lng: "), localStorage.getItem("Lat: ")]).setPopup(popup).addTo(map);
+    FetchGame(gameId)
+      .then(response =>
+        missionMarker
+          .setLngLat([response.nwPoint.x, response.nwPoint.y]).setPopup(popup).addTo(map))
+
+    games
+      .then(response =>
+        response.map((g) => {
+          console.log(g.nwPoint)
+        })
+      )
 
     let gravestone = document.createElement('div');
     gravestone.className = 'gravestone';
