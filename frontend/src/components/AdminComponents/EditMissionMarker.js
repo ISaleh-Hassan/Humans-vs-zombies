@@ -83,6 +83,7 @@ const EditMissionMarker = (props) => {
             }));
             setValidMissionName(true);
         }
+        localStorage.setItem("Mission Name: ", ev.target.value)
     }
 
     const onStartTimeChange = ev => {
@@ -122,16 +123,35 @@ const EditMissionMarker = (props) => {
         setDeleteMission(!deleteMission);
     }
 
-    function clicked() {
-        console.log("Hello")
-        let lng = document.getElementById("markerLng");
+    function getCoordinates() {
+        let lngValue = localStorage.getItem("Lng: ")
+        let latValue = localStorage.getItem("Lat: ")
+        let lng = document.getElementById('p-lng');
+        lng.value = lngValue;
+        let lat = document.getElementById('p-lat');
+        lat.value = latValue;
+    }
 
-        lng.select();
-        lng.setSelectionRange(0, 99999); /* For mobile devices */
+    function getLng() {
+        let copyText = document.getElementById("p-lng");
 
-        document.execCommand('copy');
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
 
-        alert("Copied the text: " + lng.value);
+        document.execCommand("copy");
+
+        alert("Copied the text: " + copyText.value);
+    }
+
+    function getLat() {
+        let copyText = document.getElementById("p-lat");
+
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+
+        document.execCommand("copy");
+
+        alert("Copied the text: " + copyText.value);
     }
 
     return (
@@ -147,9 +167,13 @@ const EditMissionMarker = (props) => {
                         <Form.Control type="text" placeholder="Coordinates" />
                         <br />
                         <MainMap />
-                        <input id="markerLng" type="text" value={markerLng} hidden />
-                        <input id="markerLat" type="text" value={markerLat} hidden />
-                        <button onClick={clicked}>Click</button>
+                        <input id="p-lng" />
+                        <button onClick={getLng}>Copy Lng</button>
+                        <input id="p-lat" />
+                        <button onClick={getLat}>Copy Lat</button>
+                        <br></br>
+                        <button onClick={getCoordinates}>Get Coords</button>
+                        <br />
                         <br />
                         <Form.Control as="select" placeholder="MissionState" onChange={onMissionStateChange}>
                             <option>PREPARATION</option>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { setCoords } from '../../utils/markerStorage';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 
@@ -23,16 +22,19 @@ class MainMap extends Component {
       zoom: this.state.zoom
     });
 
-    let coords = [];
-
     let marker = new mapboxgl.Marker({
       draggable: true
     });
 
+    let missionName = localStorage.getItem("Mission Name: ")
+
+    let popup = new mapboxgl.Popup({ offset: 25 })
+    .setText('Name: ' + missionName);
+
     let mission = document.createElement('div');
     mission.className = 'mission';
     let missionMarker = new mapboxgl.Marker(mission);
-    missionMarker.setLngLat([this.state.lng, this.state.lat]).addTo(map);
+    missionMarker.setLngLat([localStorage.getItem("Lng: "), localStorage.getItem("Lat: ")]).setPopup(popup).addTo(map);
 
     let gravestone = document.createElement('div');
     gravestone.className = 'gravestone';
@@ -41,10 +43,12 @@ class MainMap extends Component {
 
     function onDragEnd() {
       let lngLat = marker.getLngLat();
+      let lngValue = lngLat.lng.toFixed(4);
+      let latValue = lngLat.lat.toFixed(4);
       coordinates.innerHTML =
-        'Longitude: ' + lngLat.lng + '<br />Latitude: ' + lngLat.lat;
-        coords = [lngLat.lng, lngLat.lat]
-        setCoords(coords)
+        'Longitude: ' + lngValue + '<br />Latitude: ' + latValue;
+      localStorage.setItem("Lng: ", lngValue);
+      localStorage.setItem("Lat: ", latValue);
     }
 
     marker.on('dragend', onDragEnd);
@@ -53,9 +57,9 @@ class MainMap extends Component {
       let currentPosition = document.getElementById("current-position");
       // currentPosition.innerHTML = "Longitude: " + position.coords.longitude +
       //   "<br>Latitude: " + position.coords.latitude;
-      marker.setLngLat([position.coords.longitude, position.coords.latitude]).addTo(map)
-      localStorage.setItem('Current Position Lng: ', position.coords.longitude)
-      localStorage.setItem('Current Position Lat: ', position.coords.latitude)
+      marker.setLngLat([position.coords.longitude.toFixed(4), position.coords.latitude.toFixed(4)]).addTo(map)
+      localStorage.setItem('Current Position Lng: ', position.coords.longitude.toFixed(4))
+      localStorage.setItem('Current Position Lat: ', position.coords.latitude.toFixed(4))
     }
 
     if (navigator.geolocation) {

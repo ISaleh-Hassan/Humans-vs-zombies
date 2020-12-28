@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { CreateMission } from '../../utils/missionStorage'
 import MainMap from "../MapComponents/MainMap";
-import { getCoords } from "../../utils/markerStorage";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -22,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateMissionMarker = (props) => {
-
   let gameId = localStorage.getItem("Game ID")
   let userId = localStorage.getItem("User ID")
 
@@ -55,9 +53,6 @@ const CreateMissionMarker = (props) => {
       endTime: "2021-01-02T08:00:00.000+00:00"
     })
 
-  let markerLng = localStorage.getItem('Marker Lng: ')
-  let markerLat = localStorage.getItem('Marker Lat: ')
-
   async function createMission() {
     if (validMissionName === true) {
       let createMissionResponse = await CreateMission(missionObject);
@@ -83,6 +78,7 @@ const CreateMissionMarker = (props) => {
       }));
       setValidMissionName(true);
     }
+    localStorage.setItem("Mission Name: ", ev.target.value)
   }
 
   const onStartTimeChange = ev => {
@@ -102,16 +98,30 @@ const CreateMissionMarker = (props) => {
   }
 
   function getCoordinates() {
-    let coordsValue = localStorage.getItem("Coords: ")
-    let pcoordinates = document.getElementById('pcoordinates');
-    pcoordinates.value = coordsValue;
+    let lngValue = localStorage.getItem("Lng: ")
+    let latValue = localStorage.getItem("Lat: ")
+    let lng = document.getElementById('p-lng');
+    lng.value = lngValue;
+    let lat = document.getElementById('p-lat');
+    lat.value = latValue;
   }
 
-  function myFunction() {
-    var copyText = document.getElementById("pcoordinates");
+  function getLng() {
+    let copyText = document.getElementById("p-lng");
 
     copyText.select();
-    copyText.setSelectionRange(0, 99999); 
+    copyText.setSelectionRange(0, 99999);
+
+    document.execCommand("copy");
+
+    alert("Copied the text: " + copyText.value);
+  }
+
+  function getLat() {
+    let copyText = document.getElementById("p-lat");
+
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
 
     document.execCommand("copy");
 
@@ -128,11 +138,16 @@ const CreateMissionMarker = (props) => {
           <Form.Group>
             <Form.Control type="text" placeholder="Enter mission name" onChange={onMissionNameChange} />
             <br />
-            <Form.Control type="text" placeholder="Coordinates" />
+            <Form.Control type="text" placeholder="Longitude" /><Form.Control type="text" placeholder="Latitude" />
             <br />
             <MainMap />
-            <input id="pcoordinates" />
-            <button onClick={myFunction}>Copy</button>
+            <input id="p-lng" />
+            <button onClick={getLng}>Copy Lng</button>
+            <input id="p-lat" />
+            <button onClick={getLat}>Copy Lat</button>
+            <br></br>
+            <button onClick={getCoordinates}>Get Coords</button>
+            <br />
             <br />
             <TextField
               id="datetime-local"
@@ -159,7 +174,6 @@ const CreateMissionMarker = (props) => {
             <br /><br />
             <Button disabled={!validMissionName} onClick={createMission}>Create</Button><Link to="/admin"><Button>Cancel</Button></Link>
             <br></br>
-            <Button onClick={getCoordinates}>Get Coords</Button>
           </Form.Group>
         </div>
       </section>
