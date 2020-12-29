@@ -3,6 +3,7 @@ package experis.humansvszombies.hvz.models.datastructures;
 import java.sql.Timestamp;
 
 import experis.humansvszombies.hvz.models.enums.Faction;
+import experis.humansvszombies.hvz.models.enums.SquadRank;
 
 public class ChatMessageObject {
     private Integer chatMessageId;
@@ -14,12 +15,15 @@ public class ChatMessageObject {
     private Integer squadId;
     private String username;
     private String stringTimestamp;
+    private boolean alive;
+    private SquadRank squadRank;
 
     public ChatMessageObject() {
 
     }
 
-    public ChatMessageObject(Integer chatMessageId, String message, Faction faction, Timestamp timestamp, Integer gameId, Integer playerId, Integer squadId, String username, String sTimestamp) {
+    public ChatMessageObject(Integer chatMessageId, String message, Faction faction, Timestamp timestamp, Integer gameId, 
+            Integer playerId, Integer squadId, String username, String sTimestamp, boolean alive, SquadRank squadRank) {
         this.chatMessageId = chatMessageId;
         this.message = message;
         this.faction = faction;
@@ -29,6 +33,8 @@ public class ChatMessageObject {
         this.squadId = squadId;
         this.username = username;
         this.stringTimestamp = sTimestamp;
+        this.alive = alive;
+        this.squadRank = squadRank;
     }
 
     public Integer getChatMessageId() {
@@ -101,5 +107,21 @@ public class ChatMessageObject {
 
     public void setStringTimestamp(String stringTimestamp) {
         this.stringTimestamp = stringTimestamp;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    public SquadRank getSquadRank() {
+        return squadRank;
+    }
+
+    public void setSquadRank(SquadRank squadRank) {
+        this.squadRank = squadRank;
     }
 }
