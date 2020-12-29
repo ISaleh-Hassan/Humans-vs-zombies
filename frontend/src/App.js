@@ -18,7 +18,7 @@ import ChooseFaction from './components/GameComponents/ChooseFaction'
 import CurrentGames from './components/GameComponents/CurrentGames'
 import Home from './components/HomeComponents/Home'
 import LandingPage from './components/HomeComponents/LandingPage'
-import MainMap from './components/MapComponents/MainMap'
+import GameMap from './components/GameComponents/GameMap'
 import SquadCreate from './components/SquadComponents/SquadCreate'
 import SquadDetail from './components/SquadComponents/SquadDetail'
 import SquadList from './components/SquadComponents/SquadList'
@@ -49,7 +49,7 @@ const App = () => {
           <PrivateRoute exact path="/currentgames" component={CurrentGames} />
           <PrivateRoute exact path="/admin" component={Admin} />
           <PrivateRoute exact path="/playerstate" component={PlayerState} />
-          <PrivateRoute exact path="/map" component={MainMap} />
+          <PrivateRoute exact path="/map" component={GameMap} />
           <PrivateRoute exact path="/choosefaction" component={ChooseFaction} />
           <PrivateRoute exact path="/creategame" component={AdminCreateGame} />
           <PrivateRoute exact path="/create/missionmarker" component={CreateMissionMarker} />

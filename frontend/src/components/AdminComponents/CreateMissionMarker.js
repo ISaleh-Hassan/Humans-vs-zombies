@@ -78,8 +78,7 @@ const CreateMissionMarker = (props) => {
     else {
       setMissionObject((prevState) => ({
         ...prevState,
-        name: currentMissionName,
-        missionState: "PREPARATION"
+        name: currentMissionName
       }));
       setValidMissionName(true);
     }
@@ -125,8 +124,10 @@ const CreateMissionMarker = (props) => {
   function getCoordinates() {
     let lngValue = localStorage.getItem("Lng: ")
     let latValue = localStorage.getItem("Lat: ")
+
     let lng = document.getElementById('p-lng');
     lng.value = lngValue;
+    
     let lat = document.getElementById('p-lat');
     lat.value = latValue;
   }

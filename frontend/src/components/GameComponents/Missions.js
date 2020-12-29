@@ -1,7 +1,6 @@
 import { Button } from 'react-bootstrap';
 import React, { useEffect, useState } from "react";
 import { getPlayerInfo } from "../../utils/gamedbstorage";
-import HeaderOutside from '../StylingComponents/HeaderOutside';
 import { FetchAllMissions } from '../../utils/missionStorage';
 
 const Missions = (props) => {
@@ -40,11 +39,9 @@ const Missions = (props) => {
     return (
         <>
             <section className="home">
-                <div className="container">
-                    <HeaderOutside />
-                    <Button variant="dark" onClick={() => props.history.push("/")}>Profile</Button>
-
-                    <h1>Current Missions</h1>
+                <div>
+                    <h1>Game Name- Map</h1>
+                    <h2>Current Missions</h2>
                     <span>
                         <Button type="button" variant="primary" onClick={onFilterButtonClicked} value="ALL" size="sm">ALL</Button>
                         <Button type="button" variant="warning" onClick={onFilterButtonClicked} value="PREPARATION" size="sm">PREPARATION</Button>
