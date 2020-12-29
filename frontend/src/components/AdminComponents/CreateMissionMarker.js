@@ -41,13 +41,13 @@ const CreateMissionMarker = (props) => {
     setCurrentPlayer(body);
   }
 
-  let faction = localStorage.getItem("Faction")
+  let playerFaction = localStorage.getItem("Faction")
 
   const [validMissionName, setValidMissionName] = useState(false);
   const [missionObject, setMissionObject] = useState(
     {
       name: "",
-      faction: faction,
+      faction: playerFaction,
       missionPoint: {
         x: 18.0249,
         y: 59.2132
@@ -127,7 +127,7 @@ const CreateMissionMarker = (props) => {
 
     let lng = document.getElementById('p-lng');
     lng.value = lngValue;
-    
+
     let lat = document.getElementById('p-lat');
     lat.value = latValue;
   }

@@ -34,6 +34,10 @@ export async function CreateMission(missionData) {
         body: JSON.stringify({
             name: missionData.name,
             faction: missionData.faction,
+            missionPoint: {
+                x: missionData.missionPoint.x,
+                y: missionData.missionPoint.y
+            },
             missionState: missionData.missionState,
             startTime: missionData.startTime,
             endTime: missionData.endTime
@@ -53,6 +57,10 @@ export async function UpdateMission(missionData) {
         body: JSON.stringify({
             name: missionData.name,
             faction: missionData.faction,
+            missionPoint: {
+                x: missionData.missionPoint.x,
+                y: missionData.missionPoint.y
+            },
             missionState: missionData.missionState,
             startTime: missionData.startTime,
             endTime: missionData.endTime,
