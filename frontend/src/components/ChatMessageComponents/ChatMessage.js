@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ButtonGroup, Button, Form } from 'react-bootstrap';
 import { CreateMessage, GetBundleOfChatMessages, DeleteChatMessage, UpdateChatMessage } from '../../utils/ChatMessageStorage';
-import { GetPlayerData } from '../../utils/PlayerStorage';
 import { ThemeProvider, ChatList, ChatListItem, Avatar, Column, Subtitle, Row, Title, IconButton, SendIcon } from '@livechat/ui-kit'
 
 
@@ -261,17 +260,25 @@ const ChatMessage = props => {
             <br />
             <ThemeProvider>
                 <ChatList >
+                    {chatRoom === "FACTION" ?
+                        <Subtitle>{playerFaction} CHAT</Subtitle>
+                        : null
+                    }
                     {chatMessages.map((chatMessage) =>
                         <ChatListItem key={chatMessage.chatMessageId}>
                             <Avatar imgUrl="https://livechat.s3.amazonaws.com/default/avatars/male_8.jpg" />
                             <Column fill>
-                                <Row justify>
-                                    <Title ellipsis>{chatMessage.username}</Title>
-                                    <Subtitle nowrap>{chatMessage.stringTimestamp}</Subtitle>
-                                    {chatRoom === "ALL" ? <p>Hello All</p> :
-                                     chatRoom === "FACTION" ? <p>Hello Faction</p> :
-                                     chatRoom === "SQUAD" ? <p>Hello Squad</p> :null
-                                    }
+                                <Row>
+                                    <Title>{chatMessage.username}</Title>
+
+                                    {chatRoom === "SQUAD" ?
+                                        <Subtitle>{chatMessage.squadRank}</Subtitle>
+                                        :
+                                        chatRoom === "FACTION" && chatMessage.alive ?
+                                            <Subtitle> Alive </Subtitle>
+                                            : null}
+
+                                    <Subtitle>{chatMessage.stringTimestamp}</Subtitle>
                                 </Row>
                                 <Subtitle >
                                     <div>
