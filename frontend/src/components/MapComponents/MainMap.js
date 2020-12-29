@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { FetchAllGames, FetchGame } from '../../utils/GameStorage';
+import { FetchAllMissions } from '../../utils/missionStorage';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 
@@ -27,24 +27,22 @@ class MainMap extends Component {
       draggable: true
     });
 
-    let missionName = localStorage.getItem("Mission Name: ")
+    let missions = FetchAllMissions();
 
-    let popup = new mapboxgl.Popup({ offset: 25 })
-      .setText('Name: ' + missionName);
-
-    let games = FetchAllGames();
-
-    games
+    missions
       .then(response =>
-        response.map((g) => {
+        response.map((m) => {
 
           let mission = document.createElement('div');
           mission.className = 'mission';
           let missionMarker = new mapboxgl.Marker(mission);
 
-          if (g.nwPoint !== null) {
+          let popup = new mapboxgl.Popup({ offset: 25 })
+            .setText('Name: ' + m.name);
+
+          if (m.missionPoint !== null) {
             missionMarker
-              .setLngLat([g.nwPoint.x, g.nwPoint.y]).setPopup(popup).addTo(map)
+              .setLngLat([m.missionPoint.x, m.missionPoint.y]).setPopup(popup).addTo(map)
           }
         })
       )

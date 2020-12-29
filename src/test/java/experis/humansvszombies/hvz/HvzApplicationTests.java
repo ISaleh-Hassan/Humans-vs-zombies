@@ -117,11 +117,11 @@ class HvzApplicationTests {
 			// Add Mission objects
 			for (int m = 0; m < numberOfMissions; m++) {
 				if (m == 0) {
-					mc.addMission(new Mission("ZOMBIE Mission: " + (m + 1), Faction.ZOMBIE, MissionState.COMPLETED, Timestamp.valueOf("2000-01-10 01:01:01"), Timestamp.valueOf("2020-12-12 01:59:59")), gId);
+					mc.addMission(new Mission("ZOMBIE Mission: " + (m + 1), Faction.ZOMBIE, new Point(10, 10), MissionState.COMPLETED, Timestamp.valueOf("2000-01-10 01:01:01"), Timestamp.valueOf("2020-12-12 01:59:59")), gId);
 				} else if (m == 1) {
-					mc.addMission(new Mission("HUMAN Mission: " + (m + 1), Faction.HUMAN, MissionState.COMPLETED, Timestamp.valueOf("2000-01-10 01:01:01"), Timestamp.valueOf("2020-12-12 02:30:00")), gId);
+					mc.addMission(new Mission("HUMAN Mission: " + (m + 1), Faction.HUMAN, new Point(10, 10), MissionState.COMPLETED, Timestamp.valueOf("2000-01-10 01:01:01"), Timestamp.valueOf("2020-12-12 02:30:00")), gId);
 				} else {
-					mc.addMission(new Mission("ALL Mission: " + (m + 1), Faction.ALL, MissionState.IN_PROGRESS, Timestamp.valueOf("2000-01-10 04:04:04"), Timestamp.valueOf("2020-12-12 05:05:05")), gId);
+					mc.addMission(new Mission("ALL Mission: " + (m + 1), Faction.ALL, new Point(10, 10),  MissionState.IN_PROGRESS, Timestamp.valueOf("2000-01-10 04:04:04"), Timestamp.valueOf("2020-12-12 05:05:05")), gId);
 				}
 			}
 

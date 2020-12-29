@@ -48,6 +48,10 @@ const CreateMissionMarker = (props) => {
     {
       name: "",
       faction: currentPlayer.faction,
+      missionPoint: {
+        x: 18.0249,
+        y: 59.2132
+      },
       missionState: "PREPARATION",
       startTime: "2021-01-01T08:00:00.000+00:00",
       endTime: "2021-01-02T08:00:00.000+00:00"
@@ -97,6 +101,26 @@ const CreateMissionMarker = (props) => {
     }));
   }
 
+  const onLngChange = ev => {
+    let lng = ev.target.value;
+    setMissionObject((prevState) => ({
+      ...prevState,
+      missionPoint: {
+        x: lng,
+      }
+    }));
+  }
+
+  const onLatChange = ev => {
+    let lat = ev.target.value;
+    setMissionObject((prevState) => ({
+      ...prevState,
+      missionPoint: {
+        y: lat,
+      }
+    }));
+  }
+
   function getCoordinates() {
     let lngValue = localStorage.getItem("Lng: ")
     let latValue = localStorage.getItem("Lat: ")
@@ -138,7 +162,8 @@ const CreateMissionMarker = (props) => {
           <Form.Group>
             <Form.Control type="text" placeholder="Enter mission name" onChange={onMissionNameChange} />
             <br />
-            <Form.Control type="text" placeholder="Longitude" /><Form.Control type="text" placeholder="Latitude" />
+            <Form.Control type="text" placeholder="Longitude" onChange={onLngChange} />
+            <Form.Control type="text" placeholder="Latitude" onChange={onLatChange} />
             <br />
             <MainMap />
             <input id="p-lng" />

@@ -4,11 +4,13 @@ import java.sql.Timestamp;
 
 import experis.humansvszombies.hvz.models.enums.Faction;
 import experis.humansvszombies.hvz.models.enums.MissionState;
+import org.springframework.data.geo.Point;
 
 public class MissionObject {
     private Integer missionId;
     private String name;
     private Faction faction;
+    private Point missionPoint;
     private MissionState missionState;
     private Timestamp startTime;
     private Timestamp endTime;
@@ -18,11 +20,12 @@ public class MissionObject {
 
     }
 
-    public MissionObject(Integer missionId, String name, Faction faction, MissionState missionState,
+    public MissionObject(Integer missionId, String name, Faction faction, Point missionPoint, MissionState missionState,
             Timestamp startTime, Timestamp endTime, Integer gameId) {
         this.missionId = missionId;
         this.name = name;
         this.faction = faction;
+        this.missionPoint = missionPoint;
         this.missionState = missionState;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -52,6 +55,10 @@ public class MissionObject {
     public void setFaction(Faction faction) {
         this.faction = faction;
     }
+
+    public Point getMissionPoint() { return missionPoint; }
+
+    public void setMissionPoint(Point missionPoint) { this.missionPoint = missionPoint; }
 
     public MissionState getMissionState() {
         return missionState;

@@ -71,6 +71,9 @@ public class MissionController {
                 if (newMission.getFactionVisibility() != null) {
                     mission.setFactionVisibility(newMission.getFactionVisibility());
                 }
+                if (newMission.getMissionPoint() != null) {
+                    mission.setMissionPoint(newMission.getMissionPoint());
+                }
                 if (newMission.getStartTime() != null) {
                     mission.setStartTime(newMission.getStartTime());
                 }
@@ -127,6 +130,7 @@ public class MissionController {
             mission.getMissionId(),
             mission.getName(),
             mission.getFactionVisibility(),
+            mission.getMissionPoint(),
             mission.getState(),
             mission.getStartTime(),
             mission.getEndTime(),

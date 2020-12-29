@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -73,7 +74,7 @@ public class MissionTests {
 
     @Test
     void updateMission() {
-        Mission newMission = new Mission("Updated Name", Faction.ZOMBIE, MissionState.PREPERATION,
+        Mission newMission = new Mission("Updated Name", Faction.ZOMBIE, new Point(10, 10), MissionState.PREPERATION,
         Timestamp.valueOf("2000-01-10 01:01:01"), Timestamp.valueOf("2020-12-12 12:12:12"));
         ResponseEntity<MissionObject> response = mc.updateMission( newMission, this.missionId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
