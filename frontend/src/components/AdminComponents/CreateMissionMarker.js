@@ -41,13 +41,13 @@ const CreateMissionMarker = (props) => {
     setCurrentPlayer(body);
   }
 
-  localStorage.setItem('Faction', currentPlayer.faction);
+  let faction = localStorage.getItem("Faction")
 
   const [validMissionName, setValidMissionName] = useState(false);
   const [missionObject, setMissionObject] = useState(
     {
       name: "",
-      faction: currentPlayer.faction,
+      faction: faction,
       missionPoint: {
         x: 18.0249,
         y: 59.2132
@@ -78,7 +78,8 @@ const CreateMissionMarker = (props) => {
     else {
       setMissionObject((prevState) => ({
         ...prevState,
-        name: currentMissionName
+        name: currentMissionName,
+        missionState: "PREPARATION"
       }));
       setValidMissionName(true);
     }
