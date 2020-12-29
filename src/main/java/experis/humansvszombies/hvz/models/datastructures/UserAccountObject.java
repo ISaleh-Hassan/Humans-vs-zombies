@@ -11,6 +11,7 @@ public class UserAccountObject {
     private String password;
     private String email;
     private String phoneNumber;
+    private String jwt;
 
     public UserAccountObject() {
 
@@ -90,5 +91,13 @@ public class UserAccountObject {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getJwt() {
+        return jwt;
+    }
+
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
     }
 }

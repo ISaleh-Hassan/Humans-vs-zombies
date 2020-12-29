@@ -6,11 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.datastructures.UserAccountObject;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
 import experis.humansvszombies.hvz.repositories.UserAccountRepository;
+import experis.humansvszombies.hvz.security.jwt.JwtUtils;
+import experis.humansvszombies.hvz.security.services.UserDetailsImpl;
+
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -20,6 +28,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class UserAccountController {
     @Autowired
     UserAccountRepository userAccountRepository;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    PasswordEncoder encoder;
+
+    @Autowired
+    JwtUtils jwtUtils;
 
     @CrossOrigin()
     @GetMapping("/api/fetch/useraccount/all")
@@ -134,30 +151,55 @@ public class UserAccountController {
     @CrossOrigin()
     @PostMapping("/api/useraccount/login")
     public ResponseEntity<UserAccountObject> loginUser(@RequestBody UserAccount userAccount) {
-        //Assume the login will fail.
-        UserAccountObject userInfo = null;
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        //Check that userAccount isn't null. Then check if the supplied email exists in the database.
+
         if (userAccount != null) {
-            UserAccount user = userAccountRepository.findDistinctByEmail(userAccount.getEmail());
-            if (user != null) {
-                //Compare supplied password to account password and return SUCCESS message if login information is correct.
-                if (user.getPassword().equals(userAccount.getPassword())) {
-                    status = HttpStatus.OK;
-                    userInfo = new UserAccountObject(
-                        user.getUserAccountId(), 
-                        null, 
-                        null, 
-                        user.getUserType(), 
-                        user.getUsername(), 
-                        null, 
-                        null,
-                        null
-                    );
-                }
-            }  
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userAccount.getUsername(), userAccount.getPassword()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            UserAccountObject response = new UserAccountObject(
+                userAccount.getUserAccountId(), 
+                null, 
+                null, 
+                userAccount.getUserType(), 
+                userAccount.getUsername(), 
+                null, 
+                null,
+                null
+            );
+            response.setJwt(jwt);
+            return ResponseEntity.ok(response);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(userInfo, status);
+        
+
+
+        // //Assume the login will fail.
+        // UserAccountObject userInfo = null;
+        // HttpStatus status = HttpStatus.BAD_REQUEST;
+        // //Check that userAccount isn't null. Then check if the supplied email exists in the database.
+        // if (userAccount != null) {
+        //     UserAccount user = userAccountRepository.findDistinctByEmail(userAccount.getEmail());
+        //     if (user != null) {
+        //         //Compare supplied password to account password and return SUCCESS message if login information is correct.
+        //         if (user.getPassword().equals(userAccount.getPassword())) {
+        //             status = HttpStatus.OK;
+        //             userInfo = new UserAccountObject(
+        //                 user.getUserAccountId(), 
+        //                 null, 
+        //                 null, 
+        //                 user.getUserType(), 
+        //                 user.getUsername(), 
+        //                 null, 
+        //                 null,
+        //                 null
+        //             );
+        //         }
+        //     }  
+        // }
+        // return new ResponseEntity<>(userInfo, status);
     }
 
     private UserAccountObject createUserAccountObject(UserAccount userAccount) {
