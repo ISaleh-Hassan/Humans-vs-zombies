@@ -27,6 +27,10 @@ const EditGame = (props) => {
     }
   }, [selectedGameId]);
 
+  useEffect(() => {
+
+  }, [gameObject]);
+
   async function fetchAllGames() {
     let allGames = await FetchAllGames();
     if (allGames !== null) {
@@ -40,7 +44,17 @@ const EditGame = (props) => {
   async function fetchGame() {
     let game = await FetchGame(selectedGameId);
     if (game !== null) {
-      setGameObject(game);
+      setGameObject(
+        {
+          name: game.name,
+          gameState: game.gameState,
+          gameId: game.gameId,
+          startTime: game.startTime,
+          endTime: game.endTime,
+          maxNumberOfPlayers: game.maxNumberOfPlayers,
+          description: game.description
+        }
+      );
     } else {
       alert('Failed to fetch games');
       setGameObject({});
@@ -48,15 +62,13 @@ const EditGame = (props) => {
   }
 
   async function editGame() {
-    if (validGameDescription === true && validGameName === true) {
-      let editGameResponse = await UpdateGame(gameObject);
-      if (editGameResponse.status === 201) {
-        props.history.push("/currentgames");
-      } else if (editGameResponse.status === 400) {
-        alert("Game name must be unique!");
-      } else {
-        alert("Something went wrong while creating the game.");
-      }
+    let editGameResponse = await UpdateGame(gameObject);
+    if (editGameResponse.status === 200) {
+      props.history.push("/admin");
+    } else if (editGameResponse.status === 400) {
+      alert("Game name must be unique!");
+    } else {
+      alert("Something went wrong while updating the game.");
     }
   }
 
@@ -118,13 +130,21 @@ const EditGame = (props) => {
     let selectedGame = ev.target.value;
     if (selectedGame !== "0") {
       setSelectedGameId(selectedGame)
+      setGameObject({})
     }
     else {
       setSelectedGameId(null);
     }
   }
 
+  function isEmpty(obj) {
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop))
+        return false;
+    }
 
+    return true;
+  }
   return (
     <>
       <section className="home">
@@ -135,17 +155,19 @@ const EditGame = (props) => {
           <br />
           <Form.Group>
 
-            <Form.Control onChange={handleChangeGameToUpdate} as="select">
+            <Form.Control
+              onChange={handleChangeGameToUpdate}
+              className="mb-4"
+              as="select">
               <option value="0">Select game...</option>
               {allGames.filter(game => game.gameState !== 'COMPLETED').map(filteredGame => (
                 <option key={filteredGame.gameId} value={filteredGame.gameId}>
                   {filteredGame.name}
                 </option>
               ))}
-
             </Form.Control>
 
-            {selectedGameId!==null ?
+            {selectedGameId !== null && !isEmpty(gameObject) ?
               <div>
                 <Form.Control
                   type="text"
@@ -164,7 +186,7 @@ const EditGame = (props) => {
                   id="datetime-local"
                   label="Start time"
                   type="datetime-local"
-                  defaultValue={console.log(gameObject.startTime)}
+                  defaultValue={gameObject.startTime.substring(0, 16)}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -176,7 +198,7 @@ const EditGame = (props) => {
                   id="datetime-local"
                   label="End time"
                   type="datetime-local"
-                  defaultValue="2021-01-01T09:00"
+                  defaultValue={gameObject.endTime.substring(0, 16)}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -184,19 +206,19 @@ const EditGame = (props) => {
                 />
                 <br />
                 <br />
-                <Form.Control 
-                type="number" 
-                defaultValue={gameObject.maxNumberOfPlayers}
-                size="sm" 
-                onChange={onSizeChange} 
-                placeholder="Max number of players...">
+                <Form.Control
+                  type="number"
+                  defaultValue={gameObject.maxNumberOfPlayers}
+                  size="sm"
+                  onChange={onSizeChange}
+                  placeholder="Max number of players...">
 
                 </Form.Control>
                 <br /> <br />
-                <Button disabled={!validGameName || !validGameDescription} onClick={editGame}>Edit</Button>
+                <Button
+                  onClick={editGame}>Edit</Button>
               </div>
               : null}
-
           </Form.Group>
         </div>
       </section>
