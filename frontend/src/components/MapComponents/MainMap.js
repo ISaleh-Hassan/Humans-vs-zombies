@@ -32,22 +32,20 @@ class MainMap extends Component {
     let popup = new mapboxgl.Popup({ offset: 25 })
       .setText('Name: ' + missionName);
 
-    let gameId = localStorage.getItem("Game ID")
-
     let games = FetchAllGames();
-
-    let mission = document.createElement('div');
-    mission.className = 'mission';
-    let missionMarker = new mapboxgl.Marker(mission);
-    FetchGame(gameId)
-      .then(response =>
-        missionMarker
-          .setLngLat([response.nwPoint.x, response.nwPoint.y]).setPopup(popup).addTo(map))
 
     games
       .then(response =>
         response.map((g) => {
-          console.log(g.nwPoint)
+
+          let mission = document.createElement('div');
+          mission.className = 'mission';
+          let missionMarker = new mapboxgl.Marker(mission);
+
+          if (g.nwPoint !== null) {
+            missionMarker
+              .setLngLat([g.nwPoint.x, g.nwPoint.y]).setPopup(popup).addTo(map)
+          }
         })
       )
 
