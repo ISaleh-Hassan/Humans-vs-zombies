@@ -1,6 +1,8 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import Header from '../StylingComponents/Header';
 import Form from 'react-bootstrap/Form'
+import { FormGroup } from 'react-bootstrap';
 
 const Bite = ({ history }) => {
 
@@ -12,105 +14,128 @@ const Bite = ({ history }) => {
     let currentCoordinates = ('Coordinates: \nLatitude: ' + latitude + ' \nLongitude: ' + longitude);
 
     const [currentPlayer, setCurrentPlayer] = useState([]);
-
-    useEffect(() => {
-        fetchCurrentPlayer();
-    }, [])
-
-    async function fetchCurrentPlayer() {
-        const response = await (await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId)).json();
-        setCurrentPlayer(response);
-    }
-
-    const [validBiteCode, setValidBiteCode] = useState(false);
-    // const [victim, setVictim] = useState(
-    //     {
-    //         playerId: '',
-    //         biteCode: '1234ABCD',
-    //         faction: '',
-    //         isAlive: true,
-    //         isPatientZero: false
-    //     })
-
-    // Need to get the player object through their bite code
-    // if the victimPlayer.biteCode === the bite code input into the form the victim can be either turned or killed
-
-    const [currentBiteCode, setCurrentBiteCode] = useState([]);
+    const [validBiteCodeLength, setValidBiteCodeLength] = useState(false);
+    const [currentBiteCode, setCurrentBiteCode] = useState('');  // This is the bite code input into the form
     const [currentVictim, setCurrentVictim] = useState([]);
     
-
-    const onBiteCodeChange = ev => {
-        let biteCodeInput = ev.target.value;
-        if (biteCodeInput.length < 8 || biteCodeInput.length > 8 /* || currentBiteCode !== victimBiteCode */) {
-            setValidBiteCode(false);
-        } else /* (currentBiteCode === currentVictim.biteCode) */ {
-            console.log('That is a valid bite code');
-            
-            setValidBiteCode(true);
-            
-            /* fetchCurrentVictim().then(data => {
-                console.log('Look here at this cool data: ' + data);
-            }) */
-        }
-        setCurrentBiteCode(biteCodeInput);
-        // The function call below doesn't work properly... It doesn't setCurrentVictim correctly, but it DOES log the final message to the console...
-        fetchCurrentVictim();
-        return currentVictim;
-    }
-
-
-    async function fetchCurrentVictim() {
-        const response = await (await fetch('/api/fetch/player/' + gameId + '/' + currentBiteCode)).json();
-        setCurrentVictim(await response);
-        console.log('You did a victim fetch');
-        console.log('Check this data yo: ' + response.playerId);
-        return currentVictim;
-    }
-
-
-    async function testVictim() {
-        console.log('This is the bite code input from the form: ' + currentBiteCode);
-        console.log('This is the current player object: ' + currentPlayer.playerId);
-        console.log('This is the victim\'s bite code according to victim fetch: ' + currentVictim.biteCode);
-    }
-
-
+    const [currentVictimUser, setCurrentVictimUser] = useState([]);
     const [currentVictimSquadMember, setCurrentVictimSquadMember] = useState([]);
 
-    useEffect(() => {
-        fetchCurrentVictimSquadMember();
-    }, [])
+    const [buttonStatus, setButtonStatus] = useState(true);  // This is used to disable the "turn" and "kill" buttons if the bite code is incorrect
+    const [validationButtonStatus, setValidationButtonStatus] = useState(true);  // This was needed to stop the validation message from showing before pressing the "validate" button
 
-    async function fetchCurrentVictimSquadMember() {
-        const response = await (await fetch('/api/fetch/squadmember/game=' + gameId + '/player=' + currentVictim.playerId)).json();
-        setCurrentVictimSquadMember(response);
+    
+    useEffect(() => {
+        fetchCurrentPlayer();
+    }, []);
+
+    useEffect(() => {
+        fetchCurrentVictim();
+    }, [validBiteCodeLength]);
+
+    useEffect(() => {
+        fetchCurrentVictimUser();
+    }, [currentVictim]);
+
+
+    async function fetchCurrentPlayer() {
+        const playerResponse = await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId);
+        if (playerResponse.status === 200) {
+            let body = await playerResponse.json();
+            setCurrentPlayer(body);
+        } else {
+            setCurrentPlayer({});
+        }
+    };
+
+    
+    function masterValidation() {
+        setValidationButtonStatus(false);
+        fetchCurrentVictim();
+        console.log('validation button status: ' + validationButtonStatus);   
+    }
+
+    
+    const onBiteCodeChange = ev => {
+        let biteCodeInput = ev.target.value;
+        setCurrentBiteCode(biteCodeInput);
+
+        if (biteCodeInput.length < 8 || biteCodeInput.length > 8) {
+            setValidBiteCodeLength(false);
+        } else {
+            setCurrentBiteCode(biteCodeInput);
+            setValidBiteCodeLength(true);
+            setValidationButtonStatus(true);
+        }
+    }
+    console.log(currentBiteCode);
+
+
+    // IF TIME: This needs to be cleaned up, and should probably be broken into a few smaller functions
+    async function fetchCurrentVictim() {
+        setValidationButtonStatus(false);
+        const victimResponse = await fetch('/api/fetch/player/' + gameId + '/' + currentBiteCode);
+        if (victimResponse.status === 200 && validBiteCodeLength === true) {
+            let body = await victimResponse.json();
+            setCurrentVictim(body);
+
+            if (currentVictim.biteCode === currentBiteCode) {
+                fetchCurrentVictimUser();
+
+                alert('That is a valid bite code! It belongs to ' + currentVictimUser.username + '. \nIf this is not the correct player, please try validating again or enter a different bite code.');
+                console.log('This is the ID of the victim that was fetched: ' + currentVictim.playerId);
+                console.log('This is the bite code of the victim that was fetched: ' + currentVictim.biteCode);
+                setButtonStatus(false);
+            };
+
+        } else if (victimResponse.status !== 200 && validBiteCodeLength === true && validationButtonStatus === false) {
+                alert('That bite code is not connected to a player in this game');
+                setCurrentVictim({});
+                setButtonStatus(true);            
+        } else {
+            console.log('The bite code has not been set yet...')
+            setCurrentVictim({});
+            setButtonStatus(true);
+        }
     }
 
 
-    // I need to pause the testVictim function, so it doesn't get called until the fetchCurrentVictim function has finished running.
-    // How the frick do I do that? HELP ON MONDAY.
+    // This function is used to get and show the victim's username in the validation alert
+    async function fetchCurrentVictimUser() {
+        const victimUserResponse = await fetch('/api/fetch/useraccount/' + currentVictim.userAccountId);
+        if (victimUserResponse.status === 200) {
+            let body = await victimUserResponse.json()
+            setCurrentVictimUser(body);
+        } else {
+            setCurrentVictimUser({});
+        };
+    };
+    console.log(currentVictimUser.username);
 
-/*     async function victimMaster() {
-        const fetchVictim = await fetchCurrentVictim();
-        console.log(fetchVictim);
+    
+    // useEffect(() => {
+    //     fetchCurrentVictimSquadMember();
+    // }, [])
 
-        const testBiteCode = await testVictim();
-        console.log(testBiteCode);
-    } */
+    
+
+    // async function fetchCurrentVictimSquadMember() {
+    //     const response = await (await fetch('/api/fetch/squadmember/game=' + gameId + '/player=' + currentVictim.playerId)).json();
+    //     setCurrentVictimSquadMember(response);
+    // }
 
 
     async function handleZombie() {
-        // Need to add a function that creates a grave stone on the map, using the auto fetched coordinates
-        // and the victim description from the form
         console.log('The player was turned into a ZOMBIE');
-        if (validBiteCode === true) {
+        if (validBiteCodeLength === true) {
             let playerResponse = await fetch('/api/update/player/' + currentVictim.playerId, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    faction: 'ZOMBIE'
+                    faction: 'ZOMBIE',   // Are factions determined by numbers now? Update accordingly.
+                    isAlive: false
                 })
             });
             if (playerResponse.status === 200) {
@@ -140,10 +165,13 @@ const Bite = ({ history }) => {
         }
     }
 
-    // Need a check on other pages that limits access if the player's isAlive = false
+    
+    
+    // Need to add a function that creates a grave stone on the map, using the auto fetched coordinates
+    // and the victim description from the form
     async function handleKill() {
         console.log('The player was killed');
-        if (validBiteCode === true) {
+        if (validBiteCodeLength === true) {
             let response = await fetch('/api/update/player/' + currentVictim.playerId, {
                 method: 'PATCH',
                 headers: {
@@ -151,15 +179,16 @@ const Bite = ({ history }) => {
                 },
                 body: JSON.stringify({
                     isAlive: false
-                })
+                }) 
             });
+
             if (response.status === 200) {
                 let body = await response.json();
                 console.log(body);
                 return body;
             } else {
                 return null;
-            }
+            } 
         }
     }
 
@@ -172,31 +201,33 @@ const Bite = ({ history }) => {
                 <h2>BITE CODE</h2>
                 <div id="biteHuman">{currentPlayer.biteCode}</div>
             </div>
-        )
+        );
     } else if (currentPlayer.faction === 'HUMAN') {
         return (
             <div>
                 <Header />
                 <div id="codeEntryContainer">
                     <h2>BITE CODE ENTRY
-                        {console.log(currentPlayer)}
+                        {/* {console.log(currentPlayer)}
+                        {console.log('This is the bite code that was logged from the form: ' + currentBiteCode)} */}
                     </h2>
                     <Form>
-                        <Form.Control onChange={onBiteCodeChange} id="biteCode" type="text" placeholder="Bite Code" required></Form.Control>
+                        <Form.Group>
+                            <Form.Control onChange={onBiteCodeChange} id="biteCode" type="text" placeholder="Bite Code" required></Form.Control>
+                            {/* <Button type="button" variant="dark" onClick={fetchCurrentVictim}>Validate Bite Code</Button> */}
+                            <Button id="validation" type="button" variant="dark" onClick={masterValidation}>Validate Bite Code</Button>
+                        </Form.Group>
                         <br/>
                         <Form.Control id="coordinates" as="textarea" rows={3} value={currentCoordinates} required></Form.Control>
                         <br/>
-                        <Form.Control id="victimDescription" placeholder="Enter victim description..." as="textarea" rows={3} required></Form.Control>
+                        <Form.Control id="victimDescription" placeholder="Enter victim description..." as="textarea" rows={3}></Form.Control>
                     </Form>
                     <br/>
-                    <button onClick={fetchCurrentVictim}>FETCH VICTIM</button>
-                    <button onClick={testVictim}>TEST VICTIM</button>
-                    {/* <button onClick={victimMaster}>VICTIM MASTER</button> */}
-                    <button onClick={handleZombie}>Turn into ZOMBIE</button>
-                    <button onClick={handleKill}>Kill victim</button>
+                    <Button type="button" variant="dark" disabled={buttonStatus} onClick={handleZombie}>Turn into ZOMBIE</Button>
+                    <Button type="button" variant="dark" disabled={buttonStatus} onClick={handleKill}>Kill victim</Button>
                 </div>
             </div>
-        )
+        );
     } else {
         return (
             <div>
