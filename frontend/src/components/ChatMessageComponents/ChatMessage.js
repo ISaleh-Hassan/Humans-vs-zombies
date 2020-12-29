@@ -21,20 +21,6 @@ const ChatMessage = props => {
     const [messageToUpdateId, setMessageToUpdateId] = useState(null);
     const [isEditingMessage, setIsEditingMessage] = useState(false);
 
-
-    // const [timestamp, setTimeStamp] = useState(getTime());
-    // const [playerData, setPlayerData] = useState(null);
-    // const [playerSquadId, setPlayerSquadId] = useState(localStorage.getItem('Squad ID'));
-    // const [msgObject, setMsgObject] = useState(
-    //     {
-    //         gameId: localStorage.getItem('Game ID'),
-    //         playerId: localStorage.getItem('Player ID'),
-    //         squadId: localStorage.getItem('Squad ID'),
-    //         message: '',
-    //         faction: 'ALL',
-    //         timestamp: timestamp
-    //     })
-
     useEffect(() => {
         if (userId !== 'null' && userId !== null) {
             if (playerId !== 'null' && playerId !== null) {
@@ -46,7 +32,7 @@ const ChatMessage = props => {
                             squadId: null,
                             faction: chatRoom
                         }
-                        fetchMessages(request);
+                        fetchMessages();
                     } else {
                         alert('Faction missing.');
                         props.history.push("/landing");
@@ -224,9 +210,9 @@ const ChatMessage = props => {
         }
     }
 
-    function resetTextField(){
-        const textField= document.getElementById("messageInput");
-        textField.value=""
+    function resetTextField() {
+        const textField = document.getElementById("messageInput");
+        textField.value = ""
     }
     async function sendUpdatedMessage() {
         let updatedMesageObj = {
@@ -272,8 +258,8 @@ const ChatMessage = props => {
                                                 placeholder="Edit your message..."
                                                 onChange={onMsgChanged}
                                                 defaultValue={chatMessage.message} />
-                                            <button onClick={sendUpdatedMessage}>Update</button>
-                                            <button onClick={handleCancelEditingMessage}>Cancel</button>
+                                            <Button variant="info" size="sm" onClick={sendUpdatedMessage}>Update</Button>
+                                            <Button className="m-2" size="sm" variant="secondary"  onClick={handleCancelEditingMessage}>Cancel</Button>
                                         </Form.Group>
                                             : chatMessage.message
                                         }
@@ -282,8 +268,8 @@ const ChatMessage = props => {
                                     <div>
                                         {checkIfPlayerIsAuthor(chatMessage.playerId) && !isEditingMessage ?
                                             <Subtitle >
-                                                <button onClick={() => handleEditMessage(chatMessage.chatMessageId)}> Edit</button>
-                                                <button onClick={() => handleDeleteMessage(chatMessage.chatMessageId)}>Delete</button>
+                                                <Button className="m-1" variant="secondary" size="sm" onClick={() => handleEditMessage(chatMessage.chatMessageId)}> Edit</Button>
+                                                <Button variant="danger" size="sm" onClick={() => handleDeleteMessage(chatMessage.chatMessageId)}> Delete</Button>
                                             </Subtitle>
                                             : null}
                                     </div>
