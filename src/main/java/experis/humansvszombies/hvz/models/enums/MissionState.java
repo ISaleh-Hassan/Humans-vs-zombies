@@ -1,7 +1,7 @@
 package experis.humansvszombies.hvz.models.enums;
 
 public enum MissionState {
-    PREPERATION,
+    PREPARATION,
     IN_PROGRESS,
     COMPLETED
 }

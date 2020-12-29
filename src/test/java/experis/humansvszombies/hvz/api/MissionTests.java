@@ -74,13 +74,14 @@ public class MissionTests {
 
     @Test
     void updateMission() {
-        Mission newMission = new Mission("Updated Name", Faction.ZOMBIE, new Point(10, 10), MissionState.PREPERATION,
+        Mission newMission = new Mission("Updated Name", "Updated Description", Faction.ZOMBIE, new Point(10, 10),
         Timestamp.valueOf("2000-01-10 01:01:01"), Timestamp.valueOf("2020-12-12 12:12:12"));
         ResponseEntity<MissionObject> response = mc.updateMission( newMission, this.missionId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(newMission.getName(), response.getBody().getName());
+        assertEquals(newMission.getMissionDescription(), response.getBody().getMissionDescription());
         assertEquals(newMission.getFactionVisibility(), response.getBody().getFaction());
-        assertEquals(newMission.getState(), response.getBody().getMissionState());
+        assertEquals(newMission.getMissionPoint(), response.getBody().getMissionPoint());
         assertEquals(newMission.getStartTime(), response.getBody().getStartTime());
         assertEquals(newMission.getEndTime(), response.getBody().getEndTime());
     }

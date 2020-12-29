@@ -68,6 +68,9 @@ public class MissionController {
             if (missionRepository.existsById(missionId)) {
                 mission = missionRepository.findById(missionId).get();
 
+                if (newMission.getMissionDescription() != null) {
+                    mission.setMissionDescription(newMission.getMissionDescription());
+                }
                 if (newMission.getFactionVisibility() != null) {
                     mission.setFactionVisibility(newMission.getFactionVisibility());
                 }
@@ -82,9 +85,6 @@ public class MissionController {
                 }
                 if (newMission.getName()!= null) {
                     mission.setName(newMission.getName());
-                }
-                if (newMission.getState() != null) {
-                    mission.setState(newMission.getState());
                 }
 
                 missionRepository.save(mission);
@@ -129,9 +129,9 @@ public class MissionController {
         MissionObject missionObject = new MissionObject(
             mission.getMissionId(),
             mission.getName(),
+            mission.getMissionDescription(),
             mission.getFactionVisibility(),
             mission.getMissionPoint(),
-            mission.getState(),
             mission.getStartTime(),
             mission.getEndTime(),
             (mission.getGame() != null) ? mission.getGame().getGameId() : null

@@ -44,15 +44,16 @@ const CreateMissionMarker = (props) => {
   let playerFaction = localStorage.getItem("Faction")
 
   const [validMissionName, setValidMissionName] = useState(false);
+  const [validDescription, setValidDescription] = useState(true);
   const [missionObject, setMissionObject] = useState(
     {
       name: "",
-      faction: playerFaction,
+      missionDescription: "",
+      faction: "",
       missionPoint: {
         x: 18.0249,
         y: 59.2132
       },
-      missionState: "PREPARATION",
       startTime: "2021-01-01T08:00:00.000+00:00",
       endTime: "2021-01-02T08:00:00.000+00:00"
     })
@@ -84,6 +85,29 @@ const CreateMissionMarker = (props) => {
     }
     localStorage.setItem("Mission Name: ", ev.target.value)
   }
+
+  const onDescriptionChange = ev => {
+    let currentDescription = ev.target.value;
+    if (currentDescription.length < 4) {
+      setValidDescription(false);
+    }
+    else {
+      setMissionObject((prevState) => ({
+        ...prevState,
+        missionDescription: currentDescription
+      }));
+      setValidDescription(true);
+    }
+  }
+
+  const onFactionChange = ev => {
+    let currentFaction = ev.target.value;
+    setMissionObject((prevState) => ({
+      ...prevState,
+      faction: currentFaction
+    }));
+  }
+
 
   const onStartTimeChange = ev => {
     let time = ev.target.value;
@@ -163,6 +187,14 @@ const CreateMissionMarker = (props) => {
           <h1>Create Mission Marker</h1>
           <Form.Group>
             <Form.Control type="text" placeholder="Enter mission name" onChange={onMissionNameChange} />
+            <br />
+            <Form.Control type="text" placeholder="Mission description..." onChange={onDescriptionChange} />
+            <br />
+            <Form.Control as="select" placeholder="Faction" onChange={onFactionChange}>
+              <option>ALL</option>
+              <option>HUMAN</option>
+              <option>ZOMBIE</option>
+            </Form.Control>
             <br />
             <Form.Control type="text" placeholder="Longitude" onChange={onLngChange} />
             <Form.Control type="text" placeholder="Latitude" onChange={onLatChange} />
