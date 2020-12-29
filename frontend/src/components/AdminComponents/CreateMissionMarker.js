@@ -49,7 +49,7 @@ const CreateMissionMarker = (props) => {
     {
       name: "",
       missionDescription: "",
-      faction: "ALL",
+      faction: "",
       missionPoint: {
         x: 18.0249,
         y: 59.2132
@@ -190,10 +190,11 @@ const CreateMissionMarker = (props) => {
             <br />
             <Form.Control type="text" placeholder="Mission description..." onChange={onDescriptionChange} />
             <br />
+            <label>Faction: </label>
             <Form.Control as="select" placeholder="Faction" onChange={onFactionChange}>
-              <option>ALL</option>
               <option>HUMAN</option>
               <option>ZOMBIE</option>
+              <option>ALL</option>
             </Form.Control>
             <br />
             <Form.Control type="text" placeholder="Longitude" onChange={onLngChange} />

@@ -162,7 +162,7 @@ const EditMissionMarker = (props) => {
                 <div className="container">
                     <h1>Edit Mission Marker</h1>
                     <Form.Group>
-                        <Form.Control type="text" placeholder="Enter mission name" onChange={onMissionNameChange} />
+                        <Form.Control type="text" placeholder="Enter mission name"  placeholder={missionObject.name} onChange={onMissionNameChange} />
                         <br />
                         <Form.Control type="text" placeholder="Coordinates" />
                         <br />

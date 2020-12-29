@@ -52,6 +52,7 @@ const Missions = (props) => {
                         <thead>
                             <tr>
                                 <th>Mission</th>
+                                <th>Faction</th>
                                 <th>Start</th>
                                 <th>End</th>
                             </tr>
@@ -60,6 +61,7 @@ const Missions = (props) => {
                             {missions.map((m) =>
                                 <tr key={m.missionId}>
                                     {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.name}</td> : null}
+                                    {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.factionVisibility}</td> : null}
                                     {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.startTime}</td> : null}
                                     {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.endTime}</td> : null}
                                     {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>
