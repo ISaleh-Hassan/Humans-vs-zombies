@@ -27,6 +27,20 @@ const CurrentGames = (props) => {
         }
     }
 
+
+  // The usertype should be determined by calling the database, not by using local storage as that can be edited.
+  // This should be updated ASAP.
+  const userType = localStorage.getItem('Usertype');
+
+  function handleAdminAccess() {
+    if (userType === 'Admin') {
+        props.history.push('/admin')
+    } else {
+        alert('You do not have access to the admin menu')
+    }
+  }
+
+
     function handlePreview(id) {
         localStorage.setItem("Game ID", id);
         props.history.push("/landing");
@@ -42,9 +56,7 @@ const CurrentGames = (props) => {
             <section className="home">
                 <div className="container">
                     <HeaderOutside />
-                    <Button variant="dark" onClick={() => props.history.push("/")}>Profile</Button>
-                    <Button variant="dark" onClick={() => props.history.push("/creategame")}>Create New Game</Button>
-
+                    
                     <h1>Current Games</h1>
                     <span>
                         <Button type="button" variant="primary" onClick={onFilterButtonClicked} value="ALL" size="sm">ALL</Button>
@@ -78,7 +90,13 @@ const CurrentGames = (props) => {
                             )}
                         </tbody>
                     </table>
-                    <br></br>
+                    <br/>
+                    <div>
+                        <Button variant="dark" onClick={() => props.history.push("/")}>Profile</Button>
+                        <Button variant="dark" onClick={handleAdminAccess}>Admin</Button>
+                        {/* The button below should probably not exist on the current games page, as only admin users are supposed to be able to create a new game */}
+                        {/* <Button variant="dark" onClick={() => props.history.push("/creategame")}>Create New Game</Button> */}
+                    </div>
                 </div>
             </section>
         </>
