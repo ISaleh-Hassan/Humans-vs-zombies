@@ -8,17 +8,19 @@ public class SquadDetails {
     private Faction faction;
     private Integer maxNumberOfMembers;
     private Integer numberOfRegisteredMembers;
+    private Integer numberOfDeadMembers;
 
     public SquadDetails() {
 
     }
 
-    public SquadDetails(Integer squadId, String squadName, Faction faction, Integer maxNumberOfMembers, Integer numberOfRegisteredMembers) {
+    public SquadDetails(Integer squadId, String squadName, Faction faction, Integer maxNumberOfMembers, Integer numberOfRegisteredMembers, Integer numberOfDeadMembers) {
         this.squadId = squadId;
         this.squadName = squadName;
         this.faction = faction;
         this.maxNumberOfMembers = maxNumberOfMembers;
         this.numberOfRegisteredMembers = numberOfRegisteredMembers;
+        this.numberOfDeadMembers = numberOfDeadMembers;
     }
 
     public Integer getSquadId() {
@@ -59,5 +61,13 @@ public class SquadDetails {
 
     public void setNumberOfRegisteredMembers(Integer numberOfRegisteredMembers) {
         this.numberOfRegisteredMembers = numberOfRegisteredMembers;
+    }
+
+    public Integer getNumberOfDeadMembers() {
+        return numberOfDeadMembers;
+    }
+
+    public void setNumberOfDeadMembers(Integer numberOfDeadMembers) {
+        this.numberOfDeadMembers = numberOfDeadMembers;
     }
 }
