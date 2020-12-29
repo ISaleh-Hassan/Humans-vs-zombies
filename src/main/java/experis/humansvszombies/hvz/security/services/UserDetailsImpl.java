@@ -1,43 +1,62 @@
 package experis.humansvszombies.hvz.security.services;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import experis.humansvszombies.hvz.models.enums.UserType;
 import experis.humansvszombies.hvz.models.tables.UserAccount;
 
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
     private Integer id;
     private String username;
-    private String email;
+	private String email;
+	private Collection<? extends GrantedAuthority> authorities;
 
     @JsonIgnore
     private String password;
 
 
-    public UserDetailsImpl(Integer id, String username, String email, String password) {
+    public UserDetailsImpl(Integer id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.password = password;
+		this.password = password;
+		this.authorities = authorities;
     }
 
     public static UserDetailsImpl build(UserAccount user) {
+		Set<UserType> role = new HashSet<>();
+		role.add(user.getUserType());
+
+		List<GrantedAuthority> authorities = role.stream()
+			.map(r -> new SimpleGrantedAuthority(r.name()))
+			.collect(Collectors.toList());
+
+		System.out.println("*******************************");
+		System.out.println("ROLES: " + authorities);
+		System.out.println("*******************************");
 		return new UserDetailsImpl(
 				user.getUserAccountId(), 
 				user.getUsername(), 
 				user.getEmail(),
-				user.getPassword());
+				user.getPassword(),
+				authorities);
     }
     
     @Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		return authorities;
 	}
 
 	public Integer getId() {

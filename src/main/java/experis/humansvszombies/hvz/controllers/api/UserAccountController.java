@@ -1,6 +1,9 @@
 package experis.humansvszombies.hvz.controllers.api;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,6 +72,8 @@ public class UserAccountController {
     public ResponseEntity<UserAccountObject> addUserAccount(@RequestBody UserAccount newUserAccount) {
         try {
             HttpStatus response = HttpStatus.CREATED;
+            BCryptPasswordEncoder encrypter = new BCryptPasswordEncoder();
+            newUserAccount.setPassword(encrypter.encode(newUserAccount.getPassword()));
             userAccountRepository.save(newUserAccount);
             System.out.println("UserAccount CREATED with id: " + newUserAccount.getUserAccountId());
             return new ResponseEntity<>(this.createUserAccountObject(newUserAccount), response);
@@ -152,23 +158,33 @@ public class UserAccountController {
     @PostMapping("/api/useraccount/login")
     public ResponseEntity<UserAccountObject> loginUser(@RequestBody UserAccount userAccount) {
 
+        System.out.println("Did I even get here?");
         if (userAccount != null) {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userAccount.getUsername(), userAccount.getPassword()));
+            UserAccount user = userAccountRepository.findDistinctByEmail(userAccount.getEmail());
+            if (user == null) {
+                throw new RuntimeException();
+            }
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), userAccount.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+				.map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+                
             UserAccountObject response = new UserAccountObject(
-                userAccount.getUserAccountId(), 
+                user.getUserAccountId(), 
                 null, 
                 null, 
-                userAccount.getUserType(), 
-                userAccount.getUsername(), 
+                user.getUserType(), 
+                user.getUsername(), 
                 null, 
                 null,
                 null
             );
             response.setJwt(jwt);
+            response.setRoles(roles);
             return ResponseEntity.ok(response);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
