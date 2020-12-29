@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +42,7 @@ public class SquadMemberController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squadmember/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<SquadMemberObject>> getAllSquadMembers() {
         ArrayList<SquadMember> squadMembers = (ArrayList<SquadMember>)squadMemberRepository.findAll();
         ArrayList<SquadMemberObject> squadMemberObjects = new ArrayList<SquadMemberObject>();
@@ -53,6 +55,7 @@ public class SquadMemberController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squadmember/{squadMemberId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadMemberObject> getSquadMemberById(@PathVariable Integer squadMemberId) {
         try {
             return squadMemberRepository.findById(squadMemberId)
@@ -66,6 +69,7 @@ public class SquadMemberController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squadmember/game={gameId}/squad={squadId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<SquadMemberObject>> getSquadMembersByGameIdAndSquadId(@PathVariable Integer gameId, @PathVariable Integer squadId) {
         try {
             HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -87,6 +91,7 @@ public class SquadMemberController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squadmember/game={gameId}/player={playerId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadMemberObject> getSquadMemberByPlayerId(@PathVariable Integer gameId, @PathVariable Integer playerId) {
         try {
             HttpStatus status = HttpStatus.NOT_FOUND;
@@ -113,6 +118,7 @@ public class SquadMemberController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squadmember/details/game={gameId}/squad={squadId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<SquadMemberDetails>> getSquadMemberDetailsBySquadId(@PathVariable Integer gameId, @PathVariable Integer squadId) {
         try {
             HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -156,6 +162,7 @@ public class SquadMemberController {
 
     @CrossOrigin()
     @PostMapping("/api/create/squadmember/{gameId}/{squadId}/{playerId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadMemberObject> addSquadMember(@RequestBody SquadMember newSquadMember, @PathVariable Integer gameId,
         @PathVariable Integer squadId, @PathVariable Integer playerId) {
             try {
@@ -187,6 +194,7 @@ public class SquadMemberController {
         value = "/api/update/squadmember/{squadMemberId}",
         produces = "application/json",
         method = {RequestMethod.GET, RequestMethod.PATCH})
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadMemberObject> updateSquadMember(@RequestBody SquadMember newSquadMember, @PathVariable Integer squadMemberId) {
         try {
             SquadMember squadMember;
@@ -214,6 +222,7 @@ public class SquadMemberController {
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/squadmember/{squadMemberId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<String> deleteSquadMember(@PathVariable Integer squadMemberId) {
         try {
             String message = "";

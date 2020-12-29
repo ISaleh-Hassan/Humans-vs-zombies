@@ -22,7 +22,6 @@ import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.repositories.GameRepository;
 import experis.humansvszombies.hvz.repositories.PlayerRepository;
 
-
 @RestController
 public class GameController {
     @Autowired
@@ -33,7 +32,7 @@ public class GameController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/game/all")
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<GameObject>> getAllGames() {
         ArrayList<Game> games = (ArrayList<Game>)gameRepository.findAll();
         ArrayList<GameObject> returnGames = new ArrayList<GameObject>();
@@ -46,6 +45,7 @@ public class GameController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/game/{gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<GameObject> getGameById(@PathVariable Integer gameId) {
         try {   
             return gameRepository.findById(gameId)
@@ -59,6 +59,7 @@ public class GameController {
 
     @CrossOrigin()
     @PostMapping("/api/create/game")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<GameObject> addGame(@RequestBody Game newGame) {
         try {
             newGame = gameRepository.save(newGame);
@@ -76,6 +77,7 @@ public class GameController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/game/{gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<GameObject> updateGame(@RequestBody Game newGame, @PathVariable Integer gameId) {   
         try {
             Game game;
@@ -129,6 +131,7 @@ public class GameController {
         value = "/api/delete/game/{gameId}",
         produces = "application/json",
         method = {RequestMethod.GET, RequestMethod.DELETE})
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<String> deleteGame(@PathVariable Integer gameId) {
         try {
             String message = "";

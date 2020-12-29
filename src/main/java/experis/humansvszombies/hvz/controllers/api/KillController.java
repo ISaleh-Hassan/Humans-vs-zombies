@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.datastructures.KillObject;
@@ -24,6 +25,7 @@ public class KillController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/kill/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<KillObject>> getAllKills() {
         ArrayList<Kill> kills = (ArrayList<Kill>)killRepository.findAll();
         ArrayList<KillObject> returnKills = new ArrayList<KillObject>();
@@ -36,6 +38,7 @@ public class KillController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/kill/{killId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<KillObject> getKillById(@PathVariable Integer killId) {
         try {
             return killRepository.findById(killId)
@@ -49,6 +52,7 @@ public class KillController {
 
     @CrossOrigin()
     @PostMapping("/api/create/kill/{gameId}/{killerId}/{victimId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<KillObject> addKill(@RequestBody Kill newKill, @PathVariable Integer gameId, 
     @PathVariable Integer killerId, @PathVariable Integer victimId) {
         try {
@@ -72,6 +76,7 @@ public class KillController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/kill/{killId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<KillObject> updateKill(@RequestBody Kill newKill, @PathVariable Integer killId) {
         try {
             Kill kill;
@@ -101,6 +106,7 @@ public class KillController {
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/kill/{killId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<String> deleteKill(@PathVariable Integer killId) {
         try {
             String message = "";
@@ -124,6 +130,7 @@ public class KillController {
 
     @CrossOrigin()
     @PostMapping("/api/v2/create/kill")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<KillObject> addKillVersion2(@RequestBody KillObject newKill) {
         try {
             HttpStatus status = HttpStatus.CREATED;

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,6 +45,7 @@ public class UserAccountController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/useraccount/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<UserAccountObject>> getAllUsers() {
         ArrayList<UserAccount> users = (ArrayList<UserAccount>)userAccountRepository.findAll();
         ArrayList<UserAccountObject> returnUsers = new ArrayList<UserAccountObject>();
@@ -56,6 +58,7 @@ public class UserAccountController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/useraccount/{userAccountId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<UserAccountObject> getUserById(@PathVariable Integer userAccountId) {
         try {
             return userAccountRepository.findById(userAccountId)
@@ -88,6 +91,7 @@ public class UserAccountController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/useraccount/{userAccountId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<UserAccountObject> updateUser(@RequestBody UserAccount newUser, @PathVariable Integer userAccountId) {
         try {
             UserAccount user;
@@ -132,6 +136,7 @@ public class UserAccountController {
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/useraccount/{userAccountId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<String> deleteUserAccount(@PathVariable Integer userAccountId) {
         try {
             String message = "";
