@@ -56,7 +56,7 @@ export async function DeleteChatMessage(msgId) {
 }
 
 export async function UpdateChatMessage(messageData) {
-    let url = getBaseUrl() + "/update/chatmessage/" + messageData.gameId;
+    let url = getBaseUrl() + "update/chatmessage/" + messageData.chatMessageId;
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {

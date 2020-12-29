@@ -76,7 +76,7 @@ public class ChatMessageController {
     }
 
     @CrossOrigin()
-    @PatchMapping("/api/update/kill/{chatMessageId}")
+    @PatchMapping("/api/update/chatmessage/{chatMessageId}")
     public ResponseEntity<ChatMessageObject> updateChatMessage(@RequestBody ChatMessage newChatMessage, @PathVariable Integer chatMessageId) {
         try {
             ChatMessage chatMessage;

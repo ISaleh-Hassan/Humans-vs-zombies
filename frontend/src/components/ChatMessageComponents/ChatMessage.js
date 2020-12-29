@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ButtonGroup, Button, Form } from 'react-bootstrap';
-import { CreateMessage, GetBundleOfChatMessages, DeleteChatMessage } from '../../utils/ChatMessageStorage';
+import { CreateMessage, GetBundleOfChatMessages, DeleteChatMessage, UpdateChatMessage } from '../../utils/ChatMessageStorage';
 import { ThemeProvider, ChatList, ChatListItem, Avatar, Column, Subtitle, Row, Title, IconButton, SendIcon } from '@livechat/ui-kit'
 
 
@@ -18,7 +18,8 @@ const ChatMessage = props => {
     const [message, setMessage] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const [validInput, setValidInput] = useState(false);
-    const [updateMessage, setUpdateMessage] = useState(false);
+    const [messageToUpdateId, setMessageToUpdateId] = useState(null);
+    const [isEditingMessage, setIsEditingMessage] = useState(false);
 
 
     // const [timestamp, setTimeStamp] = useState(getTime());
@@ -146,7 +147,7 @@ const ChatMessage = props => {
         setMessage(currentInput);
     }
 
-    const prepareMessageObject = (ev) => {
+    const prepareMessageObject = () => {
         let msgObject;
         let time = new Date().getTime();
         switch (chatRoom) {
@@ -183,11 +184,13 @@ const ChatMessage = props => {
             default:
                 break;
         }
-        sendMessage(msgObject);
+        return msgObject;
     }
 
-    async function sendMessage(msg) {
+    async function sendMessage() {
+        let msg = prepareMessageObject();
         const response = await CreateMessage(msg);
+        resetTextField()
         if (response !== null) {
             setRefresh(!refresh);
         } else {
@@ -205,14 +208,45 @@ const ChatMessage = props => {
 
     }
 
+    function checkIfPlayerIsAuthor(msgAuthorId) {
+        if (playerId === msgAuthorId.toString()) {
+            return true;
+        }
+    }
     function handleEditMessage(msgId) {
-        setUpdateMessage(true);
-        console.log(msgId)
+        setMessageToUpdateId(msgId)
+        setIsEditingMessage(true)
     }
 
-    function onEditedMsgChanged(ev) {
-        console.log(ev.target.value)
+    function handleUpdateMessage(msgId) {
+        if (msgId === messageToUpdateId) {
+            return true;
+        }
     }
+
+    function resetTextField(){
+        const textField= document.getElementById("messageInput");
+        textField.value=""
+    }
+    async function sendUpdatedMessage() {
+        let updatedMesageObj = {
+            message: message,
+            chatMessageId: messageToUpdateId
+        }
+        let response = await UpdateChatMessage(updatedMesageObj)
+
+        if (response !== null) {
+            setIsEditingMessage(false);
+            setRefresh(!refresh);
+            setMessageToUpdateId(null)
+        } else {
+            alert("Failed to edit message! Failed to delete.")
+        }
+    }
+    function handleCancelEditingMessage() {
+        setIsEditingMessage(false);
+    }
+
     return (
         <>
             <ButtonGroup >
@@ -233,19 +267,26 @@ const ChatMessage = props => {
                                 </Row>
                                 <Subtitle >
                                     <div>
-                                        {!updateMessage ? chatMessage.message :
-                                            <Form.Group>
-                                                <Form.Control type="text"
-                                                 placeholder="edit your message"
-                                                  onChange={onEditedMsgChanged}
-                                                   />                 
-                                            </Form.Group>
+                                        {handleUpdateMessage(chatMessage.chatMessageId) && isEditingMessage ? <Form.Group>
+                                            <Form.Control type="text"
+                                                placeholder="Edit your message..."
+                                                onChange={onMsgChanged}
+                                                defaultValue={chatMessage.message} />
+                                            <button onClick={sendUpdatedMessage}>Update</button>
+                                            <button onClick={handleCancelEditingMessage}>Cancel</button>
+                                        </Form.Group>
+                                            : chatMessage.message
                                         }
+
                                     </div>
-                                </Subtitle>
-                                <Subtitle >
-                                    <button onClick={() => handleEditMessage(chatMessage.chatMessageId)}> Edit</button>
-                                    <button onClick={() => handleDeleteMessage(chatMessage.chatMessageId)}>Delete</button>
+                                    <div>
+                                        {checkIfPlayerIsAuthor(chatMessage.playerId) && !isEditingMessage ?
+                                            <Subtitle >
+                                                <button onClick={() => handleEditMessage(chatMessage.chatMessageId)}> Edit</button>
+                                                <button onClick={() => handleDeleteMessage(chatMessage.chatMessageId)}>Delete</button>
+                                            </Subtitle>
+                                            : null}
+                                    </div>
                                 </Subtitle>
                             </Column>
                         </ChatListItem>
@@ -253,8 +294,8 @@ const ChatMessage = props => {
                 </ChatList>
 
                 <Form.Group>
-                    <Form.Control type="text" placeholder="Enter a message" onChange={onMsgChanged} />
-                    <IconButton disabled={!validInput} onClick={prepareMessageObject}>
+                    <Form.Control id="messageInput" type="text" placeholder="Enter a message" onChange={onMsgChanged} />
+                    <IconButton disabled={!validInput} onClick={sendMessage}>
                         <SendIcon />
                     </IconButton>
                 </Form.Group>
