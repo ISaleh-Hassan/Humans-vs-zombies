@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import Header from '../StylingComponents/Header';
 import Form from 'react-bootstrap/Form'
+import { FetchPlayer } from '../../utils/PlayerStorage';
 
 const Bite = ({ history }) => {
 
@@ -14,8 +15,12 @@ const Bite = ({ history }) => {
     }, [])
 
     async function fetchCurrentPlayer() {
-        const response = await (await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId)).json();
-        setCurrentPlayer(response);
+        const response = await FetchPlayer(gameId, userId);
+        if (response !== null) {
+            setCurrentPlayer(response);
+        } else {
+            alert("Could not find Player object.")
+        }
     }
 
 

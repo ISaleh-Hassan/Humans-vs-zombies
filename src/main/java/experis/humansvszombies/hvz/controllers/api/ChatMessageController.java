@@ -40,7 +40,7 @@ public class ChatMessageController {
     }
 
     @CrossOrigin()
-    @GetMapping("/api/fetch/message/{chatMessageId}")
+    @GetMapping("/api/fetch/chatmessage/{chatMessageId}")
     @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ChatMessageObject> getChatMessageById(@PathVariable Integer chatMessageId) {
         try {

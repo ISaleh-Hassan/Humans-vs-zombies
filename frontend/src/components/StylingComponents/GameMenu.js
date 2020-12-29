@@ -4,6 +4,7 @@ import Modal from './Modal';
 import firebase from '../../utils/firebase'
 import { clearUser } from "../../utils/localstorage";
 import { Button } from 'react-bootstrap';
+import { FetchPlayer } from '../../utils/PlayerStorage';
 
 const BUTTON_WRAPPER_STYLES = {
     position: 'relative',
@@ -32,10 +33,9 @@ const GameMenu = ({history}) => {
     }, [])
 
     async function fetchCurrentPlayer() {
-        const response = await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId);
-        if (response.status === 200) {
-            let body = await response.json();
-            setCurrentPlayer(body);
+        const response = FetchPlayer(gameId, userId);
+        if (response !== null) {
+            setCurrentPlayer(response);
         }else {
             alert('Could not fetch current player.');
             setCurrentPlayer({});

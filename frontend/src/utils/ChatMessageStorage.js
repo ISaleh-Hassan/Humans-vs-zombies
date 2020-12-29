@@ -1,11 +1,47 @@
 import { getBaseUrl } from "./baseUrl";
 
+export async function GetAllChatMessages() {
+    const token = localStorage.getItem('jwt');
+    let url = getBaseUrl() + "fetch/chatmessage/all";
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token 
+        }
+    });
+    if (response.status === 200) {
+        let body = await response.json();
+        return body;
+    } else {
+        return null;
+    }
+}
+
+export async function GetChatMessageById(chatMessageId) {
+    const token = localStorage.getItem('jwt');
+    let url = getBaseUrl() + "fetch/chatmessage/" + chatMessageId;
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token 
+        }
+    });
+    if (response.status === 200) {
+        let body = await response.json();
+        return body;
+    } else {
+        return null;
+    }
+}
+
 export async function GetBundleOfChatMessages(request) {
-    let url = "fetch/chatmessage/bundle";
-    const response = await fetch(getBaseUrl() + url, {
+    const token = localStorage.getItem('jwt');
+    let url = getBaseUrl() + "fetch/chatmessage/bundle";
+    const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             gameId: request.gameId,
@@ -22,6 +58,7 @@ export async function GetBundleOfChatMessages(request) {
 }
 
 export async function CreateMessage(messageData) {
+    const token = localStorage.getItem('jwt');
     let squadId = messageData.squadId;
     if (squadId === 'null') {
         squadId = 0;
@@ -31,7 +68,8 @@ export async function CreateMessage(messageData) {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             message: messageData.message,
