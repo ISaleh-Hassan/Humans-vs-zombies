@@ -49,7 +49,7 @@ const CreateMissionMarker = (props) => {
     {
       name: "",
       missionDescription: "",
-      faction: "",
+      faction: "ALL",
       missionPoint: {
         x: 18.0249,
         y: 59.2132
@@ -104,7 +104,7 @@ const CreateMissionMarker = (props) => {
     let currentFaction = ev.target.value;
     setMissionObject((prevState) => ({
       ...prevState,
-      faction: currentFaction
+      factionVisibility: currentFaction
     }));
   }
 
@@ -231,7 +231,7 @@ const CreateMissionMarker = (props) => {
             />
             <br />
             <br /><br />
-            <Button disabled={!validMissionName} onClick={createMission}>Create</Button><Link to="/admin"><Button>Cancel</Button></Link>
+            <Button disabled={!validMissionName || !validDescription} onClick={createMission}>Create</Button><Link to="/admin"><Button>Cancel</Button></Link>
             <br></br>
           </Form.Group>
         </div>

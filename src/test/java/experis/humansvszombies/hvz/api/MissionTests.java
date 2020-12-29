@@ -80,7 +80,7 @@ public class MissionTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(newMission.getName(), response.getBody().getName());
         assertEquals(newMission.getMissionDescription(), response.getBody().getMissionDescription());
-        assertEquals(newMission.getFactionVisibility(), response.getBody().getFaction());
+        assertEquals(newMission.getFactionVisibility(), response.getBody().getFactionVisibility());
         assertEquals(newMission.getMissionPoint(), response.getBody().getMissionPoint());
         assertEquals(newMission.getStartTime(), response.getBody().getStartTime());
         assertEquals(newMission.getEndTime(), response.getBody().getEndTime());

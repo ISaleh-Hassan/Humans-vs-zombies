@@ -10,7 +10,7 @@ public class MissionObject {
     private Integer missionId;
     private String name;
     private String missionDescription;
-    private Faction faction;
+    private Faction factionVisibility;
     private Point missionPoint;
     private Timestamp startTime;
     private Timestamp endTime;
@@ -20,12 +20,12 @@ public class MissionObject {
 
     }
 
-    public MissionObject(Integer missionId, String name, String missionDescription, Faction faction, Point missionPoint,
+    public MissionObject(Integer missionId, String name, String missionDescription, Faction factionVisibility, Point missionPoint,
             Timestamp startTime, Timestamp endTime, Integer gameId) {
         this.missionId = missionId;
         this.name = name;
         this.missionDescription = missionDescription;
-        this.faction = faction;
+        this.factionVisibility = factionVisibility;
         this.missionPoint = missionPoint;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -52,12 +52,12 @@ public class MissionObject {
 
     public void setMissionDescription(String missionDescription) { this.missionDescription = missionDescription; }
 
-    public Faction getFaction() {
-        return faction;
+    public Faction getFactionVisibility() {
+        return factionVisibility;
     }
 
-    public void setFaction(Faction faction) {
-        this.faction = faction;
+    public void setFactionVisibility(Faction factionVisibility) {
+        this.factionVisibility = factionVisibility;
     }
 
     public Point getMissionPoint() { return missionPoint; }

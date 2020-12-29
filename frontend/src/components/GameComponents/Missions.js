@@ -54,7 +54,6 @@ const Missions = (props) => {
                                 <th>Mission</th>
                                 <th>Start</th>
                                 <th>End</th>
-                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>

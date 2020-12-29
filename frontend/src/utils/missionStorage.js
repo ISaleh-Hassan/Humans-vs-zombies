@@ -34,7 +34,7 @@ export async function CreateMission(missionData) {
         body: JSON.stringify({
             name: missionData.name,
             missionDescription: missionData.missionDescription,
-            faction: missionData.faction,
+            factionVisibility: missionData.factionVisibility,
             missionPoint: {
                 x: missionData.missionPoint.x,
                 y: missionData.missionPoint.y
