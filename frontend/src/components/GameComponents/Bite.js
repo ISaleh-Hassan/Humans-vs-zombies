@@ -17,6 +17,8 @@ const Bite = ({ history }) => {
     const [validBiteCodeLength, setValidBiteCodeLength] = useState(false);
     const [currentBiteCode, setCurrentBiteCode] = useState('');  // This is the bite code input into the form
     const [currentVictim, setCurrentVictim] = useState([]);
+
+    const [victimDescription, setVictimDescription] = useState('');
     
     const [currentVictimUser, setCurrentVictimUser] = useState([]);
     const [currentVictimSquadMember, setCurrentVictimSquadMember] = useState([]);
@@ -68,7 +70,12 @@ const Bite = ({ history }) => {
             setValidationButtonStatus(true);
         }
     }
-    console.log(currentBiteCode);
+
+
+    const onVictimDescriptionChange = ev => {
+        let victimDescriptionInput = ev.target.value;
+        setVictimDescription(victimDescriptionInput);
+    }
 
 
     // IF TIME: This needs to be cleaned up, and should probably be broken into a few smaller functions
@@ -110,14 +117,11 @@ const Bite = ({ history }) => {
             setCurrentVictimUser({});
         };
     };
-    console.log(currentVictimUser.username);
 
     
     // useEffect(() => {
     //     fetchCurrentVictimSquadMember();
     // }, [])
-
-    
 
     // async function fetchCurrentVictimSquadMember() {
     //     const response = await (await fetch('/api/fetch/squadmember/game=' + gameId + '/player=' + currentVictim.playerId)).json();
@@ -165,12 +169,17 @@ const Bite = ({ history }) => {
         }
     }
 
+
+
     
     
-    // Need to add a function that creates a grave stone on the map, using the auto fetched coordinates
+    // Need to add a function that creates a grave stone on the map, using the auto fetched coordinates, bite code,
     // and the victim description from the form
     async function handleKill() {
+        
         console.log('The player was killed');
+        console.log('This is the victim description: ' + victimDescription);
+        
         if (validBiteCodeLength === true) {
             let response = await fetch('/api/update/player/' + currentVictim.playerId, {
                 method: 'PATCH',
@@ -202,25 +211,22 @@ const Bite = ({ history }) => {
                 <div id="biteHuman">{currentPlayer.biteCode}</div>
             </div>
         );
+
     } else if (currentPlayer.faction === 'HUMAN') {
         return (
             <div>
                 <Header />
                 <div id="codeEntryContainer">
-                    <h2>BITE CODE ENTRY
-                        {/* {console.log(currentPlayer)}
-                        {console.log('This is the bite code that was logged from the form: ' + currentBiteCode)} */}
-                    </h2>
+                    <h2>BITE CODE ENTRY</h2>
                     <Form>
                         <Form.Group>
                             <Form.Control onChange={onBiteCodeChange} id="biteCode" type="text" placeholder="Bite Code" required></Form.Control>
-                            {/* <Button type="button" variant="dark" onClick={fetchCurrentVictim}>Validate Bite Code</Button> */}
                             <Button id="validation" type="button" variant="dark" onClick={masterValidation}>Validate Bite Code</Button>
                         </Form.Group>
                         <br/>
                         <Form.Control id="coordinates" as="textarea" rows={3} value={currentCoordinates} required></Form.Control>
                         <br/>
-                        <Form.Control id="victimDescription" placeholder="Enter victim description..." as="textarea" rows={3}></Form.Control>
+                        <Form.Control onChange={onVictimDescriptionChange} id="victimDescription" name="victimDescription" placeholder="Enter victim description..." as="textarea" rows={3}></Form.Control>
                     </Form>
                     <br/>
                     <Button type="button" variant="dark" disabled={buttonStatus} onClick={handleZombie}>Turn into ZOMBIE</Button>
@@ -228,6 +234,7 @@ const Bite = ({ history }) => {
                 </div>
             </div>
         );
+        
     } else {
         return (
             <div>
