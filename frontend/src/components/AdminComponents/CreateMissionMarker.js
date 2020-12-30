@@ -49,7 +49,7 @@ const CreateMissionMarker = (props) => {
     {
       name: "",
       missionDescription: "",
-      faction: "",
+      factionVisibility: "HUMAN",
       missionPoint: {
         x: 18.0249,
         y: 59.2132
@@ -125,6 +125,7 @@ const CreateMissionMarker = (props) => {
     }));
   }
 
+  // Here's the probleeem
   const onLngChange = ev => {
     let lng = ev.target.value;
     setMissionObject((prevState) => ({
@@ -134,7 +135,8 @@ const CreateMissionMarker = (props) => {
       }
     }));
   }
-
+  
+  // Here's the probleeem
   const onLatChange = ev => {
     let lat = ev.target.value;
     setMissionObject((prevState) => ({
