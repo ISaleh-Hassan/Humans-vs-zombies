@@ -18,9 +18,9 @@ const ChatMessage = props => {
     const [message, setMessage] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const [validInput, setValidInput] = useState(false);
-    const [messageToUpdateId, setMessageToUpdateId] = useState(0);
+    const [messageToUpdateId, setMessageToUpdateId] = useState(null);
     const [isEditingMessage, setIsEditingMessage] = useState(false);
-    const [messagesAndPlayersObjects, setmessagesAndPlayersObjects] = useState([]);
+
 
     useEffect(() => {
         if (userId !== 'null' && userId !== null) {
@@ -200,6 +200,8 @@ const ChatMessage = props => {
         } else {
             alert("Failed to send message! Failed to delete.")
         }
+
+
     }
 
     function checkIfPlayerIsAuthor(msgAuthorId) {
@@ -218,11 +220,11 @@ const ChatMessage = props => {
         }
     }
 
+
     function resetTextField() {
         const textField = document.getElementById("messageInput");
         textField.value = ""
     }
-
     async function sendUpdatedMessage() {
         let updatedMesageObj = {
             message: message,
@@ -233,7 +235,7 @@ const ChatMessage = props => {
         if (response !== null) {
             setIsEditingMessage(false);
             setRefresh(!refresh);
-            setMessageToUpdateId(0)
+            setMessageToUpdateId(null)
         } else {
             alert("Failed to edit message! Failed to delete.")
         }
@@ -282,6 +284,7 @@ const ChatMessage = props => {
                                 </Row>
                                 <Subtitle >
                                     <div>
+                                      
                                         {handleUpdateMessage(chatMessage.chatMessageId) && isEditingMessage ?
                                             <Form.Group>
                                                 <Form.Control type="text"
@@ -298,6 +301,7 @@ const ChatMessage = props => {
                                             </Form.Group>
                                             : chatMessage.message
                                         }
+
                                     </div>
                                     <div>
                                         {checkIfPlayerIsAuthor(chatMessage.playerId) && !isEditingMessage ?
@@ -310,6 +314,7 @@ const ChatMessage = props => {
                                                 <Button variant="danger"
                                                     size="sm"
                                                     onClick={() => handleDeleteMessage(chatMessage.chatMessageId)}> Delete</Button>
+
                                             </Subtitle>
                                             : null}
                                     </div>
@@ -320,7 +325,9 @@ const ChatMessage = props => {
                 </ChatList>
 
                 <Form.Group>
+
                     <Form.Control onKeyUp={handleClickEnterToSendMessage} id="messageInput" type="text" placeholder="Enter a message" onChange={onMsgChanged} />
+
                     <IconButton disabled={!validInput} onClick={sendMessage}>
                         <SendIcon />
                     </IconButton>
