@@ -83,22 +83,26 @@ export async function CreateMessage(messageData) {
 }
 
 export async function DeleteChatMessage(msgId) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "delete/chatmessage/" + msgId;
     const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         }
     });
     return response.status;
 }
 
 export async function UpdateChatMessage(messageData) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "update/chatmessage/" + messageData.chatMessageId;
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             message: messageData.message,
