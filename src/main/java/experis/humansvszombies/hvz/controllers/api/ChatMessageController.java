@@ -8,6 +8,7 @@ import experis.humansvszombies.hvz.models.tables.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.repositories.ChatMessageRepository;
@@ -32,6 +33,7 @@ public class ChatMessageController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/chatmessage/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<ChatMessageObject>> getAllChatMessages() {
         ArrayList<ChatMessage> messages = (ArrayList<ChatMessage>)chatMessageRepository.findAll();
         ArrayList<ChatMessageObject> returnMessages = new ArrayList<ChatMessageObject>();
@@ -43,7 +45,8 @@ public class ChatMessageController {
     }
 
     @CrossOrigin()
-    @GetMapping("/api/fetch/message/{chatMessageId}")
+    @GetMapping("/api/fetch/chatmessage/{chatMessageId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ChatMessageObject> getChatMessageById(@PathVariable Integer chatMessageId) {
         try {
             return chatMessageRepository.findById(chatMessageId)
@@ -57,6 +60,7 @@ public class ChatMessageController {
 
     @CrossOrigin()
     @PostMapping("/api/create/chatmessage/{gameId}/{playerId}/{squadId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ChatMessageObject> addChatMessage(@RequestBody ChatMessage newChatMessage, @PathVariable Integer gameId,
                                                       @PathVariable Integer playerId, @PathVariable Integer squadId) {
         try {
@@ -82,6 +86,7 @@ public class ChatMessageController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/chatmessage/{chatMessageId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ChatMessageObject> updateChatMessage(@RequestBody ChatMessage newChatMessage, @PathVariable Integer chatMessageId) {
         try {
             ChatMessage chatMessage;
@@ -114,6 +119,7 @@ public class ChatMessageController {
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/chatmessage/{chatMessageId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<String> deleteChatMessage(@PathVariable Integer chatMessageId) {
         try {
             String message = "";
@@ -137,6 +143,7 @@ public class ChatMessageController {
 
     @CrossOrigin()
     @PostMapping("/api/fetch/chatmessage/bundle")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<ChatMessageObject>> fetchBundleOfChatMessages(@RequestBody ChatMessageObject request) {
         try {
             ArrayList<ChatMessage> messages;

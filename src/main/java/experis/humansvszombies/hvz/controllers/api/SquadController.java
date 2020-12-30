@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,7 @@ public class SquadController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<SquadObject>> getAllSquads() {
         ArrayList<Squad> squads = (ArrayList<Squad>)squadRepository.findAll();
         ArrayList<SquadObject> returnSquads = new ArrayList<SquadObject>();
@@ -51,6 +53,7 @@ public class SquadController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/{squadId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadObject> getSquadById(@PathVariable Integer squadId) {
         try {
             return squadRepository.findById(squadId)
@@ -64,6 +67,7 @@ public class SquadController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/game={gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<SquadObject>> getSquadByGameId(@PathVariable Integer gameId) {
         try {
             HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -85,6 +89,7 @@ public class SquadController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/details/game={gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<SquadDetails>> getSquadDetailsByGameId(@PathVariable Integer gameId) {
         try {
             HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -129,6 +134,7 @@ public class SquadController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/game={gameId}/player={playerId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadObject> getSquadFromGameIdAndPlayerId(@PathVariable Integer gameId, @PathVariable Integer playerId) {
         try {
             HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -157,6 +163,7 @@ public class SquadController {
 
     @CrossOrigin()
     @PostMapping("/api/create/squad/{gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadObject> addSquad(@RequestBody Squad newSquad, @PathVariable Integer gameId) {
         try {
             if (newSquad != null) {
@@ -177,6 +184,7 @@ public class SquadController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/squad/{squadId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<SquadObject> updateSquad(@RequestBody Squad newSquad, @PathVariable Integer squadId) {
         try {
             Squad squad;
@@ -209,6 +217,7 @@ public class SquadController {
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/squad/{squadId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<String> deleteSquad(@PathVariable Integer squadId) {
         try {
             String message = "";

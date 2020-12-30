@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.datastructures.MissionObject;
@@ -21,6 +22,7 @@ public class MissionController {
 
     @CrossOrigin
     @GetMapping("/api/fetch/mission/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<MissionObject>> getAllMissions() {
         ArrayList<Mission> missions = (ArrayList<Mission>)missionRepository.findAll();
         ArrayList<MissionObject> returnMissions = new ArrayList<MissionObject>();
@@ -33,6 +35,7 @@ public class MissionController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/mission/{missionId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<MissionObject> getMissionById(@PathVariable Integer missionId) {
         try {
             return missionRepository.findById(missionId)
@@ -46,6 +49,7 @@ public class MissionController {
 
     @CrossOrigin
     @PostMapping("/api/create/mission/{gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<MissionObject> addMission(@RequestBody Mission newMission, @PathVariable Integer gameId) {
         try {
             HttpStatus response = HttpStatus.CREATED;
@@ -61,6 +65,7 @@ public class MissionController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/mission/{missionId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<MissionObject> updateMission(@RequestBody Mission newMission, @PathVariable Integer missionId) {
         try {
             Mission mission;
@@ -101,6 +106,7 @@ public class MissionController {
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/mission/{missionId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<String> deleteMission(@PathVariable Integer missionId) {
         try {
             String message = "";

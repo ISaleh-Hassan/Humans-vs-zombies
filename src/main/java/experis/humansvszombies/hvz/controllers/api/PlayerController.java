@@ -6,6 +6,7 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.datastructures.PlayerObject;
@@ -25,6 +26,7 @@ public class PlayerController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/player/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<PlayerObject>> getAllPlayers() {
         ArrayList<Player> players = (ArrayList<Player>)playerRepository.findAll();
         ArrayList<PlayerObject> returnPlayers = new ArrayList<PlayerObject>();
@@ -37,6 +39,7 @@ public class PlayerController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/player/{playerId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> getPlayerById(@PathVariable Integer playerId) {
         try {
             return playerRepository.findById(playerId)
@@ -50,6 +53,7 @@ public class PlayerController {
     
     @CrossOrigin()
     @GetMapping("/api/fetch/player/game={gameId}/user={userId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> getPlayerByGameIdAndUserId(@PathVariable Integer gameId, @PathVariable Integer userId) {
         try {
             HttpStatus status;
@@ -76,6 +80,7 @@ public class PlayerController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/player/{gameId}/{bitecode}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> getPlayerByBitecode(@PathVariable Integer gameId, @PathVariable String bitecode) {
         try {
             HttpStatus status;
@@ -102,6 +107,7 @@ public class PlayerController {
 
     @CrossOrigin()
     @PostMapping("/api/create/player/{userAccountId}/{gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> addPlayer(@RequestBody Player newPlayer, @PathVariable Integer userAccountId,
         @PathVariable Integer gameId) {   
             try {
@@ -127,6 +133,7 @@ public class PlayerController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/player/{playerId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> updatePlayer(@RequestBody Player newPlayer, @PathVariable Integer playerId) {
         try {
             Player player;
@@ -158,6 +165,7 @@ public class PlayerController {
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/player/{playerId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<String> deletePlayer(@PathVariable Integer playerId) {
         try {
             String message = "";
