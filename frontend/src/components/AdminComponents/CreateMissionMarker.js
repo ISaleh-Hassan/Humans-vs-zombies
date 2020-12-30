@@ -41,8 +41,6 @@ const CreateMissionMarker = (props) => {
     setCurrentPlayer(body);
   }
 
-  let playerFaction = localStorage.getItem("Faction")
-
   const [validMissionName, setValidMissionName] = useState(false);
   const [validDescription, setValidDescription] = useState(true);
   const [missionObject, setMissionObject] = useState(
@@ -232,7 +230,6 @@ const onLatChange = ev => {
               }}
               onChange={onEndTimeChange}
             />
-            <br />
             <br /><br />
             <Button disabled={!validMissionName || !validDescription} onClick={createMission}>Create</Button><Link to="/admin"><Button>Cancel</Button></Link>
             <br></br>

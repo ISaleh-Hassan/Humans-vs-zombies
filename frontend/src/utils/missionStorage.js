@@ -57,15 +57,15 @@ export async function UpdateMission(missionData) {
         },
         body: JSON.stringify({
             name: missionData.name,
-            faction: missionData.faction,
+            missionDescription: missionData.missionDescription,
+            factionVisibility: missionData.factionVisibility,
             missionPoint: {
                 x: missionData.missionPoint.x,
                 y: missionData.missionPoint.y
             },
             missionState: missionData.missionState,
             startTime: missionData.startTime,
-            endTime: missionData.endTime,
-            gameId: missionData.gameId
+            endTime: missionData.endTime
         })
     })
     return response;

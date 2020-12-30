@@ -63,6 +63,7 @@ export async function UpdateGame(gameData) {
         },
         body: JSON.stringify({
             name: gameData.name,
+            description: gameData.description,
             gameState: gameData.gameState,
             startTime: gameData.startTime,
             endTime: gameData.endTime,

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Header from '../StylingComponents/Header';
 import NavBar from "../StylingComponents/NavBar";
 import { makeStyles } from '@material-ui/core/styles';
-import { DeleteMission, UpdateMission, FetchMission } from '../../utils/missionStorage'
+import { DeleteMission, UpdateMission, FetchMission, FetchAllMissions } from '../../utils/missionStorage'
 import MainMap from "../MapComponents/MainMap";
 
 const useStyles = makeStyles((theme) => ({
@@ -22,52 +22,71 @@ const useStyles = makeStyles((theme) => ({
 const EditMissionMarker = (props) => {
 
     const [validMissionName, setValidMissionName] = useState(false);
+    const [validDescription, setValidDescription] = useState(true);
     const [deleteMission, setDeleteMission] = useState(false);
-    const [missionObject, setMissionObject] = useState(
-        {
-            missionId: null,
-            name: null,
-            faction: null,
-            missionState: null,
-            startTime: null,
-            endTime: null,
-            gameId: null
-        })
-    let markerLng = localStorage.getItem('Marker Lng: ')
-    let markerLat = localStorage.getItem('Marker Lat: ')
+    const [allMissions, setAllMissions] = useState([])
+    const [selectedMissionId, setSelectedMissionId] = useState(null);
+    const [missionObject, setMissionObject] = useState({})
 
     useEffect(() => {
-        loadMissionDetails();
+        fetchAllMissions();
     }, []);
 
-    async function loadMissionDetails() {
-        const missionId = localStorage.getItem("Mission ID");
-        if (missionId != null) {
-            const mission = await FetchMission(missionId);
-            setMissionObject({
-                missionId: mission.missionId,
-                name: mission.name,
-                faction: mission.faction,
-                missionState: mission.missionState,
-                startTime: mission.startTime,
-                endTime: mission.endTime,
-                gameId: mission.gameId
-            })
+    useEffect(() => {
+        if (selectedMissionId !== null) {
+            fetchMission()
+        }
+        else {
+            setMissionObject({})
+        }
+    }, [selectedMissionId]);
+
+    useEffect(() => {
+
+    }, [missionObject]);
+
+    async function fetchAllMissions() {
+        let allMissions = await FetchAllMissions();
+        if (allMissions !== null) {
+            setAllMissions(allMissions);
         } else {
-            alert("Mission ID is null.");
+            alert('Failed to fetch missions');
+            setAllMissions([]);
+        }
+    }
+
+    async function fetchMission() {
+        let mission = await FetchMission(selectedMissionId);
+        if (mission !== null) {
+            setMissionObject(
+                {
+                    missionId: mission.missionId,
+                    name: mission.name,
+                    missionDescription: mission.missionDescription,
+                    factionVisibility: mission.factionVisibility,
+                    missionPoint: {
+                        x: mission.missionPoint.x,
+                        y: mission.missionPoint.y
+                    },
+                    missionState: mission.missionState,
+                    startTime: mission.startTime,
+                    endTime: mission.endTime
+                }
+            );
+        } else {
+            alert('Failed to fetch missions');
+            setMissionObject({});
         }
     }
 
     async function editMission() {
-        if (validMissionName === true) {
-            let updateMissionResponse = await UpdateMission(missionObject);
-            if (updateMissionResponse.status === 200) {
-                props.history.push("/missions");
-            } else if (updateMissionResponse.status === 400) {
-                alert("Mission name must be unique!");
-            } else {
-                alert("Something went wrong while creating the mission.");
-            }
+        let editMissionResponse = await UpdateMission(missionObject);
+        if (editMissionResponse.status === 200) {
+            props.history.push("/admin");
+        } else if (editMissionResponse.status === 400) {
+            alert("Mission name must be unique!");
+        } else {
+            alert("Something went wrong while updating the mission.");
         }
     }
 
@@ -86,6 +105,29 @@ const EditMissionMarker = (props) => {
         localStorage.setItem("Mission Name: ", ev.target.value)
     }
 
+    const onDescriptionChange = ev => {
+        let currentDescription = ev.target.value;
+        if (currentDescription.length < 4) {
+            setValidDescription(false);
+        }
+        else {
+            setMissionObject((prevState) => ({
+                ...prevState,
+                missionDescription: currentDescription
+            }));
+            setValidDescription(true);
+        }
+    }
+
+    const onFactionChange = ev => {
+        let currentFaction = ev.target.value;
+        setMissionObject((prevState) => ({
+            ...prevState,
+            factionVisibility: currentFaction
+        }));
+    }
+
+
     const onStartTimeChange = ev => {
         let time = ev.target.value;
         setMissionObject((prevState) => ({
@@ -102,32 +144,35 @@ const EditMissionMarker = (props) => {
         }));
     }
 
-    async function onDeteleClicked() {
-        let missionResponse = await DeleteMission(missionObject.missionId);
-        if (missionResponse === 200) {
-            props.history.push("/mission");
-        } else {
-            console.log("Something went wrong when trying to delete the mission.");
-        }
-    }
-
-    const onMissionStateChange = ev => {
-        let currentState = ev.target.value;
+    const onLngChange = ev => {
+        let lng = ev.target.value;
         setMissionObject((prevState) => ({
             ...prevState,
-            missionState: currentState
+            missionPoint: {
+                x: lng,
+                y: missionObject.missionPoint.y
+            }
         }));
     }
 
-    const onCheckBoxChanged = ev => {
-        setDeleteMission(!deleteMission);
+    const onLatChange = ev => {
+        let lat = ev.target.value;
+        setMissionObject((prevState) => ({
+            ...prevState,
+            missionPoint: {
+                x: missionObject.missionPoint.x,
+                y: lat
+            }
+        }));
     }
 
     function getCoordinates() {
         let lngValue = localStorage.getItem("Lng: ")
         let latValue = localStorage.getItem("Lat: ")
+
         let lng = document.getElementById('p-lng');
         lng.value = lngValue;
+
         let lat = document.getElementById('p-lat');
         lat.value = latValue;
     }
@@ -153,6 +198,39 @@ const EditMissionMarker = (props) => {
 
         alert("Copied the text: " + copyText.value);
     }
+    async function onDeleteClicked() {
+        let missionResponse = await DeleteMission(missionObject.missionId);
+        if (missionResponse === 200) {
+            props.history.push("/missions");
+        } else {
+            console.log("Something went wrong when trying to delete the mission.");
+        }
+    }
+
+    const onCheckBoxChanged = ev => {
+        setDeleteMission(!deleteMission);
+    }
+
+    function handleChangeMissionToUpdate(ev) {
+        let selectedMission = ev.target.value;
+        localStorage.setItem("Mission ID", selectedMission)
+        if (selectedMission !== "0") {
+            setSelectedMissionId(selectedMission)
+            setMissionObject({})
+        }
+        else {
+            setSelectedMissionId(null);
+        }
+    }
+
+    function isEmpty(obj) {
+        for (var prop in obj) {
+            if (obj.hasOwnProperty(prop))
+                return false;
+        }
+
+        return true;
+    }
 
     return (
         <>
@@ -162,53 +240,75 @@ const EditMissionMarker = (props) => {
                 <div className="container">
                     <h1>Edit Mission Marker</h1>
                     <Form.Group>
-                        <Form.Control type="text" placeholder="Enter mission name"  placeholder={missionObject.name} onChange={onMissionNameChange} />
-                        <br />
-                        <Form.Control type="text" placeholder="Coordinates" />
-                        <br />
-                        <MainMap />
-                        <input id="p-lng" />
-                        <button onClick={getLng}>Copy Lng</button>
-                        <input id="p-lat" />
-                        <button onClick={getLat}>Copy Lat</button>
-                        <br></br>
-                        <button onClick={getCoordinates}>Get Coords</button>
-                        <br />
-                        <br />
-                        <Form.Control as="select" placeholder="MissionState" onChange={onMissionStateChange}>
-                            <option>PREPARATION</option>
-                            <option>IN_PROGRESS</option>
-                            <option>COMPLETED</option>
+
+                        <Form.Control
+                            onChange={handleChangeMissionToUpdate}
+                            className="mb-4"
+                            as="select">
+                            <option value="0">Select mission...</option>
+                            {allMissions.filter(mission => mission.factionVisibility !== 'ALL').map(filteredMission => (
+                                <option key={filteredMission.missionId} value={filteredMission.missionId}>
+                                    {filteredMission.name}
+                                </option>
+                            ))}
                         </Form.Control>
-                        <br />
-                        <TextField
-                            id="datetime-local"
-                            label="Start time"
-                            type="datetime-local"
-                            defaultValue="2021-01-01T08:00"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            onChange={onStartTimeChange}
-                        />
-                        <br />  <br />
-                        <TextField
-                            id="datetime-local"
-                            label="End time"
-                            type="datetime-local"
-                            defaultValue="2021-01-02T08:00"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            onChange={onEndTimeChange}
-                        />
-                        <br />
-                        <br /><br />
-                        <Button disabled={!validMissionName} onClick={editMission}>Update Mission</Button>
-                        <Button disabled={!deleteMission} onClick={onDeteleClicked}>Delete Mission</Button>
-                        <Form.Group controlId="deleteMissionCheckbox">
-                            <Form.Check type="checkbox" label="Delete Mission?" onChange={onCheckBoxChanged} />
-                        </Form.Group>
+
+
+                        {selectedMissionId !== null && !isEmpty(missionObject) ?
+                            <div>
+                                <Form.Control type="text" placeholder="Enter mission name" defaultValue={missionObject.name} onChange={onMissionNameChange} />
+                                <br />
+                                <Form.Control type="text" placeholder="Mission description..." defaultValue={missionObject.missionDescription} onChange={onDescriptionChange} />
+                                <br />
+                                <label>Faction: </label>
+                                <Form.Control as="select" placeholder="Faction" defaultValue={missionObject.factionVisibility} onChange={onFactionChange}>
+                                    <option>HUMAN</option>
+                                    <option>ZOMBIE</option>
+                                    <option>ALL</option>
+                                </Form.Control>
+                                <br />
+                                <Form.Control type="text" placeholder="Longitude" defaultValue={missionObject.missionPoint.x} onChange={onLngChange} />
+                                <Form.Control type="text" placeholder="Latitude" defaultValue={missionObject.missionPoint.y} onChange={onLatChange} />
+                                <br />
+                                <MainMap />
+                                <input id="p-lng" />
+                                <button onClick={getLng}>Copy Lng</button>
+                                <input id="p-lat" />
+                                <button onClick={getLat}>Copy Lat</button>
+                                <br></br>
+                                <button onClick={getCoordinates}>Get Coords</button>
+                                <br />
+                                <br />
+                                <TextField
+                                    id="datetime-local"
+                                    label="Start time"
+                                    type="datetime-local"
+                                    defaultValue={missionObject.startTime.substring(0, 16)}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    onChange={onStartTimeChange}
+                                />
+                                <br />  <br />
+                                <TextField
+                                    id="datetime-local"
+                                    label="End time"
+                                    type="datetime-local"
+                                    defaultValue={missionObject.endTime.substring(0, 16)}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    onChange={onEndTimeChange}
+                                />
+                                <br /><br />
+                                <Button disabled={!validMissionName || !validDescription} onClick={editMission}>Update Mission</Button>
+                                <Button disabled={!deleteMission} onClick={onDeleteClicked}>Delete Mission</Button>
+                                <Form.Group controlId="deleteMissionCheckbox">
+                                    <Form.Check type="checkbox" label="Delete Mission?" onChange={onCheckBoxChanged} />
+                                </Form.Group>
+
+                            </div>
+                            : null}
                     </Form.Group>
                 </div>
             </section>
