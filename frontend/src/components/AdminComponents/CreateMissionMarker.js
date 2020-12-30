@@ -125,27 +125,27 @@ const CreateMissionMarker = (props) => {
     }));
   }
 
-  // Here's the probleeem
-  const onLngChange = ev => {
-    let lng = ev.target.value;
-    setMissionObject((prevState) => ({
-      ...prevState,
-      missionPoint: {
-        x: lng,
-      }
-    }));
-  }
-  
-  // Here's the probleeem
-  const onLatChange = ev => {
-    let lat = ev.target.value;
-    setMissionObject((prevState) => ({
-      ...prevState,
-      missionPoint: {
-        y: lat,
-      }
-    }));
-  }
+ const onLngChange = ev => {
+  let lng = ev.target.value;
+  setMissionObject((prevState) => ({
+    ...prevState,
+    missionPoint: {
+      x: lng,
+      y: missionObject.missionPoint.y
+    }
+  }));
+}
+
+const onLatChange = ev => {
+  let lat = ev.target.value;
+  setMissionObject((prevState) => ({
+    ...prevState,
+    missionPoint: {
+      x: missionObject.missionPoint.x,
+      y: lat
+    }
+  }));
+}
 
   function getCoordinates() {
     let lngValue = localStorage.getItem("Lng: ")
