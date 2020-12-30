@@ -1,4 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
+import { FetchAllSquadCheckin } from '../../utils/squadCheckinStorage';
 import { UpdateSquadMember } from '../../utils/SquadMemberStorage';
 import GameMenu from '../StylingComponents/GameMenu';
 import Header from '../StylingComponents/Header';
@@ -92,6 +93,10 @@ const SquadDetail = ({ history }) => {
         }
     }
 
+    
+    useEffect(() => {
+        FetchAllSquadCheckin();
+    }, [])
 
     async function handleLeaveSquad() {
         let response = await UpdateSquadMember(squadMemberId, null);
