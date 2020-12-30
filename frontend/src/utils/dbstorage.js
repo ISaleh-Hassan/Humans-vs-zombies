@@ -1,3 +1,4 @@
+import { getBaseUrl } from "./baseUrl";
 import { storeUser } from "./localstorage";
 
 export async function storeUserDB(username, firstname, lastname, usertype, password, email) {
@@ -47,13 +48,7 @@ export async function loginUser(email, password) {
     return status;
 }
 
-export const getUserInfo = () => {
-    fetch('/api/fetch/useraccount/all')
-        .then(response => response.json())
-        .then(data => console.log(data));
-}
-
-export async function storePhone (phone){
+export async function loginPhone(phone) {
     const response = await fetch("/api/useraccount/login", {
         method: 'POST',
         headers: {
@@ -67,6 +62,31 @@ export async function storePhone (phone){
             userType: null,
             email: null,
             password: null,
+            phoneNumber: phone
+        })
+    })
+    const status = await response.status
+    if (status === 200) {
+        const user = await response.json()
+        storeUser(user.userAccountId, user.username, user.userType);
+    }
+    return status;
+}
+
+export const getUserInfo = () => {
+    fetch('/api/fetch/useraccount/all')
+        .then(response => response.json())
+        .then(data => console.log(data));
+}
+
+export async function storePhone (userAccountId, phone){
+    let userAccountIdHC = 12;
+    const response = await fetch("/api/update/useraccount/" + userAccountIdHC, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
             phoneNumber: phone
         })
     })
