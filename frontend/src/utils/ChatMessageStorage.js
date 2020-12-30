@@ -27,7 +27,7 @@ export async function CreateMessage(messageData) {
         squadId = 0;
     }
     let url = getBaseUrl() + "create/chatmessage/" + messageData.gameId + "/" + messageData.playerId + "/" + squadId;
-    
+
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -40,6 +40,31 @@ export async function CreateMessage(messageData) {
             gameId: messageData.gameId,
             squadId: messageData.squadId,
         })
-    }) 
+    })
     return response;
-} 
+}
+
+export async function DeleteChatMessage(msgId) {
+    let url = getBaseUrl() + "delete/chatmessage/" + msgId;
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-type': 'application/json'
+        }
+    });
+    return response.status;
+}
+
+export async function UpdateChatMessage(messageData) {
+    let url = getBaseUrl() + "update/chatmessage/" + messageData.chatMessageId;
+    const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            message: messageData.message,
+        })
+    })
+    return response;
+}

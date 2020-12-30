@@ -115,10 +115,9 @@ public class ChatMessageTests {
         }
         //Fetch Human Faction Messages
         messages = cmc.fetchBundleOfChatMessages(new ChatMessageObject(null, null, Faction.HUMAN, null, 1, null, null, null, null, false, null));
+
+        messages = cmc.fetchBundleOfChatMessages(new ChatMessageObject(null, null, Faction.HUMAN, null, 1, null, null, null, null,false,null));
         assertEquals(HttpStatus.OK, messages.getStatusCode());
-        for (ChatMessageObject message : messages.getBody()) {
-            System.out.println(message.getChatMessageId());
-            System.out.println(message.getMessage());         
         }
         //Fetch Zombie Faction Messages
         messages = cmc.fetchBundleOfChatMessages(new ChatMessageObject(null, null, Faction.ZOMBIE, null, 1, null, null, null, null, false, null));

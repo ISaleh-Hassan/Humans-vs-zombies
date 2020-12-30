@@ -55,7 +55,7 @@ export async function CreateGame(gameData) {
 }
 
 export async function UpdateGame(gameData) {
-    let url = getBaseUrl() + "/update/game/" + gameData.gameId;
+    let url = getBaseUrl() + "update/game/" + gameData.gameId;
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
