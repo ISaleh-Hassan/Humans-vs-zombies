@@ -111,6 +111,7 @@ const SquadDetail = ({ history }) => {
         let response = await UpdateSquadMember(squadMemberId, null);
         if (response !== null) {
             localStorage.setItem('Squad ID', response.squadId);
+            localStorage.setItem('SquadMember ID', null)
             history.push('/squads');
         } else {
             alert('Failed to leave squad.');
@@ -129,58 +130,70 @@ const SquadDetail = ({ history }) => {
             })
                 .then(res => res.json())
                 .then(res => console.log(res));
-            localStorage.setItem('Squad ID', null);
-            localStorage.removeItem('SquadMember ID');
-            localStorage.removeItem('Squad Rank');
+            localStorage.setItem('Squad ID', 'null');
+            localStorage.setItem('Squad Member ID', 'null');
+            localStorage.setItem('Squad Rank', 'null');
             history.push('/squads');
         } else {
             alert("You must be a leader to disband the squad.")
         }
     }
+    
 
-
-    return (
-        <div>
-            <section className="home">
+    if (squadMemberId === 'null' || squadMemberId === 'undefined') {
+        return (
+            <div>
                 <div className="container">
                     <Header />
-
-                    <h1>{squad.name}
-                        {console.log(squad)}
-                        {console.log(squadMembers)}
-                        {console.log(currentPlayer)}</h1>
-                    <br />
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Alive</th>
-                                <th>Rank</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {squadMembers.map((s) =>
-                                <tr>
-                                    <td>{s.username}</td>
-                                    <td>{s.alive.toString()}</td>
-                                    <td>{s.squadRank}</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                    <br />
-
-                    <button onClick={getLocation}>Mark location</button>
-                    <p id="current-location"></p>
-                    <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
-
-                    <br />
-                    <button type="button" onClick={() => handleDisbandSquad()}>Disband Squad (only available to the leader)</button>
+                    <h3>Forbidden</h3>
+                    <p>You must first join a squad to gain access to the squad detail page.</p>
                 </div>
-            </section>
-        </div>
-    );
+            </div>
+        )
+    } else {
+        return (
+            <div>
+                <section className="home">
+                    <div className="container">
+                        <Header />
+
+                        <h1>{squad.name}
+                            {console.log(squad)}
+                            {console.log(squadMembers)}
+                            {console.log(currentPlayer)}</h1>
+                        <br />
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Alive</th>
+                                    <th>Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {squadMembers.map((s) =>
+                                    <tr>
+                                        <td>{s.username}</td>
+                                        <td>{s.alive.toString()}</td>
+                                        <td>{s.squadRank}</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                        <br />
+
+                        <button onClick={getLocation}>Mark location</button>
+                        <p id="current-location"></p>
+                        <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
+
+                        <br />
+                        <button type="button" onClick={() => handleDisbandSquad()}>Disband Squad (only available to the leader)</button>
+                    </div>
+                </section>
+            </div>
+        );
+    }
 }
 
 export default SquadDetail;

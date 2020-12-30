@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import experis.humansvszombies.hvz.models.datastructures.SquadObject;
 import experis.humansvszombies.hvz.models.datastructures.custom.SquadDetails;
+import experis.humansvszombies.hvz.models.datastructures.custom.SquadMemberDetails;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Player;
 import experis.humansvszombies.hvz.models.tables.Squad;
 import experis.humansvszombies.hvz.models.tables.SquadMember;
+import experis.humansvszombies.hvz.repositories.PlayerRepository;
 import experis.humansvszombies.hvz.repositories.SquadMemberRepository;
 import experis.humansvszombies.hvz.repositories.SquadRepository;
 
@@ -32,6 +34,9 @@ public class SquadController {
 
     @Autowired
     SquadMemberRepository squadMemberRepository;
+
+    @Autowired
+    PlayerRepository playerRepository;
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/all")
@@ -95,12 +100,22 @@ public class SquadController {
                     detailList = new ArrayList<SquadDetails>();
                     for (Squad squad : squads) {
                         ArrayList<SquadMember> members = squadMemberRepository.findByGameAndSquad(new Game(squad.getGame().getGameId()), new Squad(squad.getSquadId()));
+                        int deadPlayers = 0;
+                        for (SquadMember member : members) {
+                            Player playerObject = playerRepository.findById(member.getPlayer().getPlayerId()).orElse(null);
+                            if (playerObject != null) {
+                                if (playerObject.isAlive() == false) {
+                                    deadPlayers++;
+                                }
+                            }
+                        }
                         SquadDetails details = new SquadDetails(
                             squad.getSquadId(),
                             squad.getName(),
                             squad.getFaction(),
                             squad.getMaxNumberOfMembers(),
-                            members.size()
+                            members.size(),
+                            deadPlayers
                         );         
                         detailList.add(details);
                     }  

@@ -42,15 +42,31 @@ const GameMenu = ({history}) => {
         }
     }
 
+
     function handleBitePage() {
-        if (currentPlayer.faction === 'HUMAN') {
-            history.push('/bitehuman');
-        } else if (currentPlayer.faction === 'ZOMBIE') {
-            history.push('/bitezombie');
-        } else {
-            alert('Something went wrong, please try again.');
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
         }
     }
+
+    function showPosition(position) {
+        let currentLatitude = position.coords.latitude;
+        let currentLongitude = position.coords.longitude;
+        localStorage.setItem('Latitude', currentLatitude);
+        localStorage.setItem('Longitude', currentLongitude);
+        history.push('/bite');
+    }
+
+
+    // function handleBitePage() {
+    //     if (currentPlayer.faction === 'HUMAN') {
+    //         history.push('/bitehuman');
+    //     } else if (currentPlayer.faction === 'ZOMBIE') {
+    //         history.push('/bitezombie');
+    //     } else {
+    //         alert('Something went wrong, please try again.');
+    //     }
+    // }
 
     return (
         <div>
@@ -64,9 +80,9 @@ const GameMenu = ({history}) => {
                     <Link to="map">
                         <div>Map</div>
                     </Link>
-                    <Link to="bite">
-                        <div>Bite</div>
-                    </Link>
+                    
+                    <div onClick={handleBitePage}>Bite</div>
+                    
                     {/* <div onClick={handleBitePage}>Bite</div>
                     <Link to="bitehuman">
                         <div>Bite Human</div>

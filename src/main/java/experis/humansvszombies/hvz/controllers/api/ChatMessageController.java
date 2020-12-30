@@ -3,6 +3,7 @@ package experis.humansvszombies.hvz.controllers.api;
 import java.util.ArrayList;
 
 import experis.humansvszombies.hvz.models.datastructures.ChatMessageObject;
+import experis.humansvszombies.hvz.models.enums.SquadRank;
 import experis.humansvszombies.hvz.models.tables.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.repositories.ChatMessageRepository;
 import experis.humansvszombies.hvz.repositories.PlayerRepository;
+import experis.humansvszombies.hvz.repositories.SquadMemberRepository;
 import experis.humansvszombies.hvz.repositories.UserAccountRepository;
 
 
@@ -25,6 +27,9 @@ public class ChatMessageController {
 
     @Autowired
     UserAccountRepository userAccountRepository;
+
+    @Autowired
+    SquadMemberRepository squadMemberRepository;
 
     @CrossOrigin()
     @GetMapping("/api/fetch/chatmessage/all")
@@ -80,7 +85,7 @@ public class ChatMessageController {
     }
 
     @CrossOrigin()
-    @PatchMapping("/api/update/kill/{chatMessageId}")
+    @PatchMapping("/api/update/chatmessage/{chatMessageId}")
     @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ChatMessageObject> updateChatMessage(@RequestBody ChatMessage newChatMessage, @PathVariable Integer chatMessageId) {
         try {
@@ -169,6 +174,10 @@ public class ChatMessageController {
             Player tempPlayer = playerRepository.findById(msg.getPlayer().getPlayerId()).orElse(null);
             if (tempPlayer != null) {
                 UserAccount tempUser = userAccountRepository.findById(tempPlayer.getUserAccount().getUserAccountId()).orElse(null);
+                SquadRank rank = null;
+                if (tempPlayer.getSquadMember() != null) {
+                    rank = tempPlayer.getSquadMember().getSquadRank();
+                }
                 if (tempUser != null) {
                         msgObject = new ChatMessageObject(
                         msg.getChatMessageId(), 
@@ -179,7 +188,9 @@ public class ChatMessageController {
                         (msg.getPlayer() != null) ? msg.getPlayer().getPlayerId() : null,
                         (msg.getSquad() != null) ? msg.getSquad().getSquadId() : null,
                         tempUser.getUsername(),
-                        stringTime
+                        stringTime,
+                        tempPlayer.isAlive(),
+                        rank
                     );   
                 }
             }
