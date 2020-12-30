@@ -107,28 +107,28 @@ public class ChatMessageTests {
     @Test
     void fetchGlobalChatMessages() {
         //Fetch Global
-        ResponseEntity<ArrayList<ChatMessageObject>> messages = cmc.fetchBundleOfChatMessages(new ChatMessageObject(null, null, Faction.ALL, null, 1, null, null, null, null));
+        ResponseEntity<ArrayList<ChatMessageObject>> messages = cmc.fetchBundleOfChatMessages(new ChatMessageObject(null, null, Faction.ALL, null, 1, null, null, null, null, false, null));
         assertEquals(HttpStatus.OK, messages.getStatusCode());
         for (ChatMessageObject message : messages.getBody()) {
             System.out.println(message.getChatMessageId());
             System.out.println(message.getMessage());         
         }
         //Fetch Human Faction Messages
-        messages = cmc.fetchBundleOfChatMessages(new ChatMessageObject(null, null, Faction.HUMAN, null, 1, null, null, null, null));
+        messages = cmc.fetchBundleOfChatMessages(new ChatMessageObject(null, null, Faction.HUMAN, null, 1, null, null, null, null, false, null));
         assertEquals(HttpStatus.OK, messages.getStatusCode());
         for (ChatMessageObject message : messages.getBody()) {
             System.out.println(message.getChatMessageId());
             System.out.println(message.getMessage());         
         }
         //Fetch Zombie Faction Messages
-        messages = cmc.fetchBundleOfChatMessages(new ChatMessageObject(null, null, Faction.ZOMBIE, null, 1, null, null, null, null));
+        messages = cmc.fetchBundleOfChatMessages(new ChatMessageObject(null, null, Faction.ZOMBIE, null, 1, null, null, null, null, false, null));
         assertEquals(HttpStatus.OK, messages.getStatusCode());
         for (ChatMessageObject message : messages.getBody()) {
             System.out.println(message.getChatMessageId());
             System.out.println(message.getMessage());         
         }
         //Fetch Squad Messages
-        messages = cmc.fetchBundleOfChatMessages(new ChatMessageObject(null, null, Faction.HUMAN, null, 1, null, 1, null, null));
+        messages = cmc.fetchBundleOfChatMessages(new ChatMessageObject(null, null, Faction.HUMAN, null, 1, null, 1, null, null, false, null));
         assertEquals(HttpStatus.OK, messages.getStatusCode());
         for (ChatMessageObject message : messages.getBody()) {
             System.out.println(message.getChatMessageId());
