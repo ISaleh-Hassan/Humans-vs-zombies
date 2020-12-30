@@ -52,8 +52,8 @@ const SquadDetail = ({ history }) => {
         let squadLng = position.coords.longitude.toFixed(4);
         let squadLat = position.coords.latitude.toFixed(4);
         let currentPosition = document.getElementById("current-location");
-        currentPosition.innerHTML = "Longitude: " + squadLng +
-            "<br>Latitude: " + squadLat;
+        currentPosition.innerHTML = "<label>Longitude: </label><input type='text' id='lng' value='"+squadLng+"'>" +
+            "<br><label>Latitude: </label><input type='text' id='lat' value='"+squadLat+"'>";
         localStorage.setItem("Squad Lng: ", squadLng)
         localStorage.setItem("Squad Lat: ", squadLat)
     }
@@ -166,6 +166,7 @@ const SquadDetail = ({ history }) => {
                         <br />
 
                         <button onClick={getLocation}>Mark location</button>
+                        <br></br>
                         <p id="current-location"></p>
                         <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
 
