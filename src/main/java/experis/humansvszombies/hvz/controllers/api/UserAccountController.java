@@ -155,8 +155,27 @@ public class UserAccountController {
                         null
                     );
                 }
-            }  
-        }
+            }
+        } else { // all this is coded 30-12-20
+            // all this is coded 30-12-20
+            UserAccount userPhone = userAccountRepository.findDistinctByPhoneNumber(userAccount.getPhoneNumber());
+            if (userPhone != null) {
+                //Compare supplied password to account password and return SUCCESS message if login information is correct.
+                if (userPhone.getPhoneNumber().equals(userAccount.getPhoneNumber())) {
+                    status = HttpStatus.OK;
+                    userInfo = new UserAccountObject(
+                            userPhone.getUserAccountId(),
+                            null,
+                            null,
+                            userPhone.getUserType(),
+                            userPhone.getUsername(),
+                            null,
+                            null,
+                            null
+                    );
+                }
+            }
+        } // till here
         return new ResponseEntity<>(userInfo, status);
     }
 

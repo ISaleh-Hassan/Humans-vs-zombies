@@ -9,12 +9,14 @@ import HeaderOutside from "../StylingComponents/HeaderOutside";
 
 const RegisterPhone = ({ history }) => {
 
+    let userId = localStorage.getItem("User ID")
     const isVerified = firebase.auth().currentUser.emailVerified;
 
     const handleRegister = async event => {
         event.preventDefault();
         const { phone } = event.target.elements;
-        storePhone(phone.value);
+        storePhone(userId, phone.value);
+        history.push('/');
     }
 
     function redirectToIndex() {

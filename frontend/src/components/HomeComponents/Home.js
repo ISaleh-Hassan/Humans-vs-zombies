@@ -11,6 +11,8 @@ const Home = (props) => {
   const user = getUser();
   const isVerified = firebase.auth().currentUser.emailVerified;
 
+  
+
   const handleSignOut = () => {
     firebase.auth().signOut()
     clearUser();

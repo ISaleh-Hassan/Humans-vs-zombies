@@ -79,9 +79,8 @@ export const getUserInfo = () => {
         .then(data => console.log(data));
 }
 
-export async function storePhone (userAccountId, phone){
-    let userAccountIdHC = 12;
-    const response = await fetch("/api/update/useraccount/" + userAccountIdHC, {
+export async function storePhone(userAccountId, phone) {
+    const response = await fetch("/api/update/useraccount/" + userAccountId, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
@@ -91,5 +90,10 @@ export async function storePhone (userAccountId, phone){
         })
     })
     const status = await response.status
+    if (response.status === 200) {
+        console.log("Phone updated!")
+    } else {
+        console.log("Something went wrong!")
+    }
     return status;
 }
