@@ -42,16 +42,11 @@ const Missions = (props) => {
                 <div>
                     <h1>Game Name- Map</h1>
                     <h2>Current Missions</h2>
-                    <span>
-                        <Button type="button" variant="primary" onClick={onFilterButtonClicked} value="ALL" size="sm">ALL</Button>
-                        <Button type="button" variant="warning" onClick={onFilterButtonClicked} value="PREPARATION" size="sm">PREPARATION</Button>
-                        <Button type="button" variant="success" onClick={onFilterButtonClicked} value="IN_PROGRESS" size="sm">IN PROGRESS</Button>
-                        <Button type="button" variant="dark" onClick={onFilterButtonClicked} value="COMPLETED" size="sm">COMPLETED</Button>
-                    </span>
                     <table>
                         <thead>
                             <tr>
                                 <th>Mission</th>
+                                <th>Description</th>
                                 <th>Faction</th>
                                 <th>Start</th>
                                 <th>End</th>
@@ -61,6 +56,7 @@ const Missions = (props) => {
                             {missions.map((m) =>
                                 <tr key={m.missionId}>
                                     {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.name}</td> : null}
+                                    {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.missionDescription}</td> : null}
                                     {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.factionVisibility}</td> : null}
                                     {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.startTime}</td> : null}
                                     {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.endTime}</td> : null}
