@@ -43,9 +43,6 @@ public class UserDetailsImpl implements UserDetails {
 			.map(r -> new SimpleGrantedAuthority(r.name()))
 			.collect(Collectors.toList());
 
-		System.out.println("*******************************");
-		System.out.println("ROLES: " + authorities);
-		System.out.println("*******************************");
 		return new UserDetailsImpl(
 				user.getUserAccountId(), 
 				user.getUsername(), 
