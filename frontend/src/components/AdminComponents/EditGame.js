@@ -1,81 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../StylingComponents/Header";
-import NavBar from "../StylingComponents/NavBar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button } from 'react-bootstrap';
-import { makeStyles } from '@material-ui/core/styles';
+import { UpdateGame, FetchAllGames, FetchGame } from "../../utils/GameStorage";
 import TextField from '@material-ui/core/TextField';
-import { DeleteGame, FetchGame, UpdateGame } from "../../utils/GameStorage";
 import GameMenu from "../StylingComponents/GameMenu";
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200,
-  },
-}));
 
 const EditGame = (props) => {
-  const [validGameName, setValidGameName] = useState(true);
-  const [validGameDescription, setValidGameDescription] = useState(true);
-  const [deleteGame, setDeleteGame] = useState(false);
-  const [gameObject, setGameObject] = useState(
-    {
-      gameId: null,
-      name: null,
-      gameState: null,
-      startTime: null,
-      endTime: null,
-      maxNumberOfPlayers: 0,
-      description: null
-    })
+  const [validGameName, setValidGameName] = useState(false);
+  const [validGameDescription, setValidGameDescription] = useState(false);
+  const [allGames, setAllGames] = useState([])
+  const [selectedGameId, setSelectedGameId] = useState(null);
+  const [gameObject, setGameObject] = useState({})
 
   useEffect(() => {
-    loadGameDetails();
+    fetchAllGames();
   }, []);
 
-  async function loadGameDetails() {
-    const gameId = localStorage.getItem("Game ID");
-    if (gameId != null) {
-      const game = await FetchGame(gameId);
-      setGameObject({
-        gameId: game.gameId,
-        name: game.name,
-        gameState: game.gameState,
-        startTime: game.startTime,
-        endTime: game.endTime,
-        maxNumberOfPlayers: game.maxNumberOfPlayers,
-        description: game.description,
-      })
+  useEffect(() => {
+    if (selectedGameId !== null) {
+      fetchGame()
+    }
+    else {
+      setGameObject({})
+    }
+  }, [selectedGameId]);
+
+  useEffect(() => {
+
+  }, [gameObject]);
+
+  async function fetchAllGames() {
+    let allGames = await FetchAllGames();
+    if (allGames !== null) {
+      setAllGames(allGames);
     } else {
-      alert("Game ID is null.");
+      alert('Failed to fetch games');
+      setAllGames([]);
     }
   }
 
-  async function onUpdateClicked() {
-    if (validGameDescription === true && validGameName === true) {
-      let updateGameResponse = await UpdateGame(gameObject);
-      if (updateGameResponse.status === 200) {
-        props.history.push("/currentgames");
-      } else if (updateGameResponse.status === 400) {
-        alert("Game name must be unique!");
-      } else {
-        alert("Something went wrong while updating game information.");
-      }
+  async function fetchGame() {
+    let game = await FetchGame(selectedGameId);
+    if (game !== null) {
+      setGameObject(
+        {
+          name: game.name,
+          gameState: game.gameState,
+          gameId: game.gameId,
+          startTime: game.startTime,
+          endTime: game.endTime,
+          maxNumberOfPlayers: game.maxNumberOfPlayers,
+          description: game.description
+        }
+      );
+    } else {
+      alert('Failed to fetch games');
+      setGameObject({});
     }
   }
 
-  async function onDeteleClicked() {
-    let deleteGameResponse = await DeleteGame(gameObject.gameId);
-    if (deleteGameResponse === 200) {
-      props.history.push("/currentgames");
+  async function editGame() {
+    let editGameResponse = await UpdateGame(gameObject);
+    if (editGameResponse.status === 200) {
+      props.history.push("/admin");
+    } else if (editGameResponse.status === 400) {
+      alert("Game name must be unique!");
     } else {
-      console.log("Something went wrong when trying to delete the game.");
+      alert("Something went wrong while updating the game.");
     }
   }
 
@@ -91,14 +84,6 @@ const EditGame = (props) => {
       }));
       setValidGameName(true);
     }
-  }
-
-  const onGameStateChange = ev => {
-    let currentState = ev.target.value;
-    setGameObject((prevState) => ({
-      ...prevState,
-      gameState: currentState
-    }));
   }
 
   const onGameDescriptionChange = ev => {
@@ -141,67 +126,103 @@ const EditGame = (props) => {
     }
   }
 
-  const onCheckBoxChanged = ev => {
-    setDeleteGame(!deleteGame);
+  function handleChangeGameToUpdate(ev) {
+    let selectedGame = ev.target.value;
+    if (selectedGame !== "0") {
+      setSelectedGameId(selectedGame)
+      setGameObject({})
+    }
+    else {
+      setSelectedGameId(null);
+    }
   }
 
+  function isEmpty(obj) {
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop))
+        return false;
+    }
+
+    return true;
+  }
   return (
     <>
       <section className="home">
         <div className="container">
           <Header />
           <GameMenu />
-          <h1>Edit Game</h1>
+          <h1>Edit game</h1>
           <br />
           <Form.Group>
-            <Form.Control type="text" placeholder={gameObject.name} onChange={onGameNameChange} />
-            <br />
-            <Form.Control as="select" placeholder="Gamestate" onChange={onGameStateChange}>
-              <option>PREPARATION</option>
-              <option>IN_PROGRESS</option>
-              <option>COMPLETED</option>
-            </Form.Control>
-            <br />
-            <Form.Control placeholder={gameObject.description} as="textarea" rows={3} onChange={onGameDescriptionChange} />
-            <br />
-            <TextField
-              id="datetime-local"
-              label="Start time"
-              type="datetime-local"
-              defaultValue={gameObject.startTime}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={onStartTimeChange}
-            />
-            <br />  <br />
-            <TextField
-              id="datetime-local"
-              label="End time"
-              type="datetime-local"
-              defaultValue={gameObject.endTime}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={onEndTimeChange}
-            />
-            <br />
 
-            <br />
-            <Form.Control type="number" size="sm" onChange={onSizeChange} placeholder={gameObject.maxNumberOfPlayers}>
-
+            <Form.Control
+              onChange={handleChangeGameToUpdate}
+              className="mb-4"
+              as="select">
+              <option value="0">Select game...</option>
+              {allGames.filter(game => game.gameState !== 'COMPLETED').map(filteredGame => (
+                <option key={filteredGame.gameId} value={filteredGame.gameId}>
+                  {filteredGame.name}
+                </option>
+              ))}
             </Form.Control>
-            <br /> <br />
-            <Button disabled={!validGameName || !validGameDescription} onClick={onUpdateClicked}>Update Game</Button>
-            <Button disabled={!deleteGame} onClick={onDeteleClicked}>Delete Game</Button>
-            <Form.Group controlId="deleteGameCheckbox">
-              <Form.Check type="checkbox" label="Delete game?" onChange={onCheckBoxChanged} />
-            </Form.Group>
+
+            {selectedGameId !== null && !isEmpty(gameObject) ?
+              <div>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter game name..."
+                  defaultValue={gameObject.name}
+                  onChange={onGameNameChange} />
+                <br />
+                <Form.Control
+                  placeholder="Enter game description..."
+                  as="textarea"
+                  defaultValue={gameObject.description}
+                  rows={3}
+                  onChange={onGameDescriptionChange} />
+                <br />
+                <TextField
+                  id="datetime-local"
+                  label="Start time"
+                  type="datetime-local"
+                  defaultValue={gameObject.startTime.substring(0, 16)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+
+                  onChange={onStartTimeChange}
+                />
+                <br />  <br />
+                <TextField
+                  id="datetime-local"
+                  label="End time"
+                  type="datetime-local"
+                  defaultValue={gameObject.endTime.substring(0, 16)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={onEndTimeChange}
+                />
+                <br />
+                <br />
+                <Form.Control
+                  type="number"
+                  defaultValue={gameObject.maxNumberOfPlayers}
+                  size="sm"
+                  onChange={onSizeChange}
+                  placeholder="Max number of players...">
+
+                </Form.Control>
+                <br /> <br />
+                <Button
+                  onClick={editGame}>Edit</Button>
+              </div>
+              : null}
           </Form.Group>
         </div>
       </section>
     </>
   );
 };
-
 export default EditGame;

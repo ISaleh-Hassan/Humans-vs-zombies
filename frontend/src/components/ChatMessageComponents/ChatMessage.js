@@ -1,21 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ButtonGroup, Button, Form } from 'react-bootstrap';
-import { CreateMessage, GetBundleOfChatMessages } from '../../utils/ChatMessageStorage';
+import { CreateMessage, GetBundleOfChatMessages, DeleteChatMessage, UpdateChatMessage } from '../../utils/ChatMessageStorage';
 import { ThemeProvider, ChatList, ChatListItem, Avatar, Column, Subtitle, Row, Title, IconButton, SendIcon } from '@livechat/ui-kit'
-import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
-    container: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        width: 200,
-    },
-}));
 
 const ChatMessage = props => {
 
@@ -30,20 +18,8 @@ const ChatMessage = props => {
     const [message, setMessage] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const [validInput, setValidInput] = useState(false);
-
-
-    // const [timestamp, setTimeStamp] = useState(getTime());
-    // const [playerData, setPlayerData] = useState(null);
-    // const [playerSquadId, setPlayerSquadId] = useState(localStorage.getItem('Squad ID'));
-    // const [msgObject, setMsgObject] = useState(
-    //     {
-    //         gameId: localStorage.getItem('Game ID'),
-    //         playerId: localStorage.getItem('Player ID'),
-    //         squadId: localStorage.getItem('Squad ID'),
-    //         message: '',
-    //         faction: 'ALL',
-    //         timestamp: timestamp
-    //     })
+    const [messageToUpdateId, setMessageToUpdateId] = useState(null);
+    const [isEditingMessage, setIsEditingMessage] = useState(false);
 
     useEffect(() => {
         if (userId !== 'null' && userId !== null) {
@@ -56,7 +32,7 @@ const ChatMessage = props => {
                             squadId: null,
                             faction: chatRoom
                         }
-                        fetchMessages(request);
+                        fetchMessages();
                     } else {
                         alert('Faction missing.');
                         props.history.push("/landing");
@@ -157,7 +133,7 @@ const ChatMessage = props => {
         setMessage(currentInput);
     }
 
-    const prepareMessageObject = (ev) => {
+    const prepareMessageObject = () => {
         let msgObject;
         let time = new Date().getTime();
         switch (chatRoom) {
@@ -194,11 +170,13 @@ const ChatMessage = props => {
             default:
                 break;
         }
-        sendMessage(msgObject);
+        return msgObject;
     }
 
-    async function sendMessage(msg) {
+    async function sendMessage() {
+        let msg = prepareMessageObject();
         const response = await CreateMessage(msg);
+        resetTextField()
         if (response !== null) {
             setRefresh(!refresh);
         } else {
@@ -206,7 +184,54 @@ const ChatMessage = props => {
         }
     }
 
+    async function handleDeleteMessage(msgId) {
+        const response = await DeleteChatMessage(msgId);
+        if (response !== null) {
+            setRefresh(!refresh);
+        } else {
+            alert("Failed to send message! Failed to delete.")
+        }
 
+    }
+
+    function checkIfPlayerIsAuthor(msgAuthorId) {
+        if (playerId === msgAuthorId.toString()) {
+            return true;
+        }
+    }
+    function handleEditMessage(msgId) {
+        setMessageToUpdateId(msgId)
+        setIsEditingMessage(true)
+    }
+
+    function handleUpdateMessage(msgId) {
+        if (msgId === messageToUpdateId) {
+            return true;
+        }
+    }
+
+    function resetTextField() {
+        const textField = document.getElementById("messageInput");
+        textField.value = ""
+    }
+    async function sendUpdatedMessage() {
+        let updatedMesageObj = {
+            message: message,
+            chatMessageId: messageToUpdateId
+        }
+        let response = await UpdateChatMessage(updatedMesageObj)
+
+        if (response !== null) {
+            setIsEditingMessage(false);
+            setRefresh(!refresh);
+            setMessageToUpdateId(null)
+        } else {
+            alert("Failed to edit message! Failed to delete.")
+        }
+    }
+    function handleCancelEditingMessage() {
+        setIsEditingMessage(false);
+    }
 
     return (
         <>
@@ -227,7 +252,27 @@ const ChatMessage = props => {
                                     <Subtitle nowrap>{chatMessage.stringTimestamp}</Subtitle>
                                 </Row>
                                 <Subtitle >
-                                    {chatMessage.message}
+                                    <div>
+                                        {handleUpdateMessage(chatMessage.chatMessageId) && isEditingMessage ? <Form.Group>
+                                            <Form.Control type="text"
+                                                placeholder="Edit your message..."
+                                                onChange={onMsgChanged}
+                                                defaultValue={chatMessage.message} />
+                                            <Button variant="info" size="sm" onClick={sendUpdatedMessage}>Update</Button>
+                                            <Button className="m-2" size="sm" variant="secondary"  onClick={handleCancelEditingMessage}>Cancel</Button>
+                                        </Form.Group>
+                                            : chatMessage.message
+                                        }
+
+                                    </div>
+                                    <div>
+                                        {checkIfPlayerIsAuthor(chatMessage.playerId) && !isEditingMessage ?
+                                            <Subtitle >
+                                                <Button className="m-1" variant="secondary" size="sm" onClick={() => handleEditMessage(chatMessage.chatMessageId)}> Edit</Button>
+                                                <Button variant="danger" size="sm" onClick={() => handleDeleteMessage(chatMessage.chatMessageId)}> Delete</Button>
+                                            </Subtitle>
+                                            : null}
+                                    </div>
                                 </Subtitle>
                             </Column>
                         </ChatListItem>
@@ -235,8 +280,8 @@ const ChatMessage = props => {
                 </ChatList>
 
                 <Form.Group>
-                    <Form.Control type="text" placeholder="Enter a message" onChange={onMsgChanged} />
-                    <IconButton disabled={!validInput} onClick={prepareMessageObject}>
+                    <Form.Control id="messageInput" type="text" placeholder="Enter a message" onChange={onMsgChanged} />
+                    <IconButton disabled={!validInput} onClick={sendMessage}>
                         <SendIcon />
                     </IconButton>
                 </Form.Group>
