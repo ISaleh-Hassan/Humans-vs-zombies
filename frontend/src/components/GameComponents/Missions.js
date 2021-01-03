@@ -7,6 +7,7 @@ const Missions = (props) => {
 
     const [missions, setMissions] = useState([]);
     const [missionFilter, setmissionFilter] = useState('ALL');
+    let faction = localStorage.getItem("Faction")
 
     useEffect(() => {
         fetchMissions();
@@ -55,16 +56,11 @@ const Missions = (props) => {
                         <tbody>
                             {missions.map((m) =>
                                 <tr key={m.missionId}>
-                                    {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.name}</td> : null}
-                                    {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.missionDescription}</td> : null}
-                                    {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.factionVisibility}</td> : null}
-                                    {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.startTime}</td> : null}
-                                    {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>{m.endTime}</td> : null}
-                                    {m.missionState === missionFilter || missionFilter === 'ALL' ? <td>
-                                        {m.missionState === 'PREPARATION' ? <Button type="button" variant="warning" disabled={m.missionState === 'COMPLETED'} onClick={() => handlePreview(m.missionId)}>Preview</Button> : null}
-                                        {m.missionState === 'IN_PROGRESS' ? <Button type="button" variant="success" disabled={m.missionState === 'COMPLETED'} onClick={() => handlePreview(m.missionId)}>Preview</Button> : null}
-                                        {m.missionState === 'COMPLETED' ? <Button type="button" variant="dark" disabled={m.missionState === 'COMPLETED'} onClick={() => handlePreview(m.missionId)}>Preview</Button> : null}
-                                    </td> : null}
+                                    {m.name && m.factionVisibility === faction ? <td>{m.name}</td> : null}
+                                    {m.missionDescription && m.factionVisibility === faction ? <td>{m.missionDescription}</td> : null}
+                                    {m.factionVisibility  && m.factionVisibility === faction ? <td>{m.factionVisibility}</td> : null}
+                                    {m.startTime && m.factionVisibility === faction ? <td>{m.startTime}</td> : null}
+                                    {m.endTime && m.factionVisibility === faction ? <td>{m.endTime}</td> : null}
                                 </tr>
                             )}
                         </tbody>

@@ -31,6 +31,9 @@ class MainMap extends Component {
     let missions = FetchAllMissions();
     let squadCheckins = FetchAllSquadCheckin();
 
+    let faction = localStorage.getItem("Faction")
+    let user = localStorage.getItem("Username")
+
     missions
       .then(response =>
         response.map((m) => {
@@ -42,7 +45,7 @@ class MainMap extends Component {
           let popup = new mapboxgl.Popup({ offset: 25 })
             .setText('Name: ' + m.name);
 
-          if (m.missionPoint !== null) {
+          if (m.missionPoint !== null && m.factionVisibility === faction) {
             missionMarker
               .setLngLat([m.missionPoint.x, m.missionPoint.y]).setPopup(popup).addTo(map)
           }
@@ -54,13 +57,13 @@ class MainMap extends Component {
         response.map((sq) => {
 
           let squadCheckin = document.createElement('div');
-          squadCheckin.className = 'mission';
+          squadCheckin.className = 'squad';
           let squadCheckinMarker = new mapboxgl.Marker(squadCheckin);
 
           let popup = new mapboxgl.Popup({ offset: 25 })
-            .setText('Name: ' + sq.name);
+            .setText('Hello, ' + user);
 
-          if (sq.position !== null) {
+          if (sq.position !== null  && sq.squadId !== null || sq.squadId !== undefined) {
             squadCheckinMarker
               .setLngLat([sq.position.x, sq.position.y]).setPopup(popup).addTo(map)
           }
@@ -72,11 +75,6 @@ class MainMap extends Component {
     gravestone.className = 'gravestone';
     let graveStoneMarker = new mapboxgl.Marker(gravestone);
     graveStoneMarker.setLngLat([14.1618, 57.7826]).addTo(map);
-
-    let squad = document.createElement('div');
-    squad.className = 'squad';
-    let squadMarker = new mapboxgl.Marker(squad);
-    squadMarker.setLngLat([localStorage.getItem("Squad Lng: "), localStorage.getItem("Squad Lat: ")]).addTo(map);
 
     function onDragEnd() {
       let lngLat = marker.getLngLat();
