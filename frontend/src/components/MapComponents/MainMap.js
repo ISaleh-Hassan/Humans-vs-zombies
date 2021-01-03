@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { FetchAllMissions } from '../../utils/missionStorage';
+import { FetchAllSquadCheckin } from '../../utils/squadCheckinStorage';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 
@@ -28,6 +29,7 @@ class MainMap extends Component {
     });
 
     let missions = FetchAllMissions();
+    let squadCheckins = FetchAllSquadCheckin();
 
     missions
       .then(response =>
@@ -46,6 +48,25 @@ class MainMap extends Component {
           }
         })
       )
+
+      squadCheckins
+      .then(response =>
+        response.map((sq) => {
+
+          let squadCheckin = document.createElement('div');
+          squadCheckin.className = 'mission';
+          let squadCheckinMarker = new mapboxgl.Marker(squadCheckin);
+
+          let popup = new mapboxgl.Popup({ offset: 25 })
+            .setText('Name: ' + sq.name);
+
+          if (sq.position !== null) {
+            squadCheckinMarker
+              .setLngLat([sq.position.x, sq.position.y]).setPopup(popup).addTo(map)
+          }
+        })
+      )
+
 
     let gravestone = document.createElement('div');
     gravestone.className = 'gravestone';

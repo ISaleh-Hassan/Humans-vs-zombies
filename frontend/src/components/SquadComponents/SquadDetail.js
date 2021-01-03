@@ -12,15 +12,7 @@ const SquadDetail = ({ history }) => {
     let playerId = localStorage.getItem('Player ID');
     let squadMemberId = localStorage.getItem('SquadMember ID');
     let squadRank = localStorage.getItem('Squad Rank');
-
     let dateObject = new Date();
-    let date = ("0" + dateObject.getDate()).slice(-2); 
-    let month = ("0" + (dateObject.getMonth() + 1)).slice(-2);
-    let year = dateObject.getFullYear();
-    let hours = dateObject.getHours();
-    let minutes = dateObject.getMinutes();
-    let seconds = dateObject.getSeconds();
-    let currentDateTime = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
 
     const [squadMembers, setSquadMembers] = useState([]);
 
@@ -53,9 +45,13 @@ const SquadDetail = ({ history }) => {
     // }
 
     function getLocation() {
+        let lng = localStorage.getItem("Squad Lng: ")
+        let lat = localStorage.getItem("Squad Lat: ")
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
         }
+        CreateSquadCheckin(gameId, squadId, squadMemberId, dateObject, lng, lat)
+        
     }
 
     function showPosition(position) {

@@ -22,8 +22,8 @@ export async function FetchGame(squadCheckinId) {
     }
 }
 
-export async function CreateSquadCheckin(gameId, squadId, squadMemberId, currentTime, lat, lng) {
-    let url = getBaseUrl() + "create/squadcheckin" + gameId + '/' + squadId + '/' + squadMemberId
+export async function CreateSquadCheckin(gameId, squadId, squadMemberId, currentTime, lng, lat) {
+    let url = getBaseUrl() + "create/squadcheckin/" + gameId + '/' + squadId + '/' + squadMemberId
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -32,18 +32,24 @@ export async function CreateSquadCheckin(gameId, squadId, squadMemberId, current
         body: JSON.stringify({
             pointOfTime: currentTime,
             position: {
-                x: lat,
-                y: lng
+                x: lng,
+                y: lat
             },
             gameId: gameId,
             squadId: squadId,
             squadMemberId: squadMemberId
         })
     })
+    if (response.status === 200) {
+        let body = await response.json();
+        return body;
+    } else {
+        return null;
+    }
     return response;
 }
 
-export async function UpdateSquadCheckin(squadCheckinId, gameId, squadId, squadMemberId, currentTime, lat, lng) {
+export async function UpdateSquadCheckin(squadCheckinId, gameId, squadId, squadMemberId, currentTime, lng, lat) {
     let url = getBaseUrl() + "/update/squadcheckin/" + squadCheckinId;
     const response = await fetch(url, {
         method: 'PATCH',
@@ -53,8 +59,8 @@ export async function UpdateSquadCheckin(squadCheckinId, gameId, squadId, squadM
         body: JSON.stringify({
             pointOfTime: currentTime,
             position: {
-                x: lat,
-                y: lng
+                x: lng,
+                y: lat
             },
             gameId: gameId,
             squadId: squadId,
