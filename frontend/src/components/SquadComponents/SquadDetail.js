@@ -1,4 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
+import { CreateSquadCheckin } from '../../utils/squadCheckinStorage';
 import { UpdateSquadMember } from '../../utils/SquadMemberStorage';
 import GameMenu from '../StylingComponents/GameMenu';
 import Header from '../StylingComponents/Header';
@@ -11,6 +12,15 @@ const SquadDetail = ({ history }) => {
     let playerId = localStorage.getItem('Player ID');
     let squadMemberId = localStorage.getItem('SquadMember ID');
     let squadRank = localStorage.getItem('Squad Rank');
+
+    let dateObject = new Date();
+    let date = ("0" + dateObject.getDate()).slice(-2); 
+    let month = ("0" + (dateObject.getMonth() + 1)).slice(-2);
+    let year = dateObject.getFullYear();
+    let hours = dateObject.getHours();
+    let minutes = dateObject.getMinutes();
+    let seconds = dateObject.getSeconds();
+    let currentDateTime = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
 
     const [squadMembers, setSquadMembers] = useState([]);
 
@@ -109,18 +119,18 @@ const SquadDetail = ({ history }) => {
         if (squadRank === "LEADER") {
             fetch('/api/delete/squad/' + squadId, {
                 method: 'DELETE',
-                })
-                    .then(res => res.json())
-                    .then(res => console.log(res));
-                localStorage.setItem('Squad ID', 'null');
-                localStorage.setItem('Squad Member ID', 'null');
-                localStorage.setItem('Squad Rank', 'null');
-                history.push('/squads');
+            })
+                .then(res => res.json())
+                .then(res => console.log(res));
+            localStorage.setItem('Squad ID', 'null');
+            localStorage.setItem('Squad Member ID', 'null');
+            localStorage.setItem('Squad Rank', 'null');
+            history.push('/squads');
         } else {
             alert("You must be a leader to disband the squad.")
         }
     }
-    
+
 
     if (squadMemberId === 'null' || squadMemberId === 'undefined') {
         return (
