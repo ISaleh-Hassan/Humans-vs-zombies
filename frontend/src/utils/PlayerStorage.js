@@ -80,9 +80,13 @@ export async function UpdatePlayer(playerData) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-
-        })
+        body: JSON.stringify(
+            {
+                alive: playerData.alive,
+                faction: playerData.faction,
+                patientZero: playerData.patientZero
+            }
+        )
     })
     return response;
 }
@@ -94,6 +98,6 @@ export async function DeletePlayer(playerId) {
         headers: {
             'Content-type': 'application/json'
         }
-        });
-    return response.status;
+    });
+    return response;
 }

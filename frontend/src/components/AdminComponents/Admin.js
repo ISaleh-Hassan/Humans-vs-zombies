@@ -15,7 +15,7 @@ const Admin = () => {
           <h1>Admin</h1>
           <Link to="/creategame">Create Game</Link>
           <Link to="/editgame">Edit Game</Link>
-          <Link to="#">Edit Player State</Link>
+          <Link to="/playerstate">Edit Player State</Link>
           <Link to="/create/missionmarker">Create Mission Marker</Link>
           <Link to="#">Edit Mission Marker</Link>
         </div>
