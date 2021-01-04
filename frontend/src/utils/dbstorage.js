@@ -81,6 +81,17 @@ export const getUserInfo = () => {
         .then(data => console.log(data));
 }
 
+export async function fetchUser(userId) {
+    let url = getBaseUrl() + "fetch/useraccount/" + userId;
+    const response = await fetch(url);
+    if (response.status === 200) {
+        let body = await response.json();
+        return body;
+    } else {
+        return null;
+    }
+}
+
 export async function storePhone(userAccountId, phone) {
     const response = await fetch("/api/update/useraccount/" + userAccountId, {
         method: 'PATCH',
