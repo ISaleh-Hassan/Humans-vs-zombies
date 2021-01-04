@@ -74,3 +74,4 @@ export async function DeleteMission(missionId) {
     });
     return response.status;
 }
+}

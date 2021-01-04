@@ -110,12 +110,6 @@ export async function storePhone(phone) {
     return status;
 }
 
-export const getUserInfo = () => {
-    fetch('/api/fetch/useraccount/all')
-        .then(response => response.json())
-        .then(data => console.log(data));
-}
-
 export async function fetchUser(userId) {
     let url = getBaseUrl() + "fetch/useraccount/" + userId;
     const response = await fetch(url);
@@ -125,23 +119,4 @@ export async function fetchUser(userId) {
     } else {
         return null;
     }
-}
-
-export async function storePhone(userAccountId, phone) {
-    const response = await fetch("/api/update/useraccount/" + userAccountId, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            phoneNumber: phone
-        })
-    })
-    const status = await response.status
-    if (response.status === 200) {
-        console.log("Phone updated!")
-    } else {
-        console.log("Something went wrong!")
-    }
-    return status;
 }

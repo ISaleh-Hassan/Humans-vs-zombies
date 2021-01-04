@@ -3,10 +3,9 @@ const userName = 'Username';
 const pKey = 'Player ID'
 const jwt = 'jwt'
 
-export const storeUser = (user, username, usertype, token) => {
+export const storeUser = (user, username, token) => {
     localStorage.setItem(uKey, user);
     localStorage.setItem(userName, username);
-    localStorage.setItem(userType, usertype);
     localStorage.setItem(jwt, token)
 }
 
