@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import { loginPhone } from '../../utils/dbstorage';
 import firebase from '../../utils/firebase'
 import HeaderOutside from '../StylingComponents/HeaderOutside';
@@ -10,7 +11,7 @@ const Phone = ({ history }) => {
     const phoneNumber = document.getElementById('phone');
 
     const status = await loginPhone(phoneNumber.value)
-    
+
     if (status === 200) {
       firebase.auth().signInWithPhoneNumber(phoneNumber.value, recaptcha).then(function (e) {
         var code = prompt('Enter the OTP Code: ', '');
@@ -52,6 +53,8 @@ const Phone = ({ history }) => {
           <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase.js"></script>
 
           <button onClick={handleClick}>Get code</button>
+          <Link to="/login">Login with email instead.</Link>
+
         </div>
       </section>
     </>

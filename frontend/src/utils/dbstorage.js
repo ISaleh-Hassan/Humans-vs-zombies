@@ -34,7 +34,7 @@ export async function loginUser(email, password) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token 
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             players: [],
@@ -59,7 +59,7 @@ export async function loginPhone(phone) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token 
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             players: [],
@@ -88,7 +88,11 @@ export const getUserInfo = () => {
 
 export async function fetchUser(userId) {
     let url = getBaseUrl() + "fetch/useraccount/" + userId;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    });
     if (response.status === 200) {
         let body = await response.json();
         return body;

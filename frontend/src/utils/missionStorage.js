@@ -1,11 +1,15 @@
 import { getBaseUrl } from "./baseUrl";
 
 let gameId = localStorage.getItem("Game ID");
-const token = localStorage.getItem('jwt');
 
 export async function FetchAllMissions() {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "fetch/mission/all";
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    });
     if (response.status === 200) {
         let body = await response.json();
         return body;
@@ -15,17 +19,23 @@ export async function FetchAllMissions() {
 }
 
 export async function FetchMission(missionId) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "fetch/mission/" + missionId;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': 'Bearer ' + token 
+        }
+    });
     if (response.status === 200) {
         let body = await response.json();
         return body;
     } else {
-        return false;
+        return null;
     }
 }
 
 export async function CreateMission(missionData) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "create/mission/" + gameId
     const response = await fetch(url, {
         method: 'POST',
@@ -51,6 +61,7 @@ export async function CreateMission(missionData) {
 }
 
 export async function UpdateMission(missionData) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "/update/mission/" + missionData.missionId;
     const response = await fetch(url, {
         method: 'PATCH',
@@ -75,6 +86,7 @@ export async function UpdateMission(missionData) {
 }
 
 export async function DeleteMission(missionId) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "delete/mission/" + missionId;
     const response = await fetch(url, {
         method: 'DELETE',

@@ -1,10 +1,13 @@
 import { getBaseUrl } from "./baseUrl";
 
-const token = localStorage.getItem('jwt');
-
 export async function FetchAllSquadCheckin() {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "fetch/squadcheckin/all";
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    });
     if (response.status === 200) {
         let body = await response.json();
         return body;
@@ -25,6 +28,7 @@ export async function FetchGame(squadCheckinId) {
 }
 
 export async function CreateSquadCheckin(gameId, squadId, squadMemberId, currentTime, lng, lat) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "create/squadcheckin/" + gameId + '/' + squadId + '/' + squadMemberId
     const response = await fetch(url, {
         method: 'POST',
@@ -53,6 +57,7 @@ export async function CreateSquadCheckin(gameId, squadId, squadMemberId, current
 }
 
 export async function UpdateSquadCheckin(squadCheckinId, gameId, squadId, squadMemberId, currentTime, lng, lat) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "/update/squadcheckin/" + squadCheckinId;
     const response = await fetch(url, {
         method: 'PATCH',
@@ -75,6 +80,7 @@ export async function UpdateSquadCheckin(squadCheckinId, gameId, squadId, squadM
 }
 
 export async function DeleteSquadCheckin(squadCheckinId) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "delete/squadcheckin/" + squadCheckinId;
     const response = await fetch(url, {
         method: 'DELETE',

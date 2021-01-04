@@ -20,6 +20,7 @@ const Home = (props) => {
   }, [])
 
   async function fetchUserID() {
+    const token = localStorage.getItem('jwt');
     await fetchUser(userId).then(result => {
       localStorage.setItem("User Phone", result.phoneNumber)
     })
