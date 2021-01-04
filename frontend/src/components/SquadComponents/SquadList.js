@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CreateSquadMember, UpdateSquadMember } from '../../utils/SquadMemberStorage';
 import { FetchPlayer } from '../../utils/PlayerStorage';
 import { CreateSquadMember, FetchSquadMember, UpdateSquadMember } from '../../utils/SquadMemberStorage';
-import GameMenu from '../StylingComponents/GameMenu';
 import Header from '../StylingComponents/Header';
 
 const SquadList = ({ history }) => {

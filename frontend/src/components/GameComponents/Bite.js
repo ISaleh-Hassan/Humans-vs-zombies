@@ -11,6 +11,7 @@ const Bite = ({ history }) => {
     let userId = localStorage.getItem('User ID');
     let latitude = localStorage.getItem('Latitude');
     let longitude = localStorage.getItem('Longitude');
+    let token = localStorage.getItem('jwt');
 
     let currentCoordinates = ('Coordinates: \nLatitude: ' + latitude + ' \nLongitude: ' + longitude);
 
@@ -49,7 +50,12 @@ const Bite = ({ history }) => {
 
 
     async function fetchCurrentPlayer() {
-        const playerResponse = await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId);
+        const playerResponse = await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
         if (playerResponse.status === 200) {
             let body = await playerResponse.json();
             setCurrentPlayer(body);
@@ -89,7 +95,12 @@ const Bite = ({ history }) => {
     // IF TIME: This needs to be cleaned up, and should probably be broken into a few smaller functions
     async function fetchCurrentVictim() {
         setValidationButtonStatus(false);
-        const victimResponse = await fetch('/api/fetch/player/' + gameId + '/' + currentBiteCode);
+        const victimResponse = await fetch('/api/fetch/player/' + gameId + '/' + currentBiteCode, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
         if (victimResponse.status === 200 && validBiteCodeLength === true) {
             let body = await victimResponse.json();
             setCurrentVictim(body);
@@ -117,7 +128,12 @@ const Bite = ({ history }) => {
 
     // This function is used to get and show the victim's username in the validation alert
     async function fetchCurrentVictimUser() {
-        const victimUserResponse = await fetch('/api/fetch/useraccount/' + currentVictim.userAccountId);
+        const victimUserResponse = await fetch('/api/fetch/useraccount/' + currentVictim.userAccountId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
         if (victimUserResponse.status === 200) {
             let body = await victimUserResponse.json()
             setCurrentVictimUser(body);
@@ -137,10 +153,11 @@ const Bite = ({ history }) => {
     // Ask for help creating a kill object!!
 
     async function createKillObject() {
-        let killResponse = await fetch ('/api/create/kill/' + gameId + '/' + currentPlayer.playerId + '/' + currentVictim.playerId, {
+        let killResponse = await fetch('/api/create/kill', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token 
             },
             body: JSON.stringify({
                 timeOfDeath: dateTime,
@@ -148,6 +165,11 @@ const Bite = ({ history }) => {
                     x: longitude,
                     y: latitude
                 },
+                gameId: gameId,
+                killerId: currentPlayer.playerId,
+                victimId: currentVictim.playerId,
+                biteCode: currentBiteCode,
+                description: victimDescription
             })
         });
         if (killResponse.status === 200) {
@@ -168,7 +190,8 @@ const Bite = ({ history }) => {
             let playerResponse = await fetch('/api/update/player/' + currentVictim.playerId, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token 
                 },
                 body: JSON.stringify({
                     faction: 'ZOMBIE', 
@@ -198,7 +221,8 @@ const Bite = ({ history }) => {
             let response = await fetch('/api/update/player/' + currentVictim.playerId, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token 
                 },
                 body: JSON.stringify({
                     isAlive: false
@@ -218,7 +242,7 @@ const Bite = ({ history }) => {
 
 
     // The factions need to be switched back, the current state is for testing
-    if (currentPlayer.faction === 'ZOMBIE') {
+    if (currentPlayer.faction === 'HUMAN') {
         return (
             <div>
                 <Header />
@@ -227,7 +251,7 @@ const Bite = ({ history }) => {
             </div>
         );
 
-    } else if (currentPlayer.faction === 'HUMAN') {
+    } else if (currentPlayer.faction === 'ZOMBIE') {
         return (
             <div>
                 <Header />

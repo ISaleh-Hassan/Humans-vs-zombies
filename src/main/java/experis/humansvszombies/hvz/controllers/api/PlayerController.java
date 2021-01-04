@@ -179,7 +179,7 @@ public class PlayerController {
 
     @CrossOrigin()
     @PatchMapping("/api/update/player/{playerId}")
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> updatePlayer(@RequestBody Player newPlayer, @PathVariable Integer playerId) {
         try {
             Player player;
