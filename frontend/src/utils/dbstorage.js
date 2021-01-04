@@ -1,6 +1,8 @@
 import { getBaseUrl } from "./baseUrl";
 import { storeUser } from "./localstorage";
 
+// export a variable userType then create a function that gets usertype or just get direct
+
 export async function storeUserDB(username, firstname, lastname, usertype, password, email) {
     console.log(usertype);
     const response = await fetch("/api/create/useraccount", {
