@@ -95,6 +95,9 @@ public class KillController {
                 if (newKill.getTimeOfDeath() != null) {
                     kill.setTimeOfDeath(newKill.getTimeOfDeath());
                 }
+                if (newKill.getDescription() != null) {
+                    kill.setDescription(newKill.getDescription());
+                }
                 killRepository.save(kill);
                 response = HttpStatus.OK;
                 System.out.println("Updated kill with id: " + kill.getKillId());
@@ -182,7 +185,8 @@ public class KillController {
             (kill.getGame() != null) ? kill.getGame().getGameId() : null, 
             (kill.getKiller() != null) ? kill.getKiller().getPlayerId() : null, 
             (kill.getVictim() != null) ? kill.getVictim().getPlayerId() : null, 
-            null
+            null,
+            kill.getDescription()
         );
         return returnObject;
     }
