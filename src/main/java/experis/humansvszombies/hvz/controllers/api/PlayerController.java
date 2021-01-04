@@ -48,6 +48,9 @@ public class PlayerController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching a PlayerObject based on id.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
     
@@ -75,6 +78,9 @@ public class PlayerController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId or userId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);        
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching player based on gameId and userId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);       
         }
     }
 
@@ -102,6 +108,9 @@ public class PlayerController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId or bitecode was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);            
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when fetching player based on gameId and bitecode.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);            
         }
     }
 
@@ -128,12 +137,15 @@ public class PlayerController {
             } catch(IllegalArgumentException e) {
                 System.out.println("Exception thrown: newPlayer was null.");
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }      
+            } catch(Exception e) {
+                System.out.println("Exception thrown: Something unexpected went wrong when creating a new Player.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }        
     }
 
     @CrossOrigin()
     @PatchMapping("/api/update/player/{playerId}")
-    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<PlayerObject> updatePlayer(@RequestBody Player newPlayer, @PathVariable Integer playerId) {
         try {
             Player player;
@@ -160,6 +172,9 @@ public class PlayerController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: playerId or newPlayer was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a Player.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -184,7 +199,10 @@ public class PlayerController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: playerId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
-        }     
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a Player.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        }  
     }
 
     public ResponseEntity<Boolean> checkBiteCode(Integer victimId, String biteCode) {
@@ -205,6 +223,9 @@ public class PlayerController {
             return new ResponseEntity<>(result, status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: victimId was null.");
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when checking Bitecode.");
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }

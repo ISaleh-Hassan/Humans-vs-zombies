@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -26,9 +25,6 @@ import experis.humansvszombies.hvz.security.services.UserDetailsImpl;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
-
-
-
 @RestController
 public class UserAccountController {
     @Autowired
@@ -47,10 +43,10 @@ public class UserAccountController {
     @GetMapping("/api/fetch/useraccount/all")
     @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<UserAccountObject>> getAllUsers() {
-        ArrayList<UserAccount> users = (ArrayList<UserAccount>)userAccountRepository.findAll();
+        ArrayList<UserAccount> users = (ArrayList<UserAccount>) userAccountRepository.findAll();
         ArrayList<UserAccountObject> returnUsers = new ArrayList<UserAccountObject>();
         for (UserAccount userAccount : users) {
-            returnUsers.add(this.createUserAccountObject(userAccount));            
+            returnUsers.add(this.createUserAccountObject(userAccount));
         }
         System.out.println("Fetched all useraccounts");
         return new ResponseEntity<>(returnUsers, HttpStatus.OK);
@@ -66,6 +62,10 @@ public class UserAccountController {
                     .orElseGet(() -> new ResponseEntity<>((UserAccountObject) null, HttpStatus.NOT_FOUND));
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(
+                    "Exception thrown: Something unexpected went wrong when fetching UserAccount based on id.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -86,13 +86,17 @@ public class UserAccountController {
         } catch (DataIntegrityViolationException e) {
             System.out.println("Exception thrown: email or username must be unique.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a UserAccount.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @PatchMapping("/api/update/useraccount/{userAccountId}")
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
-    public ResponseEntity<UserAccountObject> updateUser(@RequestBody UserAccount newUser, @PathVariable Integer userAccountId) {
+    public ResponseEntity<UserAccountObject> updateUser(@RequestBody UserAccount newUser,
+            @PathVariable Integer userAccountId) {
         try {
             UserAccount user;
             HttpStatus response;
@@ -131,6 +135,9 @@ public class UserAccountController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or user was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a UserAccount.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -142,7 +149,7 @@ public class UserAccountController {
             String message = "";
             HttpStatus response;
             UserAccount userAccount = userAccountRepository.findById(userAccountId).orElse(null);
-            if(userAccount != null) {
+            if (userAccount != null) {
                 userAccountRepository.deleteById(userAccountId);
                 System.out.println("UserAccount DELETED with id: " + userAccount.getUserAccountId());
                 message = "SUCCESS";
@@ -155,86 +162,48 @@ public class UserAccountController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: userAccountId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a UserAccount.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
-    //SPECIAL METHODS
     @CrossOrigin()
     @PostMapping("/api/useraccount/login")
     public ResponseEntity<UserAccountObject> loginUser(@RequestBody UserAccount userAccount) {
+        try {
+            if (userAccount != null) {
+                UserAccount user = userAccountRepository.findDistinctByEmail(userAccount.getEmail());
+                if (user == null) {
+                    throw new RuntimeException();
+                }
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(user.getUsername(), userAccount.getPassword()));
 
-        System.out.println("Did I even get here?");
-        if (userAccount != null) {
-            UserAccount user = userAccountRepository.findDistinctByEmail(userAccount.getEmail());
-            if (user == null) {
-                throw new RuntimeException();
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                String jwt = jwtUtils.generateJwtToken(authentication);
+                UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+                List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+                        .collect(Collectors.toList());
+
+                UserAccountObject response = new UserAccountObject(user.getUserAccountId(), null, null,
+                        user.getUserType(), user.getUsername(), null, null, null);
+                response.setJwt(jwt);
+                response.setRoles(roles);
+                return ResponseEntity.ok(response);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), userAccount.getPassword()));
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtUtils.generateJwtToken(authentication);
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            List<String> roles = userDetails.getAuthorities().stream()
-				.map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-                
-            UserAccountObject response = new UserAccountObject(
-                user.getUserAccountId(), 
-                null, 
-                null, 
-                user.getUserType(), 
-                user.getUsername(), 
-                null, 
-                null,
-                null
-            );
-            response.setJwt(jwt);
-            response.setRoles(roles);
-            return ResponseEntity.ok(response);
-        } else {
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when loging in.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        
-
-
-        // //Assume the login will fail.
-        // UserAccountObject userInfo = null;
-        // HttpStatus status = HttpStatus.BAD_REQUEST;
-        // //Check that userAccount isn't null. Then check if the supplied email exists in the database.
-        // if (userAccount != null) {
-        //     UserAccount user = userAccountRepository.findDistinctByEmail(userAccount.getEmail());
-        //     if (user != null) {
-        //         //Compare supplied password to account password and return SUCCESS message if login information is correct.
-        //         if (user.getPassword().equals(userAccount.getPassword())) {
-        //             status = HttpStatus.OK;
-        //             userInfo = new UserAccountObject(
-        //                 user.getUserAccountId(), 
-        //                 null, 
-        //                 null, 
-        //                 user.getUserType(), 
-        //                 user.getUsername(), 
-        //                 null, 
-        //                 null,
-        //                 null
-        //             );
-        //         }
-        //     }  
-        // }
-        // return new ResponseEntity<>(userInfo, status);
     }
 
     private UserAccountObject createUserAccountObject(UserAccount userAccount) {
-        UserAccountObject userAccountObject = new UserAccountObject(
-            userAccount.getUserAccountId(),
-            null,
-            null,
-            userAccount.getUserType(),
-            userAccount.getUsername(),
-            null,
-            null,
-            null
-        );
+        UserAccountObject userAccountObject = new UserAccountObject(userAccount.getUserAccountId(), null, null,
+                userAccount.getUserType(), userAccount.getUsername(), null, null, null);
         return userAccountObject;
     }
-    
+
 }

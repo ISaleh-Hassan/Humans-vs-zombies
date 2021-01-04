@@ -44,6 +44,9 @@ public class MissionController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching Mission based on id.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -60,7 +63,10 @@ public class MissionController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newMission was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }   
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a new Mission.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @CrossOrigin()
@@ -101,6 +107,9 @@ public class MissionController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or mission was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a Mission.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -125,7 +134,10 @@ public class MissionController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: missionId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
-        }              
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a Mission.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     private MissionObject createMissionObject(Mission mission) {

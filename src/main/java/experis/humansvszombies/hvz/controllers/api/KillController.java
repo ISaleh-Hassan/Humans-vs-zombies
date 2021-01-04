@@ -47,6 +47,9 @@ public class KillController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when fetching Kill based on killId");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -70,6 +73,9 @@ public class KillController {
             return new ResponseEntity<>(this.createKillObject(newKill), response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newKill was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when creating a new Kill.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }   
     }
@@ -101,6 +107,9 @@ public class KillController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or kill was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a Kill.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -124,6 +133,9 @@ public class KillController {
             return new ResponseEntity<>(message, response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: killId was null.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a Kill.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }  
     }
@@ -155,6 +167,9 @@ public class KillController {
             return new ResponseEntity<>(this.createKillObject(kill), status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newKill was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a new Kill.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }   
     }

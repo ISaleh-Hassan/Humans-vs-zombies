@@ -64,6 +64,9 @@ public class SquadMemberController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadMemberId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching SquadMember by id.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -85,6 +88,9 @@ public class SquadMemberController {
             return new ResponseEntity<>(squadMemberObjects, status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId was null");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching SquadMember by gameId and squadId.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -112,6 +118,9 @@ public class SquadMemberController {
             return new ResponseEntity<>(squadMemberObject, status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: playerId was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching SquadMember by gameId and playerId.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -157,6 +166,9 @@ public class SquadMemberController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadMemberId was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching SquadMemberDetails by gameId and squadId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -185,6 +197,9 @@ public class SquadMemberController {
                 }       
             } catch (IllegalArgumentException e) {
                 System.out.println("Exception thrown: newSquadMember was null.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            } catch (Exception e) {
+                System.out.println("Exception thrown: Something unexpected went wrong when creating a SquadMember.");
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
     }
@@ -217,6 +232,9 @@ public class SquadMemberController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadMemberId or newSquadMember was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a SquadMember.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -241,6 +259,9 @@ public class SquadMemberController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadMemberId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a SquadMember.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 

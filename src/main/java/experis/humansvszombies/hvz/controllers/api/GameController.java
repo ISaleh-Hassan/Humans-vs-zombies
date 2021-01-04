@@ -54,6 +54,9 @@ public class GameController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: something went wrong when fetching game based on gameId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -63,7 +66,6 @@ public class GameController {
     public ResponseEntity<GameObject> addGame(@RequestBody Game newGame) {
         try {
             newGame = gameRepository.save(newGame);
-            System.out.println("GameState: " + newGame.getGameState());
             System.out.println("Game CREATED with id: " + newGame.getGameId());
             return new ResponseEntity<>(this.createGameObject(newGame), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -71,6 +73,9 @@ public class GameController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } catch (DataIntegrityViolationException e) {
             System.out.println("Exception thrown: Game name must be unique.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a new Game.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -123,6 +128,9 @@ public class GameController {
         } catch (DataIntegrityViolationException e) {
             System.out.println("Exception thrown: Game name must be unique.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a Game.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -150,11 +158,17 @@ public class GameController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was gameId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
-        }    
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a Game.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @CrossOrigin
     private GameObject createGameObject(Game game) {
+        if (game == null) {
+            return null;
+        }
         int numberOfPlayers = playerRepository.findByGame(new Game(game.getGameId())).size();
         String start = null;
         if (game.getStartTime() != null) {
