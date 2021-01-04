@@ -5,12 +5,14 @@ import Missions from "./Missions";
 
 const GameMap = (props) => {
 
+    let gameId = localStorage.getItem('Game ID');
+
     return (
         <>
             <section className="home">
                 <div className="container">
                     <Header />
-                    <h1>Game Name- Map</h1>
+                    <h1>{gameId}- Map</h1>
                     <MainMap />
                     <Missions />
                 </div>

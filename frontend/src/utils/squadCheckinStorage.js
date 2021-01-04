@@ -1,5 +1,7 @@
 import { getBaseUrl } from "./baseUrl";
 
+const token = localStorage.getItem('jwt');
+
 export async function FetchAllSquadCheckin() {
     let url = getBaseUrl() + "fetch/squadcheckin/all";
     const response = await fetch(url);
@@ -27,7 +29,8 @@ export async function CreateSquadCheckin(gameId, squadId, squadMemberId, current
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             pointOfTime: currentTime,
@@ -54,7 +57,8 @@ export async function UpdateSquadCheckin(squadCheckinId, gameId, squadId, squadM
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             pointOfTime: currentTime,
@@ -75,7 +79,8 @@ export async function DeleteSquadCheckin(squadCheckinId) {
     const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer ' + token
         }
     });
     return response.status;

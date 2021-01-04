@@ -1,5 +1,6 @@
 import { getBaseUrl } from "./baseUrl";
 import { storeUser } from "./localstorage";
+const token = localStorage.getItem('jwt');
 
 // export a variable userType then create a function that gets usertype or just get direct
 
@@ -8,7 +9,8 @@ export async function storeUserDB(username, firstname, lastname, usertype, passw
     const response = await fetch("/api/create/useraccount", {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             players: [],
@@ -30,7 +32,8 @@ export async function loginUser(email, password) {
     const response = await fetch("/api/useraccount/login", {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             players: [],
@@ -54,7 +57,8 @@ export async function loginPhone(phone) {
     const response = await fetch("/api/useraccount/login", {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             players: [],
@@ -96,7 +100,8 @@ export async function storePhone(userAccountId, phone) {
     const response = await fetch("/api/update/useraccount/" + userAccountId, {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             phoneNumber: phone

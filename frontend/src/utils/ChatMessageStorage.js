@@ -1,11 +1,13 @@
 import { getBaseUrl } from "./baseUrl";
+const token = localStorage.getItem('jwt');
 
 export async function GetBundleOfChatMessages(request) {
     let url = "fetch/chatmessage/bundle";
     const response = await fetch(getBaseUrl() + url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             gameId: request.gameId,
@@ -31,7 +33,8 @@ export async function CreateMessage(messageData) {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             message: messageData.message,
@@ -49,7 +52,8 @@ export async function DeleteChatMessage(msgId) {
     const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer ' + token
         }
     });
     return response.status;
@@ -60,7 +64,8 @@ export async function UpdateChatMessage(messageData) {
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             message: messageData.message,

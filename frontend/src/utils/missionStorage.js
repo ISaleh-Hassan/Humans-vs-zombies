@@ -1,6 +1,7 @@
 import { getBaseUrl } from "./baseUrl";
 
 let gameId = localStorage.getItem("Game ID");
+const token = localStorage.getItem('jwt');
 
 export async function FetchAllMissions() {
     let url = getBaseUrl() + "fetch/mission/all";
@@ -29,7 +30,8 @@ export async function CreateMission(missionData) {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             name: missionData.name,
@@ -53,7 +55,8 @@ export async function UpdateMission(missionData) {
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             name: missionData.name,
@@ -76,7 +79,8 @@ export async function DeleteMission(missionId) {
     const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer ' + token
         }
     });
     return response.status;

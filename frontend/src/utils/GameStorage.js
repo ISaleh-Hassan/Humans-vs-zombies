@@ -1,4 +1,5 @@
 import { getBaseUrl } from "./baseUrl";
+const token = localStorage.getItem('jwt');
 
 let lng = localStorage.getItem('Current Position Lng: ')
 let lat = localStorage.getItem('Current Position Lat: ')
@@ -32,7 +33,8 @@ export async function CreateGame(gameData) {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             name: gameData.name,
@@ -59,7 +61,8 @@ export async function UpdateGame(gameData) {
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             name: gameData.name,
@@ -79,7 +82,8 @@ export async function DeleteGame(gameId) {
     const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer ' + token
         }
     });
     return response.status;

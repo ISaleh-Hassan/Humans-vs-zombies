@@ -1,11 +1,13 @@
 import { getBaseUrl } from "./baseUrl";
+const token = localStorage.getItem('jwt');
 
 export async function GetPlayerData(playerId) {
     let url = getBaseUrl() + "fetch/player/" + playerId;
     const response = await fetch(getBaseUrl() + url, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         }
     }) 
     if (response.status === 200) {
@@ -30,7 +32,8 @@ export async function CreatePlayer(gameId, userId, faction) {
     let response = await fetch('/api/create/player/' + userId + '/' + gameId, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             alive: true,

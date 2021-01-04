@@ -1,4 +1,5 @@
 import { getBaseUrl } from "./baseUrl";
+const token = localStorage.getItem('jwt');
 
 export async function FetchSquadMember(gameId, playerId) {
     let url = getBaseUrl() + "fetch/squadmember/game=" + gameId + "/player=" + playerId;
@@ -22,7 +23,8 @@ export async function UpdateSquadMember(squadMemberId, squadId) {
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             squad: squadObject,
@@ -41,7 +43,8 @@ export async function CreateSquadMember(gameId, squadId, playerId, rank) {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             squadRank: rank
