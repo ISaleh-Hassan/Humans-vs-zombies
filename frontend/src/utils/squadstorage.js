@@ -1,9 +1,11 @@
 export async function storeSquadDB(squadName, squadFaction, squadMemberAmount) {
+    const token = localStorage.getItem('jwt');
     let gameId = localStorage.getItem('Game ID');
     const response = await fetch('/api/create/squad/' + gameId, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             name: squadName,

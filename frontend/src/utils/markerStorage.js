@@ -3,8 +3,15 @@ import { getBaseUrl } from "./baseUrl";
 let gameId = localStorage.getItem("Game ID");
 
 export async function FetchMission(missionId) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "fetch/mission/" + missionId;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token 
+        }
+    });
     if (response.status === 200) {
         let body = await response.json();
         return body;
@@ -14,11 +21,13 @@ export async function FetchMission(missionId) {
 }
 
 export async function CreateMission(missionData) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "create/mission/" + gameId
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             name: missionData.name,
@@ -30,11 +39,13 @@ export async function CreateMission(missionData) {
 }
 
 export async function UpdateMission(missionData) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "/update/mission/" + missionData.missionId;
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             name: missionData.name,
@@ -46,11 +57,13 @@ export async function UpdateMission(missionData) {
 }
 
 export async function DeleteMission(missionId) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "delete/mission/" + missionId;
     const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         }
     });
     return response.status;
