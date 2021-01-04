@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
+import { FetchAllKills } from '../../utils/KillStorage';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 
@@ -26,15 +27,35 @@ class MainMap extends Component {
       draggable: true
     });
 
+    let kills = FetchAllKills();
+
+    kills
+      .then(response =>
+        response.map((k) => {
+
+          let kill = document.createElement('div');
+          kill.className = 'gravestone';
+          let killMarker = new mapboxgl.Marker(kill);
+
+          let popup = new mapboxgl.Popup({ offset: 25 })
+            .setText('Description: ' + k.description + '\nTime of Death: ' + k.timeOfDeath.replace('T', ' ').substring(0, k.timeOfDeath.lastIndexOf('.')));
+
+            killMarker
+              .setLngLat([k.position.x, k.position.y]).setPopup(popup).addTo(map)
+        })
+      )
+
+
+
     let mission = document.createElement('div');
     mission.className = 'mission';
     let missionMarker = new mapboxgl.Marker(mission);
     missionMarker.setLngLat([this.state.lng, this.state.lat]).addTo(map);
 
-    let gravestone = document.createElement('div');
-    gravestone.className = 'gravestone';
-    let graveStoneMarker = new mapboxgl.Marker(gravestone);
-    graveStoneMarker.setLngLat([14.1618, 57.7826]).addTo(map);
+    // let gravestone = document.createElement('div');
+    // gravestone.className = 'gravestone';
+    // let graveStoneMarker = new mapboxgl.Marker(gravestone);
+    // graveStoneMarker.setLngLat([14.1618, 57.7826]).addTo(map);
 
     function onDragEnd() {
       let lngLat = marker.getLngLat();
