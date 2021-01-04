@@ -94,8 +94,6 @@ const LandingPage = (props) => {
                                 <Button variant="danger" onClick={handleLeaveGame}>Leave Game</Button>
                                 </> :
                                 <>
-                                <Link to="/map"><Button variant="info">Check Map</Button></Link>
-                                <br></br><br></br>
                                 <Button variant="success" onClick={handleJoinGame}>Join Game</Button>
                                 </>
                             }
