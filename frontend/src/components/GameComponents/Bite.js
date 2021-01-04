@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Header from '../StylingComponents/Header';
 import Form from 'react-bootstrap/Form'
-import { FormGroup } from 'react-bootstrap';
 import { FetchPlayer } from '../../utils/PlayerStorage';
 
 const Bite = ({ history }) => {
@@ -17,14 +16,14 @@ const Bite = ({ history }) => {
 
     const [currentPlayer, setCurrentPlayer] = useState([]);
     const [validBiteCodeLength, setValidBiteCodeLength] = useState(false);
-    const [currentBiteCode, setCurrentBiteCode] = useState('');  // This is the bite code input into the form
+    const [currentBiteCode, setCurrentBiteCode] = useState('');  // This is the bite code input from the form
     const [currentVictim, setCurrentVictim] = useState([]);
 
     const [victimDescription, setVictimDescription] = useState('');
     const [currentVictimUser, setCurrentVictimUser] = useState([]);
 
     const [buttonStatus, setButtonStatus] = useState(true);  // This is used to disable the "turn" and "kill" buttons if the bite code is incorrect
-    const [validationButtonStatus, setValidationButtonStatus] = useState(true);  // This was needed to stop the validation message from showing before pressing the "validate" button
+    const [validationButtonStatus, setValidationButtonStatus] = useState(true);  // This is currently needed to stop the validation message from showing before pressing the "validate" button
 
     
     useEffect(() => {
@@ -35,15 +34,6 @@ const Bite = ({ history }) => {
         fetchCurrentVictim();
     }, [validBiteCodeLength]);
     
-    async function fetchCurrentPlayer() {
-        const response = await FetchPlayer(gameId, userId);
-        if (response !== null) {
-            setCurrentPlayer(response);
-        } else {
-            alert("Could not find Player object.")
-        }
-    }
-
     useEffect(() => {
         fetchCurrentVictimUser();
     }, [currentVictim]);
@@ -60,6 +50,7 @@ const Bite = ({ history }) => {
             let body = await playerResponse.json();
             setCurrentPlayer(body);
         } else {
+            alert("Could not find player object.")
             setCurrentPlayer({});
         }
     };
@@ -67,8 +58,7 @@ const Bite = ({ history }) => {
     
     function masterValidation() {
         setValidationButtonStatus(false);
-        fetchCurrentVictim();
-        console.log('validation button status: ' + validationButtonStatus);   
+        fetchCurrentVictim(); 
     }
 
     
@@ -107,10 +97,7 @@ const Bite = ({ history }) => {
 
             if (currentVictim.biteCode === currentBiteCode) {
                 fetchCurrentVictimUser();
-
                 alert('That is a valid bite code! It belongs to ' + currentVictimUser.username + '. \nIf this is not the correct player, please try validating again or enter a different bite code.');
-                console.log('This is the ID of the victim that was fetched: ' + currentVictim.playerId);
-                console.log('This is the bite code of the victim that was fetched: ' + currentVictim.biteCode);
                 setButtonStatus(false);
             };
 
@@ -119,7 +106,6 @@ const Bite = ({ history }) => {
                 setCurrentVictim({});
                 setButtonStatus(true);            
         } else {
-            console.log('The bite code has not been set yet...')
             setCurrentVictim({});
             setButtonStatus(true);
         }
@@ -143,16 +129,8 @@ const Bite = ({ history }) => {
     };
 
 
-    // Getting date and time for kill object
-    let today = new Date();
-    let date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
-    let time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-    let dateTime = date + ' ' + time;
-
-
-    // Ask for help creating a kill object!!
-
     async function createKillObject() {
+        let timeStamp = new Date().getTime();
         let killResponse = await fetch('/api/create/kill', {
             method: 'POST',
             headers: {
@@ -160,7 +138,7 @@ const Bite = ({ history }) => {
                 'Authorization': 'Bearer ' + token 
             },
             body: JSON.stringify({
-                timeOfDeath: dateTime,
+                timeOfDeath: timeStamp,
                 position: {
                     x: longitude,
                     y: latitude
@@ -174,7 +152,6 @@ const Bite = ({ history }) => {
         });
         if (killResponse.status === 200) {
             let body = await killResponse.json();
-            console.log(body);
             return body;
         } else {
             return null;
@@ -209,12 +186,10 @@ const Bite = ({ history }) => {
     }
 
     
-    
-    // Need to add a function that creates a grave stone on the map, using the auto fetched coordinates, bite code,
-    // and the victim description from the form
+    // Need to add a gravestone marker to the map
+    // Perhaps that is handled in the maps file?
     async function handleKill() {
         console.log('The player was killed');
-        console.log('This is the victim description: ' + victimDescription);
         createKillObject();
         
         if (validBiteCodeLength === true) {
@@ -237,11 +212,9 @@ const Bite = ({ history }) => {
                 return null;
             } 
         }
-        // createKillObject();
     }
 
 
-    // The factions need to be switched back, the current state is for testing
     if (currentPlayer.faction === 'HUMAN') {
         return (
             <div>
