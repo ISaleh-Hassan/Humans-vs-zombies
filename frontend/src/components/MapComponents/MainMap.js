@@ -86,12 +86,6 @@ class MainMap extends Component {
         })
       )
 
-
-    let gravestone = document.createElement('div');
-    gravestone.className = 'gravestone';
-    let graveStoneMarker = new mapboxgl.Marker(gravestone);
-    graveStoneMarker.setLngLat([14.1618, 57.7826]).addTo(map);
-
     function onDragEnd() {
       let lngLat = marker.getLngLat();
       let lngValue = lngLat.lng.toFixed(4);
