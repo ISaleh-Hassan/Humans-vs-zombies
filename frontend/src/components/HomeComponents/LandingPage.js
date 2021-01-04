@@ -91,8 +91,6 @@ const LandingPage = (props) => {
                         <span>
                             {hasJoined ?
                                 <>
-                                <Link to="/map"><Button variant="info">Check Map</Button></Link>
-                                <br></br><br></br>
                                 <Button variant="danger" onClick={handleLeaveGame}>Leave Game</Button>
                                 </> :
                                 <>
