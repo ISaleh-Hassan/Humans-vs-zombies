@@ -20,7 +20,13 @@ const SquadDetail = ({ history }) => {
 
     // A check should be added depending on response code, see function below this one
     async function fetchSquadMembers() {
-        const memberResponse = await fetch('/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId);
+        const token = localStorage.getItem('jwt');
+        const memberResponse = await fetch('/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
         let body;
         if (memberResponse.status === 200) {
             body = await memberResponse.json();
@@ -61,7 +67,13 @@ const SquadDetail = ({ history }) => {
     }, [])
 
     async function fetchSquad() {
-        const response = await fetch('/api/fetch/squad/' + squadId);
+        const token = localStorage.getItem('jwt');
+        const response = await fetch('/api/fetch/squad/' + squadId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
         let body;
         if (response.status === 200) {
             body = await response.json();
@@ -79,7 +91,13 @@ const SquadDetail = ({ history }) => {
     }, [])
 
     async function fetchCurrentPlayer() {
-        const playerResponse = await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId);
+        const token = localStorage.getItem('jwt');
+        const playerResponse = await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
         if (playerResponse.status === 200) {
             let body = await playerResponse.json();
             setCurrentPlayer(body);
@@ -111,16 +129,20 @@ const SquadDetail = ({ history }) => {
 
 
     function handleDisbandSquad() {
+        const token = localStorage.getItem('jwt');
         if (squadRank === "LEADER") {
             fetch('/api/delete/squad/' + squadId, {
                 method: 'DELETE',
-                })
-                    .then(res => res.json())
-                    .then(res => console.log(res));
-                localStorage.setItem('Squad ID', 'null');
-                localStorage.setItem('Squad Member ID', 'null');
-                localStorage.setItem('Squad Rank', 'null');
-                history.push('/squads');
+                headers: {
+                    'Authorization': 'Bearer ' + token 
+                }
+            })
+                .then(res => res.json())
+                .then(res => console.log(res));
+            localStorage.setItem('Squad ID', 'null');
+            localStorage.setItem('Squad Member ID', 'null');
+            localStorage.setItem('Squad Rank', 'null');
+            history.push('/squads');
         } else {
             alert("You must be a leader to disband the squad.")
         }

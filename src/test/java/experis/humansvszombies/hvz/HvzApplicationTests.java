@@ -112,7 +112,7 @@ class HvzApplicationTests {
 				pIds.add(tempId);
 			}
 			// Add a kill object between Player 0 and Player 1
-			kc.addKill(new Kill(Timestamp.valueOf("2000-01-10 04:04:04"), new Point(12, 12)), gId, pIds.get(0), pIds.get(1));
+			kc.addKill(new Kill(Timestamp.valueOf("2000-01-10 04:04:04"), new Point(12, 12), "This is a description"), gId, pIds.get(0), pIds.get(1));
 
 			// Add Mission objects
 			for (int m = 0; m < numberOfMissions; m++) {

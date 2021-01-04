@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.datastructures.KillObject;
@@ -24,6 +25,7 @@ public class KillController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/kill/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<KillObject>> getAllKills() {
         ArrayList<Kill> kills = (ArrayList<Kill>)killRepository.findAll();
         ArrayList<KillObject> returnKills = new ArrayList<KillObject>();
@@ -36,6 +38,7 @@ public class KillController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/kill/{killId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<KillObject> getKillById(@PathVariable Integer killId) {
         try {
             return killRepository.findById(killId)
@@ -44,11 +47,15 @@ public class KillController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when fetching Kill based on killId");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @PostMapping("/api/create/kill/{gameId}/{killerId}/{victimId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<KillObject> addKill(@RequestBody Kill newKill, @PathVariable Integer gameId, 
     @PathVariable Integer killerId, @PathVariable Integer victimId) {
         try {
@@ -67,11 +74,15 @@ public class KillController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newKill was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when creating a new Kill.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }   
     }
 
     @CrossOrigin()
     @PatchMapping("/api/update/kill/{killId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<KillObject> updateKill(@RequestBody Kill newKill, @PathVariable Integer killId) {
         try {
             Kill kill;
@@ -83,6 +94,9 @@ public class KillController {
                 }
                 if (newKill.getTimeOfDeath() != null) {
                     kill.setTimeOfDeath(newKill.getTimeOfDeath());
+                }
+                if (newKill.getDescription() != null) {
+                    kill.setDescription(newKill.getDescription());
                 }
                 killRepository.save(kill);
                 response = HttpStatus.OK;
@@ -96,11 +110,15 @@ public class KillController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or kill was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a Kill.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/kill/{killId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<String> deleteKill(@PathVariable Integer killId) {
         try {
             String message = "";
@@ -119,11 +137,15 @@ public class KillController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: killId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a Kill.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }  
     }
 
     @CrossOrigin()
     @PostMapping("/api/v2/create/kill")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<KillObject> addKillVersion2(@RequestBody KillObject newKill) {
         try {
             HttpStatus status = HttpStatus.CREATED;
@@ -149,6 +171,9 @@ public class KillController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newKill was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a new Kill.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }   
     }
 
@@ -160,7 +185,8 @@ public class KillController {
             (kill.getGame() != null) ? kill.getGame().getGameId() : null, 
             (kill.getKiller() != null) ? kill.getKiller().getPlayerId() : null, 
             (kill.getVictim() != null) ? kill.getVictim().getPlayerId() : null, 
-            null
+            null,
+            kill.getDescription()
         );
         return returnObject;
     }

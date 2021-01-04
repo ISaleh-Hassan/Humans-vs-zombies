@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import Header from '../StylingComponents/Header';
 import Form from 'react-bootstrap/Form'
 import { FormGroup } from 'react-bootstrap';
+import { FetchPlayer } from '../../utils/PlayerStorage';
 
 const Bite = ({ history }) => {
 
@@ -32,6 +33,15 @@ const Bite = ({ history }) => {
     useEffect(() => {
         fetchCurrentVictim();
     }, [validBiteCodeLength]);
+    
+    async function fetchCurrentPlayer() {
+        const response = await FetchPlayer(gameId, userId);
+        if (response !== null) {
+            setCurrentPlayer(response);
+        } else {
+            alert("Could not find Player object.")
+        }
+    }
 
     useEffect(() => {
         fetchCurrentVictimUser();

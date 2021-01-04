@@ -97,7 +97,7 @@ public class KillTests {
 
     @Test
     void updateKill() {
-        ResponseEntity<KillObject> response = kc.updateKill(new Kill(Timestamp.valueOf("2000-01-10 01:01:01"),new Point(77, 7)), this.killId);
+        ResponseEntity<KillObject> response = kc.updateKill(new Kill(Timestamp.valueOf("2000-01-10 01:01:01"),new Point(77, 7), "Test description"), this.killId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(new Point(77, 7), response.getBody().getPosition());
         assertEquals(Timestamp.valueOf("2000-01-10 01:01:01"), response.getBody().getTimeOfDeath());
@@ -106,10 +106,10 @@ public class KillTests {
     @Test
     void createKillWithVerifiedBiteCode() {
         //Test with correct code
-        ResponseEntity<KillObject> response = kc.addKillVersion2(new KillObject(null, null, null, this.gameId, this.killerId, this.victimId, this.victimBiteCode));
+        ResponseEntity<KillObject> response = kc.addKillVersion2(new KillObject(null, null, null, this.gameId, this.killerId, this.victimId, this.victimBiteCode, null));
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         //Test with faulty code
-        ResponseEntity<KillObject> response2 = kc.addKillVersion2(new KillObject(null, null, null, this.gameId, this.killerId, this.victimId, "ThisCodeIsWrong"));
+        ResponseEntity<KillObject> response2 = kc.addKillVersion2(new KillObject(null, null, null, this.gameId, this.killerId, this.victimId, "ThisCodeIsWrong", null));
         assertEquals(HttpStatus.BAD_REQUEST, response2.getStatusCode());
         // //Delete Kill objects
         ResponseEntity<String> deleteResponse = kc.deleteKill(response.getBody().getKillId());

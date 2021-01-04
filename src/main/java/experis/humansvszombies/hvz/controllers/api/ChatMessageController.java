@@ -3,14 +3,17 @@ package experis.humansvszombies.hvz.controllers.api;
 import java.util.ArrayList;
 
 import experis.humansvszombies.hvz.models.datastructures.ChatMessageObject;
+import experis.humansvszombies.hvz.models.enums.SquadRank;
 import experis.humansvszombies.hvz.models.tables.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.repositories.ChatMessageRepository;
 import experis.humansvszombies.hvz.repositories.PlayerRepository;
+import experis.humansvszombies.hvz.repositories.SquadMemberRepository;
 import experis.humansvszombies.hvz.repositories.UserAccountRepository;
 
 
@@ -25,8 +28,12 @@ public class ChatMessageController {
     @Autowired
     UserAccountRepository userAccountRepository;
 
+    @Autowired
+    SquadMemberRepository squadMemberRepository;
+
     @CrossOrigin()
     @GetMapping("/api/fetch/chatmessage/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<ChatMessageObject>> getAllChatMessages() {
         ArrayList<ChatMessage> messages = (ArrayList<ChatMessage>)chatMessageRepository.findAll();
         ArrayList<ChatMessageObject> returnMessages = new ArrayList<ChatMessageObject>();
@@ -38,7 +45,8 @@ public class ChatMessageController {
     }
 
     @CrossOrigin()
-    @GetMapping("/api/fetch/message/{chatMessageId}")
+    @GetMapping("/api/fetch/chatmessage/{chatMessageId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ChatMessageObject> getChatMessageById(@PathVariable Integer chatMessageId) {
         try {
             return chatMessageRepository.findById(chatMessageId)
@@ -47,11 +55,15 @@ public class ChatMessageController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when fetching ChatMessage based on id.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @PostMapping("/api/create/chatmessage/{gameId}/{playerId}/{squadId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ChatMessageObject> addChatMessage(@RequestBody ChatMessage newChatMessage, @PathVariable Integer gameId,
                                                       @PathVariable Integer playerId, @PathVariable Integer squadId) {
         try {
@@ -72,11 +84,15 @@ public class ChatMessageController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when creating a new ChatMessage.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
-    @PatchMapping("/api/update/kill/{chatMessageId}")
+    @PatchMapping("/api/update/chatmessage/{chatMessageId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ChatMessageObject> updateChatMessage(@RequestBody ChatMessage newChatMessage, @PathVariable Integer chatMessageId) {
         try {
             ChatMessage chatMessage;
@@ -104,11 +120,15 @@ public class ChatMessageController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or newChatMessage was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a ChatMessage.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/chatmessage/{chatMessageId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<String> deleteChatMessage(@PathVariable Integer chatMessageId) {
         try {
             String message = "";
@@ -127,11 +147,15 @@ public class ChatMessageController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when deleting a ChatMessage.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @PostMapping("/api/fetch/chatmessage/bundle")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<ChatMessageObject>> fetchBundleOfChatMessages(@RequestBody ChatMessageObject request) {
         try {
             ArrayList<ChatMessage> messages;
@@ -146,7 +170,7 @@ public class ChatMessageController {
             }
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Exception thrown when fetching bundle of ChatMessages.");
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching bundle of ChatMessages.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -162,6 +186,10 @@ public class ChatMessageController {
             Player tempPlayer = playerRepository.findById(msg.getPlayer().getPlayerId()).orElse(null);
             if (tempPlayer != null) {
                 UserAccount tempUser = userAccountRepository.findById(tempPlayer.getUserAccount().getUserAccountId()).orElse(null);
+                SquadRank rank = null;
+                if (tempPlayer.getSquadMember() != null) {
+                    rank = tempPlayer.getSquadMember().getSquadRank();
+                }
                 if (tempUser != null) {
                         msgObject = new ChatMessageObject(
                         msg.getChatMessageId(), 
@@ -172,14 +200,19 @@ public class ChatMessageController {
                         (msg.getPlayer() != null) ? msg.getPlayer().getPlayerId() : null,
                         (msg.getSquad() != null) ? msg.getSquad().getSquadId() : null,
                         tempUser.getUsername(),
-                        stringTime
+                        stringTime,
+                        tempPlayer.isAlive(),
+                        rank
                     );   
                 }
             }
             return msgObject;
         } catch (IllegalArgumentException e) {
-            System.out.println("PlayerId or UserAccountId not set.");
+            System.out.println("Exception thrown: PlayerId or UserAccountId not set when creating ChatMessageObject.");
             return null;
-        } 
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a ChatMessageObject.");
+            return null;
+        }
     }
 }

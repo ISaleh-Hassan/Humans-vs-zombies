@@ -6,4 +6,5 @@ import experis.humansvszombies.hvz.models.tables.UserAccount;
 
 public interface UserAccountRepository extends JpaRepository<UserAccount, Integer> {
     UserAccount findDistinctByEmail(String email);
+    UserAccount findDistinctByUsername(String username);
 }

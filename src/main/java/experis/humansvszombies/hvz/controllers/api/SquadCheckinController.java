@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ public class SquadCheckinController {
     SquadCheckinRepository squadCheckinRepository;
 
     @GetMapping("/api/fetch/squadcheckin/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<SquadCheckinObject>> getAllSquadCheckins() {
         ArrayList<SquadCheckin> checkins = (ArrayList<SquadCheckin>)squadCheckinRepository.findAll();
         ArrayList<SquadCheckinObject> returnCheckins = new ArrayList<SquadCheckinObject>();
@@ -40,6 +42,7 @@ public class SquadCheckinController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squadcheckin/{squadCheckinId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadCheckinObject> getSquadCheckinById(@PathVariable Integer squadCheckinId) {
         try {
             return squadCheckinRepository.findById(squadCheckinId)
@@ -48,11 +51,15 @@ public class SquadCheckinController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadCheckinId was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching SquadCheckin based on id.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @PostMapping("/api/create/squadcheckin/{gameId}/{squadId}/{squadMemberId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadCheckinObject> addSquadCheckin(@RequestBody SquadCheckin newSquadCheckin, @PathVariable Integer gameId,
     @PathVariable Integer squadId, @PathVariable Integer squadMemberId) {
         try {
@@ -73,11 +80,15 @@ public class SquadCheckinController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newSquadCheckin was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }          
+        }     catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a new SquadCheckin.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }      
     }
 
     @CrossOrigin()
     @PatchMapping("/api/update/squadcheckin/{squadCheckinId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadCheckinObject> updateSquadCheckin(@RequestBody SquadCheckin newSquadCheckin, @PathVariable Integer squadCheckinId) {
         try {
             SquadCheckin checkin;
@@ -102,11 +113,15 @@ public class SquadCheckinController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadCheckinId or newSquadCheckin was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating SquadCheckin.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/squadcheckin/{squadCheckinId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<String> deleteSquadCheckin(@PathVariable Integer squadCheckinId) {
         try {
             String message = "";
@@ -125,7 +140,10 @@ public class SquadCheckinController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadCheckinId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
-        } 
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a SquadCheckin.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     private SquadCheckinObject createSquadCheckinObject(SquadCheckin squadCheckin) {

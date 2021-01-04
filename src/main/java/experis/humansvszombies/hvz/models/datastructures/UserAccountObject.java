@@ -1,5 +1,7 @@
 package experis.humansvszombies.hvz.models.datastructures;
 
+import java.util.List;
+
 import experis.humansvszombies.hvz.models.enums.UserType;
 
 public class UserAccountObject {
@@ -11,6 +13,8 @@ public class UserAccountObject {
     private String password;
     private String email;
     private String phoneNumber;
+    private String jwt;
+    private List<String> roles;
 
     public UserAccountObject() {
 
@@ -90,5 +94,21 @@ public class UserAccountObject {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getJwt() {
+        return jwt;
+    }
+
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }
