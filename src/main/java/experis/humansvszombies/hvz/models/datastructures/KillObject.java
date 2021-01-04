@@ -12,13 +12,14 @@ public class KillObject {
     private Integer killerId;
     private Integer victimId;
     private String biteCode;
+    private String description;
 
     public KillObject() {
 
     }
 
     public KillObject(Integer killId, Timestamp timeOfDeath, Point position, Integer gameId, 
-            Integer killerId, Integer victimId, String biteCode) {
+            Integer killerId, Integer victimId, String biteCode, String description) {
         this.killId = killId;
         this.timeOfDeath = timeOfDeath;
         this.position = position;
@@ -26,6 +27,7 @@ public class KillObject {
         this.killerId = killerId;
         this.victimId = victimId;
         this.biteCode = biteCode;
+        this.description = description;
     }
 
     public Integer getKillId() {
@@ -82,6 +84,14 @@ public class KillObject {
 
     public void setBiteCode(String biteCode) {
         this.biteCode = biteCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }
