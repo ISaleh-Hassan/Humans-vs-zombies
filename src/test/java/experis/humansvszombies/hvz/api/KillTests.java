@@ -50,9 +50,9 @@ public class KillTests {
         this.killerId = createTestPlayerKiller();
         this.userAccountVictimId = createTestUserAccount();
         this.victimId = createTestPlayerVictim();
-        ResponseEntity<KillObject> response = kc.addKill(new Kill(), this.gameId, this.killerId, this.victimId);
-        this.killId = response.getBody().getKillId();
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        // ResponseEntity<KillObject> response = kc.addKill(new Kill(), this.gameId, this.killerId, this.victimId);
+        // this.killId = response.getBody().getKillId();
+        // assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     @AfterEach
