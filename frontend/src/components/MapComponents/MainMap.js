@@ -38,7 +38,7 @@ class MainMap extends Component {
           let killMarker = new mapboxgl.Marker(kill);
 
           let popup = new mapboxgl.Popup({ offset: 25 })
-            .setText('Description: ' + k.description + '\nTime of Death: ' + k.timeOfDeath);
+            .setText('Description: ' + k.description + '\nTime of Death: ' + k.timeOfDeath.replace('T', ' ').substring(0, k.timeOfDeath.lastIndexOf('.')));
 
             killMarker
               .setLngLat([k.position.x, k.position.y]).setPopup(popup).addTo(map)
