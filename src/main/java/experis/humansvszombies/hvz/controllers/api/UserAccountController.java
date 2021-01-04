@@ -191,8 +191,8 @@ public class UserAccountController {
                                 null,
                                 null,
                                 userPhone.getPhoneNumber()
-                    );
-                };
+                        );
+                    }
                 }
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(user.getUsername(), userAccount.getPassword()));
