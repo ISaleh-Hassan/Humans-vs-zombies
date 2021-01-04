@@ -15,15 +15,15 @@ const Home = (props) => {
   const userId = localStorage.getItem("User ID")
   const usersPhone = localStorage.getItem("User Phone")
 
-  useEffect(() => {
-    fetchUserID();
-  }, [])
+  // useEffect(() => {
+  //   fetchUserID();
+  // }, [])
 
-  async function fetchUserID() {
-    await fetchUser(userId).then(result => {
-      localStorage.setItem("User Phone", result.phoneNumber)
-    })
-  }
+  // async function fetchUserID() {
+  //   await fetchUser(userId).then(result => {
+  //     localStorage.setItem("User Phone", result.phoneNumber)
+  //   })
+  // }
 
   const handleSignOut = () => {
     firebase.auth().signOut()
