@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import experis.humansvszombies.hvz.models.datastructures.SquadObject;
 import experis.humansvszombies.hvz.models.datastructures.custom.SquadDetails;
-import experis.humansvszombies.hvz.models.datastructures.custom.SquadMemberDetails;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Player;
 import experis.humansvszombies.hvz.models.tables.Squad;
@@ -62,6 +61,9 @@ public class SquadController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching Squad by id.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -83,6 +85,9 @@ public class SquadController {
             return new ResponseEntity<>(squadObjects, status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId was null");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching a SquadList based on gameId.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -129,6 +134,9 @@ public class SquadController {
         } catch(IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch(Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching SquadDetailList based on gameId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -158,6 +166,9 @@ public class SquadController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId or playerId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching Squad based on gameId and playerId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -179,7 +190,10 @@ public class SquadController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newGame was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }      
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a new Squad.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }  
     }
 
     @CrossOrigin()
@@ -212,6 +226,9 @@ public class SquadController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId or newSquad was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a Squad.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -235,6 +252,9 @@ public class SquadController {
             return new ResponseEntity<>(message, response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId was null.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a Squad.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }  
     } 

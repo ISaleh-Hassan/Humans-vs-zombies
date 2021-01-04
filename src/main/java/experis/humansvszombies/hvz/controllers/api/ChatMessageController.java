@@ -55,6 +55,9 @@ public class ChatMessageController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when fetching ChatMessage based on id.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -80,6 +83,9 @@ public class ChatMessageController {
             }
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when creating a new ChatMessage.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -114,6 +120,9 @@ public class ChatMessageController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or newChatMessage was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a ChatMessage.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -138,6 +147,9 @@ public class ChatMessageController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when deleting a ChatMessage.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -158,7 +170,7 @@ public class ChatMessageController {
             }
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Exception thrown when fetching bundle of ChatMessages.");
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching bundle of ChatMessages.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -196,8 +208,11 @@ public class ChatMessageController {
             }
             return msgObject;
         } catch (IllegalArgumentException e) {
-            System.out.println("PlayerId or UserAccountId not set.");
+            System.out.println("Exception thrown: PlayerId or UserAccountId not set when creating ChatMessageObject.");
             return null;
-        } 
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a ChatMessageObject.");
+            return null;
+        }
     }
 }

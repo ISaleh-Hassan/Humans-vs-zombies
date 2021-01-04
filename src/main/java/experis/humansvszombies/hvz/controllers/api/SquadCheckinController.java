@@ -51,6 +51,9 @@ public class SquadCheckinController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadCheckinId was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching SquadCheckin based on id.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -77,7 +80,10 @@ public class SquadCheckinController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newSquadCheckin was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }          
+        }     catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a new SquadCheckin.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }      
     }
 
     @CrossOrigin()
@@ -107,6 +113,9 @@ public class SquadCheckinController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadCheckinId or newSquadCheckin was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating SquadCheckin.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -131,7 +140,10 @@ public class SquadCheckinController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadCheckinId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
-        } 
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a SquadCheckin.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     private SquadCheckinObject createSquadCheckinObject(SquadCheckin squadCheckin) {
