@@ -19,9 +19,7 @@ const Bite = ({ history }) => {
     const [currentVictim, setCurrentVictim] = useState([]);
 
     const [victimDescription, setVictimDescription] = useState('');
-    
     const [currentVictimUser, setCurrentVictimUser] = useState([]);
-    const [currentVictimSquadMember, setCurrentVictimSquadMember] = useState([]);
 
     const [buttonStatus, setButtonStatus] = useState(true);  // This is used to disable the "turn" and "kill" buttons if the bite code is incorrect
     const [validationButtonStatus, setValidationButtonStatus] = useState(true);  // This was needed to stop the validation message from showing before pressing the "validate" button
@@ -118,19 +116,44 @@ const Bite = ({ history }) => {
         };
     };
 
-    
-    // useEffect(() => {
-    //     fetchCurrentVictimSquadMember();
-    // }, [])
 
-    // async function fetchCurrentVictimSquadMember() {
-    //     const response = await (await fetch('/api/fetch/squadmember/game=' + gameId + '/player=' + currentVictim.playerId)).json();
-    //     setCurrentVictimSquadMember(response);
-    // }
+    // Getting date and time for kill object
+    let today = new Date();
+    let date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+    let time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+    let dateTime = date + ' ' + time;
+
+
+    // Ask for help creating a kill object!!
+
+    async function createKillObject() {
+        let killResponse = await fetch ('/api/create/kill/' + gameId + '/' + currentPlayer.playerId + '/' + currentVictim.playerId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                timeOfDeath: dateTime,
+                position: {
+                    x: longitude,
+                    y: latitude
+                },
+            })
+        });
+        if (killResponse.status === 200) {
+            let body = await killResponse.json();
+            console.log(body);
+            return body;
+        } else {
+            return null;
+        }
+    }
 
 
     async function handleZombie() {
         console.log('The player was turned into a ZOMBIE');
+        createKillObject();
+
         if (validBiteCodeLength === true) {
             let playerResponse = await fetch('/api/update/player/' + currentVictim.playerId, {
                 method: 'PATCH',
@@ -138,7 +161,7 @@ const Bite = ({ history }) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    faction: 'ZOMBIE',   // Are factions determined by numbers now? Update accordingly.
+                    faction: 'ZOMBIE', 
                     isAlive: false
                 })
             });
@@ -150,35 +173,16 @@ const Bite = ({ history }) => {
                 return null;
             }
         }
-        // Need to find a way to update the player's squad member object as well... It currently doesn't work.
-        let squadMemberResponse = await fetch ('/api/update/squadmember/' + currentVictimSquadMember.squadMemberId, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                squadId: null
-            })
-        });
-        if (squadMemberResponse.status === 200) {
-            let body = await squadMemberResponse.json();
-            console.log(body);
-            return body;
-        } else {
-            return null;
-        }
     }
-
-
 
     
     
     // Need to add a function that creates a grave stone on the map, using the auto fetched coordinates, bite code,
     // and the victim description from the form
     async function handleKill() {
-        
         console.log('The player was killed');
         console.log('This is the victim description: ' + victimDescription);
+        createKillObject();
         
         if (validBiteCodeLength === true) {
             let response = await fetch('/api/update/player/' + currentVictim.playerId, {
@@ -199,6 +203,7 @@ const Bite = ({ history }) => {
                 return null;
             } 
         }
+        // createKillObject();
     }
 
 
@@ -218,7 +223,7 @@ const Bite = ({ history }) => {
                 <Header />
                 <div id="codeEntryContainer">
                     <h2>BITE CODE ENTRY</h2>
-                    <Form>
+                    <Form id="biteCodeForm">
                         <Form.Group>
                             <Form.Control onChange={onBiteCodeChange} id="biteCode" type="text" placeholder="Bite Code" required></Form.Control>
                             <Button id="validation" type="button" variant="dark" onClick={masterValidation}>Validate Bite Code</Button>
@@ -229,12 +234,12 @@ const Bite = ({ history }) => {
                         <Form.Control onChange={onVictimDescriptionChange} id="victimDescription" name="victimDescription" placeholder="Enter victim description..." as="textarea" rows={3}></Form.Control>
                     </Form>
                     <br/>
-                    <Button type="button" variant="dark" disabled={buttonStatus} onClick={handleZombie}>Turn into ZOMBIE</Button>
-                    <Button type="button" variant="dark" disabled={buttonStatus} onClick={handleKill}>Kill victim</Button>
+                    <Button type="submit" variant="dark" disabled={buttonStatus} onClick={handleZombie}>Turn into ZOMBIE</Button>
+                    <Button type="submit" variant="dark" disabled={buttonStatus} onClick={handleKill}>Kill victim</Button>
                 </div>
             </div>
         );
-        
+
     } else {
         return (
             <div>

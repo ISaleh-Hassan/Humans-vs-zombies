@@ -89,6 +89,15 @@ const SquadDetail = ({ history }) => {
     }
 
 
+    function handleAlive() {
+        if (squadMembers.alive === true) {
+            return 'Alive';
+        } else {
+            return 'Dead';
+        }
+    }
+
+
     async function handleLeaveSquad() {
         let response = await UpdateSquadMember(squadMemberId, null);
         if (response !== null) {
