@@ -1,5 +1,11 @@
 export async function getPlayerInfo() {
-    const response = await fetch('/api/fetch/player/all');
+    const token = localStorage.getItem('jwt');
+    const response = await fetch('/api/fetch/player/all', {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token 
+        }
+    });
 
     const status = await response.status
     if (status === 200) {

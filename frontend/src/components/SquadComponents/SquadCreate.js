@@ -2,8 +2,8 @@ import React, { Component, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form'
 import Header from '../StylingComponents/Header';
-import NavBar from '../StylingComponents/NavBar';
 import { storeSquadDB } from '../../utils/squadstorage';
+import { FetchPlayer } from '../../utils/PlayerStorage';
 
 const SquadCreate = ({ history }) => {
 
@@ -21,33 +21,37 @@ const SquadCreate = ({ history }) => {
 
     // The userId doesn't work properly (it only works with the dummy data), so we can't fetch the current player
     async function fetchCurrentPlayer() {                                                                    // user should be set to userId, not 1
-        const playerResponse = await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId);
-        let body;
-        if (playerResponse.status === 200) {
-            body = await playerResponse.json();
+        const playerResponse = await FetchPlayer(gameId, userId);
+        if(playerResponse !== null) {
+            setCurrentPlayer(playerResponse);
         } else {
-            body = null;
+            alert("Could not find Player object.");
         }
-        setCurrentPlayer(body);
     }
 
     localStorage.setItem('Faction', currentPlayer.faction);
 
     async function handleCreateSquad(event) {
         event.preventDefault();
-
+        const token = localStorage.getItem('jwt');
         const { squadName, squadMemberAmount } = event.target.elements;
         console.log(squadName.value, squadMemberAmount.value)
         let createSquadRepsonse = await storeSquadDB(squadName.value, currentPlayer.faction, squadMemberAmount.value);
 
         if (createSquadRepsonse === 201) {
-            let squadMemberExists = await fetch('/api/fetch/squadmember/game=' + gameId + '/player=' + playerId);
+            let squadMemberExists = await fetch('/api/fetch/squadmember/game=' + gameId + '/player=' + playerId, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token 
+                }
+            });
             let newSquadId = localStorage.getItem('Squad ID');
             if (squadMemberExists.status === 200) {
                 let response = await fetch('/api/update/squadmember/' + hasSquadMemberObject, {
                     method: 'PATCH',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
                     },
                     body: JSON.stringify({
                         playerId: playerId,
@@ -68,7 +72,8 @@ const SquadCreate = ({ history }) => {
                 let response = await fetch('/api/create/squadmember/' + gameId + '/' + newSquadId + '/' + playerId, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
                     },
                     body: JSON.stringify({
                         playerId: playerId,

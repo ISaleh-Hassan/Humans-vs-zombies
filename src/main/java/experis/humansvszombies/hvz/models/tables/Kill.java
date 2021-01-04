@@ -30,6 +30,9 @@ public class Kill {
     @Column(name="position")
     private Point position;
 
+    @Column(name="description")
+    private String description;
+
     @ManyToOne
     private Game game;
 
@@ -53,9 +56,10 @@ public class Kill {
         this.victim = victim;
     }
 
-    public Kill(Timestamp timeOfDeath, Point position) {
+    public Kill(Timestamp timeOfDeath, Point position, String description) {
         this.timeOfDeath = timeOfDeath;
         this.position = position;
+        this.description = description;
     }
 
     public Integer getKillId() {
@@ -104,5 +108,13 @@ public class Kill {
 
     public void setPosition(Point position) {
         this.position = position;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

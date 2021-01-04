@@ -1,4 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
+import { FetchPlayer } from '../../utils/PlayerStorage';
 import Header from '../StylingComponents/Header';
 
 const BiteHuman = ({history}) => {
@@ -13,8 +14,12 @@ const BiteHuman = ({history}) => {
     }, [])
 
     async function fetchCurrentPlayer() {
-        const response = await (await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId)).json();
-        setCurrentPlayer(response);
+        const response = await FetchPlayer(gameId, userId);
+        if (response !== null) {
+            setCurrentPlayer(response);
+        } else {
+            alert("Could not find Player object.");
+        }
     }
 
 

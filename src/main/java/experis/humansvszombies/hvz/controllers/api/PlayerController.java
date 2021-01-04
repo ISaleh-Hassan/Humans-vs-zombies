@@ -6,6 +6,7 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.datastructures.PlayerObject;
@@ -25,6 +26,7 @@ public class PlayerController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/player/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<PlayerObject>> getAllPlayers() {
         ArrayList<Player> players = (ArrayList<Player>)playerRepository.findAll();
         ArrayList<PlayerObject> returnPlayers = new ArrayList<PlayerObject>();
@@ -37,6 +39,7 @@ public class PlayerController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/player/{playerId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> getPlayerById(@PathVariable Integer playerId) {
         try {
             return playerRepository.findById(playerId)
@@ -45,11 +48,15 @@ public class PlayerController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching a PlayerObject based on id.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
     
     @CrossOrigin()
     @GetMapping("/api/fetch/player/game={gameId}/user={userId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> getPlayerByGameIdAndUserId(@PathVariable Integer gameId, @PathVariable Integer userId) {
         try {
             HttpStatus status;
@@ -71,11 +78,49 @@ public class PlayerController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId or userId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);        
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching player based on gameId and userId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);       
+        }
+    }
+
+    @CrossOrigin()
+    @GetMapping("/api/fetch/player/game={gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
+    public ResponseEntity<ArrayList<PlayerObject>> getPlayersByGameId(@PathVariable Integer gameId) {
+        try {
+            HttpStatus status;
+            ArrayList<PlayerObject> playerList = null;
+            if (gameId != null) {
+                ArrayList<Player> players = playerRepository.findByGame(new Game(gameId));
+                if (players.size() > 0) {
+                    playerList = new ArrayList<PlayerObject>();
+                    for (Player player : players) {
+                        PlayerObject p = this.createPlayerObject(player);
+                        playerList.add(p);                        
+                    }
+                    status = HttpStatus.OK;
+                } else {
+                    System.out.println("ERROR: no players found for game with id: " + gameId);
+                    status = HttpStatus.NOT_FOUND;
+                }
+            } else {
+                System.out.println("ERROR: gameId was null.");
+                status = HttpStatus.BAD_REQUEST;
+            }
+            return new ResponseEntity<>(playerList, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: gameId was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);        
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching list of players based on gameId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);       
         }
     }
 
     @CrossOrigin()
     @GetMapping("/api/fetch/player/{gameId}/{bitecode}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> getPlayerByBitecode(@PathVariable Integer gameId, @PathVariable String bitecode) {
         try {
             HttpStatus status;
@@ -97,11 +142,15 @@ public class PlayerController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId or bitecode was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);            
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when fetching player based on gameId and bitecode.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);            
         }
     }
 
     @CrossOrigin()
     @PostMapping("/api/create/player/{userAccountId}/{gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> addPlayer(@RequestBody Player newPlayer, @PathVariable Integer userAccountId,
         @PathVariable Integer gameId) {   
             try {
@@ -122,11 +171,15 @@ public class PlayerController {
             } catch(IllegalArgumentException e) {
                 System.out.println("Exception thrown: newPlayer was null.");
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }      
+            } catch(Exception e) {
+                System.out.println("Exception thrown: Something unexpected went wrong when creating a new Player.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }        
     }
 
     @CrossOrigin()
     @PatchMapping("/api/update/player/{playerId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> updatePlayer(@RequestBody Player newPlayer, @PathVariable Integer playerId) {
         try {
             Player player;
@@ -153,11 +206,15 @@ public class PlayerController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: playerId or newPlayer was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a Player.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/player/{playerId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<String> deletePlayer(@PathVariable Integer playerId) {
         try {
             String message = "";
@@ -176,7 +233,10 @@ public class PlayerController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: playerId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
-        }     
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a Player.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        }  
     }
 
     public ResponseEntity<Boolean> checkBiteCode(Integer victimId, String biteCode) {
@@ -197,6 +257,9 @@ public class PlayerController {
             return new ResponseEntity<>(result, status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: victimId was null.");
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when checking Bitecode.");
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }

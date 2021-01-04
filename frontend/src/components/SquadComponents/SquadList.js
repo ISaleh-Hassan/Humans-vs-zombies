@@ -1,9 +1,8 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CreateSquadMember, UpdateSquadMember } from '../../utils/SquadMemberStorage';
-import GameMenu from '../StylingComponents/GameMenu';
+import { FetchPlayer } from '../../utils/PlayerStorage';
+import { CreateSquadMember, FetchSquadMember, UpdateSquadMember } from '../../utils/SquadMemberStorage';
 import Header from '../StylingComponents/Header';
-import NavBar from '../StylingComponents/NavBar';
 
 const SquadList = ({ history }) => {
     let gameId = localStorage.getItem('Game ID');
@@ -20,7 +19,13 @@ const SquadList = ({ history }) => {
     }, [])
 
     async function fetchSquads() {
-        const squadResponse = await fetch('/api/fetch/squad/details/game=' + gameId);
+        const token = localStorage.getItem('jwt');
+        const squadResponse = await fetch('/api/fetch/squad/details/game=' + gameId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
         let body;
         if (squadResponse.status === 200) {
             body = await squadResponse.json();
@@ -38,8 +43,12 @@ const SquadList = ({ history }) => {
     }, [])
 
     async function fetchCurrentPlayer() {
-        const playerResponse = await (await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId));
-        setCurrentPlayer(playerResponse);
+        const playerResponse = await FetchPlayer(gameId, userId);
+        if (playerResponse !== null) {
+            setCurrentPlayer(playerResponse);
+        } else {
+            alert("Could not find Player object");
+        }
     }
 
 
@@ -50,8 +59,12 @@ const SquadList = ({ history }) => {
     }, [])
 
     async function fetchSquadMember() {
-        const response = await (await fetch('/api/fetch/squadmember/game=' + gameId + '/player=' + playerId));
-        setSquadMember(response);
+        const response = FetchSquadMember(gameId, playerId);
+        if (response !== null) {
+            setSquadMember(response);
+        } else {
+            alert("Could not find SquadMember object.");
+        }
     }
 
     async function handleJoinSquad(squadId) {
@@ -95,15 +108,11 @@ const SquadList = ({ history }) => {
                         {console.log("This is the current squad member: \n" + squadMember)}
                     </div>
 
-                    {/* <div>
-                        <button type="button" onClick={assignSquadMemberId}>ASSIGN SM ID</button>
-                    </div> */}
-
                     <table>
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Members</th>
+                                <th>Members (Dead Ones)</th>
                                 <th>Faction</th>
                                 <th></th>
                             </tr>
@@ -112,7 +121,7 @@ const SquadList = ({ history }) => {
                             {squads.map((s) =>
                                 <tr>
                                     <td>{s.squadName}</td>
-                                    <td>{s.numberOfRegisteredMembers} / {s.maxNumberOfMembers}</td>
+                                    <td>{s.numberOfRegisteredMembers} / {s.maxNumberOfMembers} ({s.numberOfDeadMembers})</td>
                                     <td>{s.faction}</td>
                                     <td>
                                         <button type="button" disabled={s.faction !== currentFaction || s.numberOfRegisteredMembers >= s.maxNumberOfMembers} onClick={() => handleJoinSquad(s.squadId)}>JOIN</button>

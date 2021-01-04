@@ -2,8 +2,14 @@ import { getBaseUrl } from "./baseUrl";
 const token = localStorage.getItem('jwt');
 
 export async function FetchSquadMember(gameId, playerId) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "fetch/squadmember/game=" + gameId + "/player=" + playerId;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token 
+        }
+    });
     if (response.status === 200) {
         let body = await response.json();
         return body;
@@ -13,6 +19,7 @@ export async function FetchSquadMember(gameId, playerId) {
 }
 
 export async function UpdateSquadMember(squadMemberId, squadId) {
+    const token = localStorage.getItem('jwt');
     let squadObject;
     if (squadId === null) {
         squadObject = null;
@@ -24,7 +31,7 @@ export async function UpdateSquadMember(squadMemberId, squadId) {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             squad: squadObject,
@@ -39,12 +46,13 @@ export async function UpdateSquadMember(squadMemberId, squadId) {
 }
 
 export async function CreateSquadMember(gameId, squadId, playerId, rank) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "create/squadmember/" + gameId + "/"+ squadId + "/" + playerId;
     const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             squadRank: rank

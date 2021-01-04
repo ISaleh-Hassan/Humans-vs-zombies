@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.datastructures.KillObject;
@@ -24,6 +25,7 @@ public class KillController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/kill/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<KillObject>> getAllKills() {
         ArrayList<Kill> kills = (ArrayList<Kill>)killRepository.findAll();
         ArrayList<KillObject> returnKills = new ArrayList<KillObject>();
@@ -36,6 +38,7 @@ public class KillController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/kill/{killId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<KillObject> getKillById(@PathVariable Integer killId) {
         try {
             return killRepository.findById(killId)
@@ -44,34 +47,54 @@ public class KillController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something went wrong when fetching Kill based on killId");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
-    @PostMapping("/api/create/kill/{gameId}/{killerId}/{victimId}")
-    public ResponseEntity<KillObject> addKill(@RequestBody Kill newKill, @PathVariable Integer gameId, 
-    @PathVariable Integer killerId, @PathVariable Integer victimId) {
+    @PostMapping("/api/create/kill")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
+    public ResponseEntity<KillObject> addKillVersion2(@RequestBody KillObject newKill) {
         try {
-            HttpStatus response = HttpStatus.CREATED;
+            HttpStatus status = HttpStatus.CREATED;
+            System.out.println("*************");
+            System.out.println(newKill.getVictimId());
+            System.out.println(newKill.getKillerId());
+            System.out.println(newKill);
+            Kill kill = new Kill();
             if (newKill != null) {
-                newKill.setGame(new Game(gameId));
-                newKill.setKiller(new Player(killerId));
-                newKill.setVictim(new Player(victimId));
-                killRepository.save(newKill);
-                System.out.println("Kill CREATED with id: " + newKill.getKillId());
+                if (playerController.checkBiteCode(newKill.getVictimId(), newKill.getBiteCode()).getBody()) {
+                    kill.setGame(new Game(newKill.getGameId()));
+                    kill.setKiller(new Player(newKill.getKillerId()));
+                    kill.setVictim(new Player(newKill.getVictimId()));
+                    kill.setPosition(newKill.getPosition());
+                    kill.setTimeOfDeath(newKill.getTimeOfDeath());
+                    kill.setDescription(newKill.getDescription());
+                    killRepository.save(kill);
+                    System.out.println("Kill CREATED with id: " + kill.getKillId());
+                } else {
+                    System.out.println("BiteCode did not match with victims BiteCode.");
+                    status = HttpStatus.BAD_REQUEST;
+                }
             } else {
                 System.out.println("Error: newKill was null.");
-                response = HttpStatus.BAD_REQUEST;
+                status = HttpStatus.BAD_REQUEST;
             }
-            return new ResponseEntity<>(this.createKillObject(newKill), response);
+            return new ResponseEntity<>(this.createKillObject(kill), status);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newKill was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }   
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a new Kill.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @CrossOrigin()
     @PatchMapping("/api/update/kill/{killId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<KillObject> updateKill(@RequestBody Kill newKill, @PathVariable Integer killId) {
         try {
             Kill kill;
@@ -83,6 +106,9 @@ public class KillController {
                 }
                 if (newKill.getTimeOfDeath() != null) {
                     kill.setTimeOfDeath(newKill.getTimeOfDeath());
+                }
+                if (newKill.getDescription() != null) {
+                    kill.setDescription(newKill.getDescription());
                 }
                 killRepository.save(kill);
                 response = HttpStatus.OK;
@@ -96,11 +122,15 @@ public class KillController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or kill was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a Kill.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/kill/{killId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<String> deleteKill(@PathVariable Integer killId) {
         try {
             String message = "";
@@ -119,48 +149,24 @@ public class KillController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: killId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a Kill.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }  
     }
 
-    @CrossOrigin()
-    @PostMapping("/api/v2/create/kill")
-    public ResponseEntity<KillObject> addKillVersion2(@RequestBody KillObject newKill) {
-        try {
-            HttpStatus status = HttpStatus.CREATED;
-            Kill kill = new Kill();
-            if (newKill != null) {
-                if (playerController.checkBiteCode(newKill.getVictimId(), newKill.getBiteCode()).getBody()) {
-                    kill.setGame(new Game(newKill.getGameId()));
-                    kill.setKiller(new Player(newKill.getKillerId()));
-                    kill.setVictim(new Player(newKill.getVictimId()));
-                    kill.setPosition(newKill.getPosition());
-                    kill.setTimeOfDeath(newKill.getTimeOfDeath());
-                    killRepository.save(kill);
-                    System.out.println("Kill CREATED with id: " + kill.getKillId());
-                } else {
-                    System.out.println("BiteCode did not match with victims BiteCode.");
-                    status = HttpStatus.BAD_REQUEST;
-                }     
-            } else {
-                System.out.println("Error: newKill was null.");
-                status = HttpStatus.BAD_REQUEST;
-            }
-            return new ResponseEntity<>(this.createKillObject(kill), status);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Exception thrown: newKill was null.");
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }   
-    }
 
-    private KillObject createKillObject(Kill kill) {      
+
+    private KillObject createKillObject(Kill kill) {
         KillObject returnObject = new KillObject(
-            kill.getKillId(), 
-            kill.getTimeOfDeath(), 
-            kill.getPosition(), 
-            (kill.getGame() != null) ? kill.getGame().getGameId() : null, 
-            (kill.getKiller() != null) ? kill.getKiller().getPlayerId() : null, 
-            (kill.getVictim() != null) ? kill.getVictim().getPlayerId() : null, 
-            null
+            kill.getKillId(),
+            kill.getTimeOfDeath(),
+            kill.getPosition(),
+            (kill.getGame() != null) ? kill.getGame().getGameId() : null,
+            (kill.getKiller() != null) ? kill.getKiller().getPlayerId() : null,
+            (kill.getVictim() != null) ? kill.getVictim().getPlayerId() : null,
+            null,
+            kill.getDescription()
         );
         return returnObject;
     }

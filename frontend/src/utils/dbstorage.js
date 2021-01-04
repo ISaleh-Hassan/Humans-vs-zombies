@@ -29,11 +29,12 @@ export async function storeUserDB(username, firstname, lastname, usertype, passw
 }
 
 export async function loginUser(email, password) {
+    const token = localStorage.getItem('jwt');
     const response = await fetch("/api/useraccount/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             players: [],
@@ -48,7 +49,7 @@ export async function loginUser(email, password) {
     const status = await response.status
     if (status === 200) {
         const user = await response.json()
-        storeUser(user.userAccountId, user.username, user.userType);
+        storeUser(user.userAccountId, user.username, user.userType, user.jwt);
     }
     return status;
 }
@@ -58,7 +59,7 @@ export async function loginPhone(phone) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             players: [],

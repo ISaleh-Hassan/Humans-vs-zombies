@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import experis.humansvszombies.hvz.models.datastructures.SquadObject;
 import experis.humansvszombies.hvz.models.datastructures.custom.SquadDetails;
-import experis.humansvszombies.hvz.models.datastructures.custom.SquadMemberDetails;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Player;
 import experis.humansvszombies.hvz.models.tables.Squad;
@@ -39,6 +39,7 @@ public class SquadController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<SquadObject>> getAllSquads() {
         ArrayList<Squad> squads = (ArrayList<Squad>)squadRepository.findAll();
         ArrayList<SquadObject> returnSquads = new ArrayList<SquadObject>();
@@ -51,6 +52,7 @@ public class SquadController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/{squadId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadObject> getSquadById(@PathVariable Integer squadId) {
         try {
             return squadRepository.findById(squadId)
@@ -59,11 +61,15 @@ public class SquadController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching Squad by id.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/game={gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<SquadObject>> getSquadByGameId(@PathVariable Integer gameId) {
         try {
             HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -80,11 +86,15 @@ public class SquadController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching a SquadList based on gameId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/details/game={gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<SquadDetails>> getSquadDetailsByGameId(@PathVariable Integer gameId) {
         try {
             HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -124,11 +134,15 @@ public class SquadController {
         } catch(IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch(Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching SquadDetailList based on gameId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @GetMapping("/api/fetch/squad/game={gameId}/player={playerId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadObject> getSquadFromGameIdAndPlayerId(@PathVariable Integer gameId, @PathVariable Integer playerId) {
         try {
             HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -152,11 +166,15 @@ public class SquadController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: gameId or playerId was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching Squad based on gameId and playerId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @PostMapping("/api/create/squad/{gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<SquadObject> addSquad(@RequestBody Squad newSquad, @PathVariable Integer gameId) {
         try {
             if (newSquad != null) {
@@ -172,11 +190,15 @@ public class SquadController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newGame was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }      
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a new Squad.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }  
     }
 
     @CrossOrigin()
     @PatchMapping("/api/update/squad/{squadId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<SquadObject> updateSquad(@RequestBody Squad newSquad, @PathVariable Integer squadId) {
         try {
             Squad squad;
@@ -204,11 +226,15 @@ public class SquadController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId or newSquad was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a Squad.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/squad/{squadId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<String> deleteSquad(@PathVariable Integer squadId) {
         try {
             String message = "";
@@ -226,6 +252,9 @@ public class SquadController {
             return new ResponseEntity<>(message, response);
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: squadId was null.");
+            return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a Squad.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
         }  
     } 
