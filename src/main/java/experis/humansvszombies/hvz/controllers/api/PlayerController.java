@@ -85,6 +85,40 @@ public class PlayerController {
     }
 
     @CrossOrigin()
+    @GetMapping("/api/fetch/player/game={gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
+    public ResponseEntity<ArrayList<PlayerObject>> getPlayersByGameId(@PathVariable Integer gameId) {
+        try {
+            HttpStatus status;
+            ArrayList<PlayerObject> playerList = null;
+            if (gameId != null) {
+                ArrayList<Player> players = playerRepository.findByGame(new Game(gameId));
+                if (players.size() > 0) {
+                    playerList = new ArrayList<PlayerObject>();
+                    for (Player player : players) {
+                        PlayerObject p = this.createPlayerObject(player);
+                        playerList.add(p);                        
+                    }
+                    status = HttpStatus.OK;
+                } else {
+                    System.out.println("ERROR: no players found for game with id: " + gameId);
+                    status = HttpStatus.NOT_FOUND;
+                }
+            } else {
+                System.out.println("ERROR: gameId was null.");
+                status = HttpStatus.BAD_REQUEST;
+            }
+            return new ResponseEntity<>(playerList, status);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: gameId was null.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);        
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching list of players based on gameId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);       
+        }
+    }
+
+    @CrossOrigin()
     @GetMapping("/api/fetch/player/{gameId}/{bitecode}")
     @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<PlayerObject> getPlayerByBitecode(@PathVariable Integer gameId, @PathVariable String bitecode) {
