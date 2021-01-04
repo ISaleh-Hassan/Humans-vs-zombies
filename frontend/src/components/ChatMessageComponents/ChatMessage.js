@@ -21,6 +21,7 @@ const ChatMessage = props => {
     const [messageToUpdateId, setMessageToUpdateId] = useState(null);
     const [isEditingMessage, setIsEditingMessage] = useState(false);
 
+
     useEffect(() => {
         if (userId !== 'null' && userId !== null) {
             if (playerId !== 'null' && playerId !== null) {
@@ -119,6 +120,7 @@ const ChatMessage = props => {
     function selectChatRoom(ev) {
         let room = ev.target.value;
         setChatRoom(room);
+        handleCancelEditingMessage()
         setRefresh(!refresh);
     }
 
@@ -184,6 +186,13 @@ const ChatMessage = props => {
         }
     }
 
+    function handleClickEnterToSendMessage(ev) {
+        console.log(ev.keyCode)
+        if (ev.keyCode === 13) {
+            sendMessage();
+        }
+    }
+
     async function handleDeleteMessage(msgId) {
         const response = await DeleteChatMessage(msgId);
         if (response !== null) {
@@ -191,6 +200,7 @@ const ChatMessage = props => {
         } else {
             alert("Failed to send message! Failed to delete.")
         }
+
 
     }
 
@@ -209,6 +219,7 @@ const ChatMessage = props => {
             return true;
         }
     }
+
 
     function resetTextField() {
         const textField = document.getElementById("messageInput");
@@ -229,6 +240,7 @@ const ChatMessage = props => {
             alert("Failed to edit message! Failed to delete.")
         }
     }
+
     function handleCancelEditingMessage() {
         setIsEditingMessage(false);
     }
@@ -236,31 +248,57 @@ const ChatMessage = props => {
     return (
         <>
             <ButtonGroup >
-                <Button variant="dark" onClick={selectChatRoom} value="ALL" >Global</Button>
-                <Button variant="dark" onClick={selectChatRoom} value="FACTION">Faction</Button>
-                <Button variant="dark" disabled={squadId === 'null'} onClick={selectChatRoom} value="SQUAD">Squad</Button>
+                <Button variant="dark"
+                    onClick={selectChatRoom}
+                    value="ALL" >Global</Button>
+                <Button variant="dark"
+                    onClick={selectChatRoom}
+                    value="FACTION">Faction</Button>
+                <Button variant="dark"
+                    disabled={squadId === 'null'}
+                    onClick={selectChatRoom}
+                    value="SQUAD">Squad</Button>
             </ButtonGroup>
             <br />
             <ThemeProvider>
                 <ChatList >
+                    {chatRoom === "FACTION" ?
+                        <Subtitle>{playerFaction} CHAT</Subtitle>
+                        : null
+                    }
                     {chatMessages.map((chatMessage) =>
                         <ChatListItem key={chatMessage.chatMessageId}>
                             <Avatar imgUrl="https://livechat.s3.amazonaws.com/default/avatars/male_8.jpg" />
                             <Column fill>
-                                <Row justify>
-                                    <Title ellipsis>{chatMessage.username}</Title>
-                                    <Subtitle nowrap>{chatMessage.stringTimestamp}</Subtitle>
+                                <Row>
+                                    <Title>{chatMessage.username}</Title>
+
+                                    {chatRoom === "SQUAD" ?
+                                        <Subtitle>{chatMessage.squadRank}</Subtitle>
+                                        :
+                                        chatRoom === "FACTION" && chatMessage.alive ?
+                                            <Subtitle> Alive </Subtitle>
+                                            : null}
+
+                                    <Subtitle>{chatMessage.stringTimestamp}</Subtitle>
                                 </Row>
                                 <Subtitle >
                                     <div>
-                                        {handleUpdateMessage(chatMessage.chatMessageId) && isEditingMessage ? <Form.Group>
-                                            <Form.Control type="text"
-                                                placeholder="Edit your message..."
-                                                onChange={onMsgChanged}
-                                                defaultValue={chatMessage.message} />
-                                            <Button variant="info" size="sm" onClick={sendUpdatedMessage}>Update</Button>
-                                            <Button className="m-2" size="sm" variant="secondary"  onClick={handleCancelEditingMessage}>Cancel</Button>
-                                        </Form.Group>
+                                      
+                                        {handleUpdateMessage(chatMessage.chatMessageId) && isEditingMessage ?
+                                            <Form.Group>
+                                                <Form.Control type="text"
+                                                    placeholder="Edit your message..."
+                                                    onChange={onMsgChanged}
+                                                    defaultValue={chatMessage.message} />
+                                                <Button variant="info"
+                                                    size="sm"
+                                                    onClick={sendUpdatedMessage}>Update</Button>
+                                                <Button className="m-2"
+                                                    size="sm"
+                                                    variant="secondary"
+                                                    onClick={handleCancelEditingMessage}>Cancel</Button>
+                                            </Form.Group>
                                             : chatMessage.message
                                         }
 
@@ -268,8 +306,15 @@ const ChatMessage = props => {
                                     <div>
                                         {checkIfPlayerIsAuthor(chatMessage.playerId) && !isEditingMessage ?
                                             <Subtitle >
-                                                <Button className="m-1" variant="secondary" size="sm" onClick={() => handleEditMessage(chatMessage.chatMessageId)}> Edit</Button>
-                                                <Button variant="danger" size="sm" onClick={() => handleDeleteMessage(chatMessage.chatMessageId)}> Delete</Button>
+                                                <Button id="sendMessage"
+                                                    className="m-1"
+                                                    variant="secondary"
+                                                    size="sm"
+                                                    onClick={() => handleEditMessage(chatMessage.chatMessageId)}> Edit</Button>
+                                                <Button variant="danger"
+                                                    size="sm"
+                                                    onClick={() => handleDeleteMessage(chatMessage.chatMessageId)}> Delete</Button>
+
                                             </Subtitle>
                                             : null}
                                     </div>
@@ -280,7 +325,9 @@ const ChatMessage = props => {
                 </ChatList>
 
                 <Form.Group>
-                    <Form.Control id="messageInput" type="text" placeholder="Enter a message" onChange={onMsgChanged} />
+
+                    <Form.Control onKeyUp={handleClickEnterToSendMessage} id="messageInput" type="text" placeholder="Enter a message" onChange={onMsgChanged} />
+
                     <IconButton disabled={!validInput} onClick={sendMessage}>
                         <SendIcon />
                     </IconButton>

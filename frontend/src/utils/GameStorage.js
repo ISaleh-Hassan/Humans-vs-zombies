@@ -5,8 +5,13 @@ let lat = localStorage.getItem('Current Position Lat: ')
 
 
 export async function FetchAllGames() {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "fetch/game/all";
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': 'Bearer ' + token 
+        }
+    });
     if (response.status === 200) {
         let body = await response.json();
         return body;
@@ -16,8 +21,13 @@ export async function FetchAllGames() {
 }
 
 export async function FetchGame(gameId) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "fetch/game/" + gameId;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': 'Bearer ' + token 
+        }
+    });
     if (response.status === 200) {
         let body = await response.json();
         return body;
@@ -28,11 +38,13 @@ export async function FetchGame(gameId) {
 
 
 export async function CreateGame(gameData) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "create/game"
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             name: gameData.name,
@@ -55,11 +67,13 @@ export async function CreateGame(gameData) {
 }
 
 export async function UpdateGame(gameData) {
-    let url = getBaseUrl() + "update/game/" + gameData.gameId;
+    const token = localStorage.getItem('jwt');
+    let url = getBaseUrl() + "/update/game/" + gameData.gameId;
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         },
         body: JSON.stringify({
             name: gameData.name,
@@ -75,11 +89,13 @@ export async function UpdateGame(gameData) {
 }
 
 export async function DeleteGame(gameId) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "delete/game/" + gameId;
     const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-            'Content-type': 'application/json'
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer ' + token 
         }
     });
     return response.status;

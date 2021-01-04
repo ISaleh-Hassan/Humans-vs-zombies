@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.datastructures.MissionObject;
@@ -21,6 +22,7 @@ public class MissionController {
 
     @CrossOrigin
     @GetMapping("/api/fetch/mission/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<ArrayList<MissionObject>> getAllMissions() {
         ArrayList<Mission> missions = (ArrayList<Mission>)missionRepository.findAll();
         ArrayList<MissionObject> returnMissions = new ArrayList<MissionObject>();
@@ -33,6 +35,7 @@ public class MissionController {
 
     @CrossOrigin()
     @GetMapping("/api/fetch/mission/{missionId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
     public ResponseEntity<MissionObject> getMissionById(@PathVariable Integer missionId) {
         try {
             return missionRepository.findById(missionId)
@@ -41,11 +44,15 @@ public class MissionController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching Mission based on id.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin
     @PostMapping("/api/create/mission/{gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<MissionObject> addMission(@RequestBody Mission newMission, @PathVariable Integer gameId) {
         try {
             HttpStatus response = HttpStatus.CREATED;
@@ -56,11 +63,15 @@ public class MissionController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: newMission was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }   
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when creating a new Mission.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @CrossOrigin()
     @PatchMapping("/api/update/mission/{missionId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<MissionObject> updateMission(@RequestBody Mission newMission, @PathVariable Integer missionId) {
         try {
             Mission mission;
@@ -99,11 +110,15 @@ public class MissionController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: id or mission was null.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when updating a Mission.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
     @CrossOrigin()
     @DeleteMapping("/api/delete/mission/{missionId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<String> deleteMission(@PathVariable Integer missionId) {
         try {
             String message = "";
@@ -122,7 +137,10 @@ public class MissionController {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception thrown: missionId was null.");
             return new ResponseEntity<>("FAILED", HttpStatus.BAD_REQUEST);
-        }              
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when deleting a Mission.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     private MissionObject createMissionObject(Mission mission) {
