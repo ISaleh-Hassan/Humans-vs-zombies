@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { FetchAllMissions } from '../../utils/missionStorage';
 import { FetchAllSquadCheckin } from '../../utils/squadCheckinStorage';
+import { FetchAllKills } from '../../utils/KillStorage';
 
 //mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNramlpcXF6aTB5dHMydHFveHE0cDdleXMifQ.cOdCvVE4RuyE_0SRtC-1ww'
@@ -31,6 +32,7 @@ class MainMap extends Component {
 
     let missions = FetchAllMissions();
     let squadCheckins = FetchAllSquadCheckin();
+    let kills = FetchAllKills();
 
     let faction = localStorage.getItem("Faction")
     let user = localStorage.getItem("Username")
@@ -53,7 +55,7 @@ class MainMap extends Component {
         })
       )
 
-      squadCheckins
+    squadCheckins
       .then(response =>
         response.map((sq) => {
 
@@ -64,10 +66,23 @@ class MainMap extends Component {
           let popup = new mapboxgl.Popup({ offset: 25 })
             .setText('Hello, ' + user);
 
-          if (sq.position !== null  && sq.squadId !== null || sq.squadId !== undefined) {
+          if (sq.position !== null && sq.squadId !== null || sq.squadId !== undefined) {
             squadCheckinMarker
               .setLngLat([sq.position.x, sq.position.y]).setPopup(popup).addTo(map)
           }
+        })
+      )
+
+    kills
+      .then(response =>
+        response.map((k) => {
+
+          let kill = document.createElement('div');
+          kill.className = 'gravestone';
+          let killMarker = new mapboxgl.Marker(kill);
+          
+          killMarker
+            .setLngLat([k.position.x, k.position.y]).addTo(map)
         })
       )
 

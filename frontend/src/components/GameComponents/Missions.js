@@ -41,7 +41,6 @@ const Missions = (props) => {
         <>
             <section className="home">
                 <div>
-                    <h1>Game Name- Map</h1>
                     <h2>Current Missions</h2>
                     <table>
                         <thead>
