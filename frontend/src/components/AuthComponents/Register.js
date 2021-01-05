@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/Form'
 import { AuthContext } from "../../utils/Auth";
 import HeaderOutside from "../StylingComponents/HeaderOutside";
 import { Button } from 'react-bootstrap';
+import { clearUser } from "../../utils/localstorage";
 
 const Register = ({ history }) => {
 
@@ -31,8 +32,7 @@ const Register = ({ history }) => {
                 firebase.auth().createUserWithEmailAndPassword(email.value, password.value)
                     .then(userData => {
                         userData.user.sendEmailVerification();
-                        console.log(userData);
-                        history.push("/")
+                        history.push("/login")
                     })
                     .catch(err => {
                         alert(err.message);
@@ -97,11 +97,10 @@ const Register = ({ history }) => {
                             <Form.Check type="checkbox" label="Register as admin?" onChange={handleCheckbox} />
                         </Form.Group>
                         <Button variant="dark" style={BUTTON_STYLES} type="submit">Register</Button>
-                        <Link to="/register">
+                        <Link to="/login">
                             <Button variant="danger" style={BUTTON_STYLES}>Cancel</Button>
                         </Link>
                     </Form>
-                    <Link to="/login">Already have an account? Log in here.</Link>
                 </div>
             </section>
         </>

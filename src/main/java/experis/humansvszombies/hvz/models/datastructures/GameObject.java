@@ -19,6 +19,7 @@ public class GameObject {
     private Integer numberOfRegisteredPlayers;
     private String stringStart;
     private String stringEnd;
+    private GameState calculatedGameState;
 
     public GameObject() {
         
@@ -26,7 +27,7 @@ public class GameObject {
 
     public GameObject(Integer gameId, String name, GameState gameState, Point nwPoint, Point sePoint,
             Timestamp startTime, Timestamp endTime, Integer maxNumberOfPlayers, String description, 
-            Integer numberOfRegisteredPlayers, String start, String end) {
+            Integer numberOfRegisteredPlayers, String start, String end, GameState calculatedGameState) {
         this.gameId = gameId;
         this.name= name;
         this.gameState = gameState;
@@ -39,6 +40,7 @@ public class GameObject {
         this.numberOfRegisteredPlayers = numberOfRegisteredPlayers;
         this.stringStart = start;
         this.stringEnd = end;
+        this.calculatedGameState = calculatedGameState;
     }
 
     public Integer getGameId() {
@@ -135,5 +137,13 @@ public class GameObject {
 
     public void setStringEnd(String stringEnd) {
         this.stringEnd = stringEnd;
+    }
+
+    public GameState getCalculatedGameState() {
+        return calculatedGameState;
+    }
+
+    public void setCalculatedGameState(GameState calculatedGameState) {
+        this.calculatedGameState = calculatedGameState;
     }
 }

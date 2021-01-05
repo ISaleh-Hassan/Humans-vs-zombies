@@ -1,6 +1,9 @@
 package experis.humansvszombies.hvz.controllers.api;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import experis.humansvszombies.hvz.models.datastructures.GameObject;
+import experis.humansvszombies.hvz.models.enums.GameState;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.repositories.GameRepository;
 import experis.humansvszombies.hvz.repositories.PlayerRepository;
@@ -168,15 +172,28 @@ public class GameController {
     private GameObject createGameObject(Game game) {
         if (game == null) {
             return null;
+        }     
+        Calendar calendar = Calendar.getInstance();
+        Date now = calendar.getTime();
+        GameState calculatedGameState;
+        if (game.getStartTime().after(now)) {
+            calculatedGameState = GameState.PREPARATION;
         }
+        else if (game.getStartTime().before(now) && game.getEndTime().after(now)) {
+            calculatedGameState = GameState.IN_PROGRESS;
+        } else {
+            calculatedGameState = GameState.COMPLETED;
+        }  
         int numberOfPlayers = playerRepository.findByGame(new Game(game.getGameId())).size();
         String start = null;
         if (game.getStartTime() != null) {
             start = game.getStartTime().toString();
+            start = start.substring(0, start.length() - 2);
         }
         String end = null; 
         if (game.getEndTime() != null) {
             end = game.getEndTime().toString();
+            end = end.substring(0, end.length() - 2);
         }
         GameObject gameObject = new GameObject(
             game.getGameId(),
@@ -190,7 +207,8 @@ public class GameController {
             game.getDescription(), 
             numberOfPlayers,
             start,
-            end
+            end,
+            calculatedGameState
         );
 
         return gameObject;
