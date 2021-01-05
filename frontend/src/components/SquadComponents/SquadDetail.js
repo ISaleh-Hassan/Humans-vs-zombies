@@ -2,8 +2,17 @@ import React, { Component, useEffect, useState } from 'react';
 import { CreateSquadCheckin } from '../../utils/squadCheckinStorage';
 import { UpdateSquadMember } from '../../utils/SquadMemberStorage';
 import Header from '../StylingComponents/Header';
+import { Button } from 'react-bootstrap';
 
 const SquadDetail = ({ history }) => {
+
+    const BUTTON_STYLES = {
+        width: '100%',
+        height: '40px',
+        margin: '2px',
+        padding: '1px'
+    }
+
     let gameId = localStorage.getItem('Game ID');
     let squadId = localStorage.getItem('Squad ID');
     let userId = localStorage.getItem('User ID');
@@ -189,12 +198,10 @@ const SquadDetail = ({ history }) => {
                         </table>
                         <br />
 
-                        <button onClick={getLocation}>Mark location</button>
+                        <Button variant="dark" style={BUTTON_STYLES} onClick={getLocation}>Mark location</Button>
                         <p id="current-location"></p>
-                        <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
-
-                        <br />
-                        <button type="button" disabled={squadRank !== 'LEADER'} onClick={() => handleDisbandSquad()}>Disband Squad</button>
+                        <Button type="button" variant="dark" style={BUTTON_STYLES} onClick={() => handleLeaveSquad()}>Leave Squad</Button>
+                        <Button type="button" variant="dark" style={BUTTON_STYLES} disabled={squadRank !== 'LEADER'} onClick={() => handleDisbandSquad()}>Disband Squad</Button>
                     </div>
                 </section>
             </div>

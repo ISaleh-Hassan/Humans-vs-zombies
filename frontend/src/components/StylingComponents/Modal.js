@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDom from 'react-dom';
+import { Button } from 'react-bootstrap';
 
 const MODAL_STYLES = {
     position: 'fixed',
@@ -21,6 +22,13 @@ const OVERLAY_STYLES = {
     zIndex: 1000
 }
 
+const BUTTON_STYLES = {
+    width: '150px',
+    height: '40px',
+    margin: '2px',
+    padding: '1px'
+}
+
 export default function Modal({ open, children, onClose }) {
     if (!open) { return null }
 
@@ -29,7 +37,7 @@ export default function Modal({ open, children, onClose }) {
             <div style={OVERLAY_STYLES} onClick={onClose} />
             <div style={MODAL_STYLES}>
                 {children}
-                <button onClick={onClose}>Close Menu</button>
+                <Button variant="secondary" style={BUTTON_STYLES} onClick={onClose}>Close Menu</Button>
             </div>
         </>,
         document.getElementById('portal')

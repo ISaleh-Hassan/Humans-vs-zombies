@@ -4,7 +4,6 @@ import { Button } from 'react-bootstrap';
 import { FetchGame } from '../../utils/GameStorage';
 import { FetchPlayer } from '../../utils/PlayerStorage';
 import { FetchSquadMember } from '../../utils/SquadMemberStorage';
-import GameMenu from '../StylingComponents/GameMenu';
 import HeaderOutside from '../StylingComponents/HeaderOutside';
 import { Link } from 'react-router-dom';
 
@@ -78,6 +77,12 @@ const LandingPage = (props) => {
         props.history.push('/currentgames');
     };
 
+    const BUTTON_STYLES = {
+    width: '150px',
+    height: '40px',
+    margin: '2px',
+    padding: '1px'
+    }
 
     return (
         <div>
@@ -102,13 +107,13 @@ const LandingPage = (props) => {
                         <span>
                             {hasJoined ?
                                 <>
-                                <Button variant="danger" onClick={handleLeaveGame}>Leave Game</Button>
+                                <Button variant="danger" style={BUTTON_STYLES} onClick={handleLeaveGame}>Leave Game</Button>
                                 </> :
                                 <>
-                                <Button variant="success" onClick={handleJoinGame}>Join Game</Button>
+                                <Button variant="success" style={BUTTON_STYLES} onClick={handleJoinGame}>Join Game</Button>
                                 </>
                             }
-                            <Link to="/currentgames"><Button variant="secondary">Go Back</Button></Link>
+                            <Link to="/currentgames"><Button variant="secondary" style={BUTTON_STYLES}>Go Back</Button></Link>
                         </span>
                     </div>
 
