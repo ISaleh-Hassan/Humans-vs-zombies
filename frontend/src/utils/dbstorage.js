@@ -1,11 +1,15 @@
+import { getBaseUrl } from "./baseUrl";
 import { storeUser } from "./localstorage";
 
+// export a variable userType then create a function that gets usertype or just get direct
+
 export async function storeUserDB(username, firstname, lastname, usertype, password, email) {
-    console.log(usertype);
+    const token = localStorage.getItem('jwt');
     const response = await fetch("/api/create/useraccount", {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             players: [],
@@ -29,7 +33,7 @@ export async function loginUser(email, password) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token 
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             players: [],
@@ -49,19 +53,13 @@ export async function loginUser(email, password) {
     return status;
 }
 
-export const getUserInfo = () => {
-    fetch('/api/fetch/useraccount/all')
-        .then(response => response.json())
-        .then(data => console.log(data));
-}
-
-export async function storePhone (phone){
+export async function loginPhone(phone) {
     const token = localStorage.getItem('jwt');
     const response = await fetch("/api/useraccount/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token 
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify({
             players: [],
@@ -75,5 +73,52 @@ export async function storePhone (phone){
         })
     })
     const status = await response.status
+    if (status === 200) {
+        const user = await response.json()
+        storeUser(user.userAccountId, user.username, user.userType);
+    }
+    return status;
+}
+
+export const getUserInfo = () => {
+    fetch('/api/fetch/useraccount/all')
+        .then(response => response.json())
+        .then(data => console.log(data));
+}
+
+export async function fetchUser(userId) {
+    const token = localStorage.getItem('jwt');
+    let url = getBaseUrl() + "fetch/useraccount/" + userId;
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    });
+    if (response.status === 200) {
+        let body = await response.json();
+        return body;
+    } else {
+        return null;
+    }
+}
+
+export async function storePhone(userAccountId, phone) {
+    const token = localStorage.getItem('jwt');
+    const response = await fetch("/api/update/useraccount/" + userAccountId, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+            phoneNumber: phone
+        })
+    })
+    const status = await response.status
+    if (response.status === 200) {
+        console.log("Phone updated!")
+    } else {
+        console.log("Something went wrong!")
+    }
     return status;
 }

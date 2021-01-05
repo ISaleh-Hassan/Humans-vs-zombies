@@ -1,6 +1,6 @@
 const uKey = 'User ID';
 const userName = 'Username';
-const userType = 'Usertype'
+const userType = 'Usertype';
 const pKey = 'Player ID'
 const jwt = 'jwt'
 

@@ -1,4 +1,9 @@
 import { getBaseUrl } from "./baseUrl";
+const token = localStorage.getItem('jwt');
+
+let lng = localStorage.getItem('Current Position Lng: ')
+let lat = localStorage.getItem('Current Position Lat: ')
+
 
 export async function FetchAllGames() {
     const token = localStorage.getItem('jwt');
@@ -46,13 +51,21 @@ export async function CreateGame(gameData) {
             name: gameData.name,
             gameState: gameData.gameState,
             startTime: gameData.startTime,
+            nwPoint: {
+                "x": lng,
+                "y": lat
+            },
+            sePoint: {
+                "x": lng,
+                "y": lat
+            },
             endTime: gameData.endTime,
             maxNumberOfPlayers: gameData.maxNumberOfPlayers,
             description: gameData.description
         })
     })
     return response;
-} 
+}
 
 export async function UpdateGame(gameData) {
     const token = localStorage.getItem('jwt');
@@ -65,6 +78,7 @@ export async function UpdateGame(gameData) {
         },
         body: JSON.stringify({
             name: gameData.name,
+            description: gameData.description,
             gameState: gameData.gameState,
             startTime: gameData.startTime,
             endTime: gameData.endTime,
@@ -84,6 +98,6 @@ export async function DeleteGame(gameId) {
             'Content-type': 'application/json',
             'Authorization': 'Bearer ' + token 
         }
-        });
+    });
     return response.status;
 }

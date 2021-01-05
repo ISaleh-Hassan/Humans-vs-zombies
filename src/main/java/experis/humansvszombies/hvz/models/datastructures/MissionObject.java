@@ -4,12 +4,14 @@ import java.sql.Timestamp;
 
 import experis.humansvszombies.hvz.models.enums.Faction;
 import experis.humansvszombies.hvz.models.enums.MissionState;
+import org.springframework.data.geo.Point;
 
 public class MissionObject {
     private Integer missionId;
     private String name;
-    private Faction faction;
-    private MissionState missionState;
+    private String missionDescription;
+    private Faction factionVisibility;
+    private Point missionPoint;
     private Timestamp startTime;
     private Timestamp endTime;
     private Integer gameId;
@@ -18,12 +20,13 @@ public class MissionObject {
 
     }
 
-    public MissionObject(Integer missionId, String name, Faction faction, MissionState missionState,
+    public MissionObject(Integer missionId, String name, String missionDescription, Faction factionVisibility, Point missionPoint,
             Timestamp startTime, Timestamp endTime, Integer gameId) {
         this.missionId = missionId;
         this.name = name;
-        this.faction = faction;
-        this.missionState = missionState;
+        this.missionDescription = missionDescription;
+        this.factionVisibility = factionVisibility;
+        this.missionPoint = missionPoint;
         this.startTime = startTime;
         this.endTime = endTime;
         this.gameId = gameId;
@@ -45,21 +48,21 @@ public class MissionObject {
         this.name = name;
     }
 
-    public Faction getFaction() {
-        return faction;
+    public String getMissionDescription() { return missionDescription; }
+
+    public void setMissionDescription(String missionDescription) { this.missionDescription = missionDescription; }
+
+    public Faction getFactionVisibility() {
+        return factionVisibility;
     }
 
-    public void setFaction(Faction faction) {
-        this.faction = faction;
+    public void setFactionVisibility(Faction factionVisibility) {
+        this.factionVisibility = factionVisibility;
     }
 
-    public MissionState getMissionState() {
-        return missionState;
-    }
+    public Point getMissionPoint() { return missionPoint; }
 
-    public void setMissionState(MissionState missionState) {
-        this.missionState = missionState;
-    }
+    public void setMissionPoint(Point missionPoint) { this.missionPoint = missionPoint; }
 
     public Timestamp getStartTime() {
         return startTime;

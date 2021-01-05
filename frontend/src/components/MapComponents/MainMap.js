@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
+import { FetchAllMissions } from '../../utils/missionStorage';
+import { FetchAllSquadCheckin } from '../../utils/squadCheckinStorage';
+import { FetchAllKills } from '../../utils/KillStorage';
+import 'mapbox-gl/dist/mapbox-gl.css';
+
+//mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
+mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNramlpcXF6aTB5dHMydHFveHE0cDdleXMifQ.cOdCvVE4RuyE_0SRtC-1ww'
 
 class MainMap extends Component {
   constructor(props) {
@@ -26,29 +32,110 @@ class MainMap extends Component {
       draggable: true
     });
 
-    let mission = document.createElement('div');
-    mission.className = 'mission';
-    let missionMarker = new mapboxgl.Marker(mission);
-    missionMarker.setLngLat([this.state.lng, this.state.lat]).addTo(map);
+    let faction = localStorage.getItem("Faction")
+    let user = localStorage.getItem("Username")
+    let userType = localStorage.getItem("Usertype")
 
-    let gravestone = document.createElement('div');
-    gravestone.className = 'gravestone';
-    let graveStoneMarker = new mapboxgl.Marker(gravestone);
-    graveStoneMarker.setLngLat([14.1618, 57.7826]).addTo(map);
+    async function fetchMissions() {
+      let missions = await FetchAllMissions();
+      if (missions != null && userType != null) {
+        missions.map((m) => {
+
+          let mission = document.createElement('div');
+          mission.className = 'mission';
+          let missionMarker = new mapboxgl.Marker(mission);
+
+          let popup = new mapboxgl.Popup({ offset: 25 })
+            .setText('Name: ' + m.name);
+
+          if (m.missionPoint !== null && m.factionVisibility === faction) {
+            missionMarker
+              .setLngLat([m.missionPoint.x, m.missionPoint.y]).setPopup(popup).addTo(map)
+          }
+          if (m.missionPoint !== null && userType === 'ADMINISTRATOR') {
+            missionMarker
+              .setLngLat([m.missionPoint.x, m.missionPoint.y]).setPopup(popup).addTo(map)
+          }
+        }
+        )
+      } else {
+        console.log("Error!")
+      }
+    }
+
+    async function fetchSquadCheckins() {
+      let squadCheckins = await FetchAllSquadCheckin();
+      if (squadCheckins != null && userType != null) {
+        squadCheckins
+          .map((sq) => {
+
+            let squadCheckin = document.createElement('div');
+            squadCheckin.className = 'squad';
+            let squadCheckinMarker = new mapboxgl.Marker(squadCheckin);
+
+            let popup = new mapboxgl.Popup({ offset: 25 })
+              .setText('Hello, ' + user);
+
+            if (sq.position !== null && sq.squadId !== null || sq.squadId !== undefined) {
+              squadCheckinMarker
+                .setLngLat([sq.position.x, sq.position.y]).setPopup(popup).addTo(map)
+            }
+            if (userType === 'ADMINISTRATOR' && sq.position !== null && sq.squadId !== null || sq.squadId !== undefined) {
+              squadCheckinMarker
+                .setLngLat([sq.position.x, sq.position.y]).setPopup(popup).addTo(map)
+            }
+          }
+          )
+      } else {
+        console.log("Error!")
+      }
+    }
+
+    async function fetchKills() {
+      let kills = await FetchAllKills();
+      if (kills != null && userType != null) {
+        kills
+          .map((k) => {
+
+            let kill = document.createElement('div');
+            kill.className = 'gravestone';
+            let killMarker = new mapboxgl.Marker(kill);
+
+            let popup = new mapboxgl.Popup({ offset: 25 })
+              .setText('Description: ' + k.description + '\nTime of Death: ' + k.timeOfDeath.replace('T', ' ').substring(0, k.timeOfDeath.lastIndexOf('.')));
+
+            killMarker
+              .setLngLat([k.position.x, k.position.y]).setPopup(popup).addTo(map)
+          }
+          )
+      } else {
+        console.log("Error!")
+      }
+    }
+
+    fetchMissions();
+    fetchSquadCheckins();
+    fetchKills();
 
     function onDragEnd() {
       let lngLat = marker.getLngLat();
+      let lngValue = lngLat.lng.toFixed(4);
+      let latValue = lngLat.lat.toFixed(4);
       coordinates.innerHTML =
-        'Longitude: ' + lngLat.lng + '<br />Latitude: ' + lngLat.lat;
+        'Longitude: ' + lngValue + '<br />Latitude: ' + latValue;
+      localStorage.setItem("Lng: ", lngValue);
+      localStorage.setItem("Lat: ", latValue);
     }
 
     marker.on('dragend', onDragEnd);
 
     function showPosition(position) {
       let currentPosition = document.getElementById("current-position");
-      currentPosition.innerHTML = "Longitude: " + position.coords.longitude +
-        "<br>Latitude: " + position.coords.latitude;
-      marker.setLngLat([position.coords.longitude, position.coords.latitude]).addTo(map)
+      // currentPosition.innerHTML = "Longitude: " + position.coords.longitude +
+      //   "<br>Latitude: " + position.coords.latitude;
+      marker.setLngLat([position.coords.longitude.toFixed(4), position.coords.latitude.toFixed(4)]).addTo(map)
+      localStorage.setItem('Current Position Lng: ', position.coords.longitude.toFixed(4))
+      localStorage.setItem('Current Position Lat: ', position.coords.latitude.toFixed(4))
     }
 
     if (navigator.geolocation) {
@@ -62,19 +149,18 @@ class MainMap extends Component {
         navigator.geolocation.getCurrentPosition(showPosition)
       );
     }
-
   }
 
   render() {
     return (
       <>
-          <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
-          <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
-            <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
-            <label>Marker Location: </label>
-            <p id="coordinates" className="coordinates"></p>
-            <label>Current Location: </label>
-            <p id="current-position"></p>
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js'></script>
+        <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
+        <label>Marker Location: </label>
+        <p id="coordinates"></p>
+        {/* <label>Current Location: </label> */}
+        <p id="current-position"></p>
       </>
     )
   }

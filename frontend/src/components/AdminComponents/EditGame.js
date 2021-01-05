@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../StylingComponents/Header";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button } from 'react-bootstrap';
-import { UpdateGame, FetchAllGames, FetchGame } from "../../utils/GameStorage";
+import { UpdateGame, FetchAllGames, FetchGame, DeleteGame } from "../../utils/GameStorage";
 import TextField from '@material-ui/core/TextField';
 import GameMenu from "../StylingComponents/GameMenu";
 
@@ -10,6 +10,7 @@ import GameMenu from "../StylingComponents/GameMenu";
 const EditGame = (props) => {
   const [validGameName, setValidGameName] = useState(false);
   const [validGameDescription, setValidGameDescription] = useState(false);
+  const [deleteGame, setDeleteGame] = useState(false);
   const [allGames, setAllGames] = useState([])
   const [selectedGameId, setSelectedGameId] = useState(null);
   const [gameObject, setGameObject] = useState({})
@@ -47,6 +48,7 @@ const EditGame = (props) => {
       setGameObject(
         {
           name: game.name,
+          description: game.description,
           gameState: game.gameState,
           gameId: game.gameId,
           startTime: game.startTime,
@@ -124,6 +126,19 @@ const EditGame = (props) => {
         maxNumberOfPlayers: numPlayers
       }));
     }
+  }
+
+  async function onDeleteClicked() {
+    let gameResponse = await DeleteGame(gameObject.gameId);
+    if (gameResponse === 200) {
+      props.history.push("/currentgames");
+    } else {
+      console.log("Something went wrong when trying to delete the game.");
+    }
+  }
+
+  const onCheckBoxChanged = ev => {
+    setDeleteGame(!deleteGame);
   }
 
   function handleChangeGameToUpdate(ev) {
@@ -214,8 +229,11 @@ const EditGame = (props) => {
 
                 </Form.Control>
                 <br /> <br />
-                <Button
-                  onClick={editGame}>Edit</Button>
+                <Button disabled={!validGameName || !validGameDescription} onClick={editGame}>Update Game</Button>
+                <Button disabled={!deleteGame} onClick={onDeleteClicked}>Delete Game</Button>
+                <Form.Group controlId="deleteGameCheckbox">
+                  <Form.Check type="checkbox" label="Delete Game?" onChange={onCheckBoxChanged} />
+                </Form.Group>
               </div>
               : null}
           </Form.Group>

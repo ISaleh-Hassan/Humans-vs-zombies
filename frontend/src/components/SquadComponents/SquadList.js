@@ -1,10 +1,9 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FetchPlayer } from '../../utils/PlayerStorage';
 import { CreateSquadMember, FetchSquadMember, UpdateSquadMember } from '../../utils/SquadMemberStorage';
-import GameMenu from '../StylingComponents/GameMenu';
 import Header from '../StylingComponents/Header';
-import NavBar from '../StylingComponents/NavBar';
+import { Button } from 'react-bootstrap';
 
 const SquadList = ({ history }) => {
     let gameId = localStorage.getItem('Game ID');
@@ -110,15 +109,11 @@ const SquadList = ({ history }) => {
                         {console.log("This is the current squad member: \n" + squadMember)}
                     </div>
 
-                    {/* <div>
-                        <button type="button" onClick={assignSquadMemberId}>ASSIGN SM ID</button>
-                    </div> */}
-
                     <table>
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Members</th>
+                                <th>Members (Dead Ones)</th>
                                 <th>Faction</th>
                                 <th></th>
                             </tr>
@@ -127,10 +122,10 @@ const SquadList = ({ history }) => {
                             {squads.map((s) =>
                                 <tr>
                                     <td>{s.squadName}</td>
-                                    <td>{s.numberOfRegisteredMembers} / {s.maxNumberOfMembers}</td>
+                                    <td>{s.numberOfRegisteredMembers} / {s.maxNumberOfMembers} ({s.numberOfDeadMembers})</td>
                                     <td>{s.faction}</td>
                                     <td>
-                                        <button type="button" disabled={s.faction !== currentFaction || s.numberOfRegisteredMembers >= s.maxNumberOfMembers} onClick={() => handleJoinSquad(s.squadId)}>JOIN</button>
+                                        <Button type="button" variant="dark" disabled={s.faction !== currentFaction || s.numberOfRegisteredMembers >= s.maxNumberOfMembers} onClick={() => handleJoinSquad(s.squadId)}>JOIN</Button>
                                     </td>
                                 </tr>
                             )}
@@ -139,7 +134,7 @@ const SquadList = ({ history }) => {
 
                     <br />
                     <Link to="createsquad">
-                        <button>Create New Squad</button>
+                        <Button variant="dark">Create New Squad</Button>
                     </Link>
                 </div>
             </section>

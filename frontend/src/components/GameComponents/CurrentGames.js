@@ -6,6 +6,13 @@ import { FetchAllGames } from '../../utils/GameStorage';
 
 const CurrentGames = (props) => {
 
+    const BUTTON_STYLES = {
+        width: '110px',
+        height: '40px',
+        margin: '2px',
+        padding: '1px'
+    }
+
     const [games, setGames] = useState([]);
     const [gameFilter, setGameFilter] = useState('ALL');
 
@@ -28,15 +35,45 @@ const CurrentGames = (props) => {
     }
 
 
-  // The usertype should be determined by calling the database, not by using local storage as that can be edited.
-  // This should be updated ASAP.
-  const userType = localStorage.getItem('Usertype');
+    const [currentUser, setCurrentUser] = useState([]);
+    
+    useEffect(() => {
+        fetchCurrentUser();
+    }, []);
+
+    async function fetchCurrentUser() {
+        const token = localStorage.getItem('jwt');
+        const userId = localStorage.getItem('User ID');
+        const response = await fetch('/api/fetch/useraccount/' + userId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
+        if (response.status === 200) {
+            let body = await response.json();
+            setCurrentUser(body);
+        } else {
+            alert("Could not find user object.")
+            setCurrentUser({});
+        }
+    };
+
 
   function handleAdminAccess() {
-    if (userType === 'Admin') {
+    if (currentUser.userType === 'ADMINISTRATOR') {
         props.history.push('/admin')
     } else {
         alert('You do not have access to the admin menu')
+    }
+  }
+
+
+  function handleAdminCreateGameAccess() {
+    if (currentUser.userType === 'ADMINISTRATOR') {
+        props.history.push('/creategame')
+    } else {
+        alert('You do not have permission to create a new game')
     }
   }
 
@@ -92,10 +129,9 @@ const CurrentGames = (props) => {
                     </table>
                     <br/>
                     <div>
-                        <Button variant="dark" onClick={() => props.history.push("/")}>Profile</Button>
-                        <Button variant="dark" onClick={handleAdminAccess}>Admin</Button>
-                        {/* The button below should probably not exist on the current games page, as only admin users are supposed to be able to create a new game */}
-                        {/* <Button variant="dark" onClick={() => props.history.push("/creategame")}>Create New Game</Button> */}
+                        <Button variant="dark" style={BUTTON_STYLES} onClick={() => props.history.push("/")}>Profile</Button>
+                        <Button variant="dark" style={BUTTON_STYLES} onClick={handleAdminAccess}>Admin</Button>
+                        <Button variant="dark" style={BUTTON_STYLES} onClick={handleAdminCreateGameAccess}>Create Game</Button>
                     </div>
                 </div>
             </section>

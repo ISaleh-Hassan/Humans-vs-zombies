@@ -1,16 +1,25 @@
 import React, { Component, useEffect, useState } from 'react';
+import { CreateSquadCheckin } from '../../utils/squadCheckinStorage';
 import { UpdateSquadMember } from '../../utils/SquadMemberStorage';
-import GameMenu from '../StylingComponents/GameMenu';
 import Header from '../StylingComponents/Header';
-import NavBar from '../StylingComponents/NavBar';
+import { Button } from 'react-bootstrap';
 
 const SquadDetail = ({ history }) => {
+
+    const BUTTON_STYLES = {
+        width: '100%',
+        height: '40px',
+        margin: '2px',
+        padding: '1px'
+    }
+
     let gameId = localStorage.getItem('Game ID');
     let squadId = localStorage.getItem('Squad ID');
     let userId = localStorage.getItem('User ID');
     let playerId = localStorage.getItem('Player ID');
     let squadMemberId = localStorage.getItem('SquadMember ID');
     let squadRank = localStorage.getItem('Squad Rank');
+    let dateObject = new Date();
 
     const [squadMembers, setSquadMembers] = useState([]);
 
@@ -35,29 +44,26 @@ const SquadDetail = ({ history }) => {
         }
         setSquadMembers(body);
     }
-
-    // The below function doesn't work as is, but should be implemented instead of the one above
-    // async function fetchSquadMembers() {
-    //     const response = await (await fetch('/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId)).json();
-    //     let body;
-    //     if (response.status === 200) {
-    //         body = response.json();
-    //     } else {
-    //         body = [];
-    //     }
-    //     setSquadMembers(body);
-    // }
+    
 
     function getLocation() {
+        let lng = localStorage.getItem("Squad Lng: ")
+        let lat = localStorage.getItem("Squad Lat: ")
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
         }
+        CreateSquadCheckin(gameId, squadId, squadMemberId, dateObject, lng, lat)
+        
     }
 
     function showPosition(position) {
+        let squadLng = position.coords.longitude.toFixed(4);
+        let squadLat = position.coords.latitude.toFixed(4);
         let currentPosition = document.getElementById("current-location");
-        currentPosition.innerHTML = "Latitude: " + position.coords.latitude +
-            "<br>Longitude: " + position.coords.longitude;
+        currentPosition.innerHTML = "Longitude: " + squadLng +
+            "<br>Latitude: " + squadLat;
+        localStorage.setItem("Squad Lng: ", squadLng)
+        localStorage.setItem("Squad Lat: ", squadLat)
     }
 
     const [squad, setSquad] = useState([]);
@@ -107,6 +113,15 @@ const SquadDetail = ({ history }) => {
     }
 
 
+    function handleAlive() {
+        if (squadMembers.alive === true) {
+            return 'Alive';
+        } else {
+            return 'Dead';
+        }
+    }
+
+
     async function handleLeaveSquad() {
         let response = await UpdateSquadMember(squadMemberId, null);
         if (response !== null) {
@@ -135,10 +150,10 @@ const SquadDetail = ({ history }) => {
             localStorage.setItem('Squad Rank', 'null');
             history.push('/squads');
         } else {
-            alert("You must be a leader to disband the squad.")
+            alert("You do not have permission to disband the squad.")
         }
     }
-    
+
 
     if (squadMemberId === 'null' || squadMemberId === 'undefined') {
         return (
@@ -175,7 +190,7 @@ const SquadDetail = ({ history }) => {
                                 {squadMembers.map((s) =>
                                     <tr>
                                         <td>{s.username}</td>
-                                        <td>{s.alive.toString()}</td>
+                                        <td>{handleAlive(s.alive.toString())}</td>
                                         <td>{s.squadRank}</td>
                                     </tr>
                                 )}
@@ -183,12 +198,10 @@ const SquadDetail = ({ history }) => {
                         </table>
                         <br />
 
-                        <button onClick={getLocation}>Mark location</button>
+                        <Button variant="dark" style={BUTTON_STYLES} onClick={getLocation}>Mark location</Button>
                         <p id="current-location"></p>
-                        <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
-
-                        <br />
-                        <button type="button" onClick={() => handleDisbandSquad()}>Disband Squad (only available to the leader)</button>
+                        <Button type="button" variant="dark" style={BUTTON_STYLES} onClick={() => handleLeaveSquad()}>Leave Squad</Button>
+                        <Button type="button" variant="dark" style={BUTTON_STYLES} disabled={squadRank !== 'LEADER'} onClick={() => handleDisbandSquad()}>Disband Squad</Button>
                     </div>
                 </section>
             </div>

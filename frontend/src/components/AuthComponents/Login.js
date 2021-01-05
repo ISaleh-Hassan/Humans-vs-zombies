@@ -5,10 +5,17 @@ import { AuthContext } from "../../utils/Auth";
 import { Link } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
 import { loginUser } from "../../utils/dbstorage.js";
-import Phone from "./Phone.js";
 import HeaderOutside from "../StylingComponents/HeaderOutside";
+import { Button } from 'react-bootstrap';
 
 const Login = ({ history }) => {
+
+    const BUTTON_STYLES = {
+        width: '120px',
+        height: '40px',
+        margin: '2px',
+        padding: '1px'
+    }
 
     const handleLogin =
         async event => {
@@ -55,9 +62,9 @@ const Login = ({ history }) => {
                             <Form.Label>Password: </Form.Label>
                             <Form.Control name="password" type="password" placeholder="Password" required />
                         </Form.Group>
-                        <button type="submit">Log in</button>
+                        <Button variant="dark" style={BUTTON_STYLES} type="submit">Log in</Button>
                         <Link to="/login">
-                            <button>Cancel</button>
+                            <Button variant="danger" style={BUTTON_STYLES}>Cancel</Button>
                         </Link>
                     </Form>
                     <Link to="/register">Don't have an account? Register here.</Link>

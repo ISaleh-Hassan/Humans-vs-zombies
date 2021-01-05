@@ -3,11 +3,11 @@ img {
     width: 60px;
     float: left;
     margin: 10px;
-    margin-right: 20px;
+    /* margin-right: 20px; */
 }
 
 #gameTitle {
-    font-size: 24px;
+    font-size: 20px;
     float: left;
     line-height: 80px;
     font-weight: bold;
@@ -15,24 +15,18 @@ img {
 
 #gameMenu {
     float: left;
-    height: 60px;
-    width: 60px;
-    background-color: rgb(221, 221, 221);
     margin: 10px;
-    margin-left: 22px;
-    border-width: 2px;
-    border-color: rgb(46, 46, 46);
-    border-style: solid;
-    border-radius: 12px;
+    margin-left: 15px;
+    line-height: 54px;
 }
 
-#menuSymbol {
+/* #menuSymbol {
     font-size: 60px;
     line-height: 40px;
     text-align: center;
     color: rgb(46, 46, 46);
     font-weight: lighter;
-}
+} */
 
 #headerContainer {
     height: 84px;

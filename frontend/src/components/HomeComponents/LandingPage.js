@@ -4,8 +4,8 @@ import { Button } from 'react-bootstrap';
 import { FetchGame } from '../../utils/GameStorage';
 import { FetchPlayer } from '../../utils/PlayerStorage';
 import { FetchSquadMember } from '../../utils/SquadMemberStorage';
-import GameMenu from '../StylingComponents/GameMenu';
 import HeaderOutside from '../StylingComponents/HeaderOutside';
+import { Link } from 'react-router-dom';
 
 const LandingPage = (props) => {
 
@@ -54,7 +54,19 @@ const LandingPage = (props) => {
         props.history.push('/choosefaction');
     };
 
-    // Need to remove the game id from the current player in the database as well
+
+    // The styling below works when the page first loads, but if the page is reloaded it crashes...
+    let gameStartTime = gameDetails.startTime;
+    // gameStartTime = gameStartTime.replace('T', ' ');
+    // gameStartTime = gameStartTime.substring(0, gameStartTime.lastIndexOf('.'));
+
+    let gameEndTime = gameDetails.endTime;
+    // gameEndTime = gameEndTime.replace('T', ' ');
+    // gameEndTime = gameEndTime.substring(0, gameEndTime.lastIndexOf('.'));
+    
+
+    
+    // Need to remove the game id from the current player in the database as well?
     const handleLeaveGame = () => {
         localStorage.removeItem('Game ID');
         localStorage.removeItem('Player ID');
@@ -65,6 +77,12 @@ const LandingPage = (props) => {
         props.history.push('/currentgames');
     };
 
+    const BUTTON_STYLES = {
+    width: '150px',
+    height: '40px',
+    margin: '2px',
+    padding: '1px'
+    }
 
     return (
         <div>
@@ -78,10 +96,9 @@ const LandingPage = (props) => {
                             <h3>Description: </h3>
                             <p> {gameDetails.description} </p>
                             <br />
-                            <h4>Start Time: {gameDetails.startTime}
-                                <br />
-                            End Time: {gameDetails.endTime}
-                            </h4>
+                            <h4>Start Time: {gameStartTime}</h4>
+                            <br />
+                            <h4>End Time: {gameEndTime}</h4>
                             <br />
                         </div>
                     </div>
@@ -89,10 +106,14 @@ const LandingPage = (props) => {
                     <div>
                         <span>
                             {hasJoined ?
-                                <Button variant="danger" onClick={handleLeaveGame}>Leave Game</Button> :
-                                <Button variant="success" onClick={handleJoinGame}>Join Game</Button>
+                                <>
+                                <Button variant="danger" style={BUTTON_STYLES} onClick={handleLeaveGame}>Leave Game</Button>
+                                </> :
+                                <>
+                                <Button variant="success" style={BUTTON_STYLES} onClick={handleJoinGame}>Join Game</Button>
+                                </>
                             }
-                            <Button variant="secondary" onClick={handleLeaveGame}>Go Back</Button>
+                            <Link to="/currentgames"><Button variant="secondary" style={BUTTON_STYLES}>Go Back</Button></Link>
                         </span>
                     </div>
 
