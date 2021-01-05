@@ -31,16 +31,17 @@ class MainMap extends Component {
       draggable: true
     });
 
-    let missions = FetchAllMissions();
-    let squadCheckins = FetchAllSquadCheckin();
-    let kills = FetchAllKills();
+    // let missions = FetchAllMissions();
+    // let squadCheckins = FetchAllSquadCheckin();
+    // let kills = FetchAllKills();
 
     let faction = localStorage.getItem("Faction")
     let user = localStorage.getItem("Username")
 
-    missions
-      .then(response =>
-        response.map((m) => {
+    async function fetchMissions() {
+      let missions = await FetchAllMissions();
+      if (missions != null) {
+        missions.map((m) => {
 
           let mission = document.createElement('div');
           mission.className = 'mission';
@@ -53,42 +54,58 @@ class MainMap extends Component {
             missionMarker
               .setLngLat([m.missionPoint.x, m.missionPoint.y]).setPopup(popup).addTo(map)
           }
-        })
-      )
+        }
+        )
 
-    squadCheckins
-      .then(response =>
-        response.map((sq) => {
+      }
+    }
 
-          let squadCheckin = document.createElement('div');
-          squadCheckin.className = 'squad';
-          let squadCheckinMarker = new mapboxgl.Marker(squadCheckin);
+    async function fetchSquadCheckins() {
+      let squadCheckins = await FetchAllSquadCheckin();
+      if (squadCheckins != null) {
+        squadCheckins
+          .map((sq) => {
 
-          let popup = new mapboxgl.Popup({ offset: 25 })
-            .setText('Hello, ' + user);
+            let squadCheckin = document.createElement('div');
+            squadCheckin.className = 'squad';
+            let squadCheckinMarker = new mapboxgl.Marker(squadCheckin);
 
-          if (sq.position !== null && sq.squadId !== null || sq.squadId !== undefined) {
-            squadCheckinMarker
-              .setLngLat([sq.position.x, sq.position.y]).setPopup(popup).addTo(map)
+            let popup = new mapboxgl.Popup({ offset: 25 })
+              .setText('Hello, ' + user);
+
+            if (sq.position !== null && sq.squadId !== null || sq.squadId !== undefined) {
+              squadCheckinMarker
+                .setLngLat([sq.position.x, sq.position.y]).setPopup(popup).addTo(map)
+            }
           }
-        })
-      )
+          )
+      }
+    }
 
-    kills
-      .then(response =>
-        response.map((k) => {
+    async function fetchKills() {
+      let kills = await FetchAllKills();
+      if (kills != null) {
+        kills
+          .map((k) => {
 
-          let kill = document.createElement('div');
-          kill.className = 'gravestone';
-          let killMarker = new mapboxgl.Marker(kill);
+            let kill = document.createElement('div');
+            kill.className = 'gravestone';
+            let killMarker = new mapboxgl.Marker(kill);
 
-          let popup = new mapboxgl.Popup({ offset: 25 })
-            .setText('Description: ' + k.description + '\nTime of Death: ' + k.timeOfDeath.replace('T', ' ').substring(0, k.timeOfDeath.lastIndexOf('.')));
+            let popup = new mapboxgl.Popup({ offset: 25 })
+              .setText('Description: ' + k.description + '\nTime of Death: ' + k.timeOfDeath.replace('T', ' ').substring(0, k.timeOfDeath.lastIndexOf('.')));
 
             killMarker
               .setLngLat([k.position.x, k.position.y]).setPopup(popup).addTo(map)
-        })
-      )
+          }
+          )
+
+      }
+    }
+
+    fetchMissions();
+    fetchSquadCheckins();
+    fetchKills();
 
     function onDragEnd() {
       let lngLat = marker.getLngLat();
