@@ -33,9 +33,9 @@ const EditGame = (props) => {
   }, [gameObject]);
 
   async function fetchAllGames() {
-    let allGames = await FetchAllGames();
-    if (allGames !== null) {
-      setAllGames(allGames);
+    let response = await FetchAllGames();
+    if (response !== null) {
+      setAllGames(response);
     } else {
       alert('Failed to fetch games');
       setAllGames([]);
@@ -157,7 +157,6 @@ const EditGame = (props) => {
       if (obj.hasOwnProperty(prop))
         return false;
     }
-
     return true;
   }
   return (
