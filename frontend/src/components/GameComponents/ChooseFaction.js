@@ -33,7 +33,6 @@ const ChooseFaction = (props) => {
                     <button type="button" onClick={() => joinHumans()}>Humans</button>
                     <button type="button" onClick={() => joinZombies()}>Zombies</button>
                 </div>
-                }
             </section>
         </>
     );
