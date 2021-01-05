@@ -63,9 +63,6 @@ const Login = ({ history }) => {
                             <Form.Control name="password" type="password" placeholder="Password" required />
                         </Form.Group>
                         <Button variant="dark" style={BUTTON_STYLES} type="submit">Log in</Button>
-                        <Link to="/login">
-                            <Button variant="danger" style={BUTTON_STYLES}>Cancel</Button>
-                        </Link>
                     </Form>
                     <Link to="/register">Don't have an account? Register here.</Link>
                     <p>Or</p>

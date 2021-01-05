@@ -64,7 +64,6 @@ const SquadCreate = ({ history }) => {
         event.preventDefault();
         const token = localStorage.getItem('jwt');
         const { squadName, squadMemberAmount } = event.target.elements;
-        console.log(squadName.value, squadMemberAmount.value)
         let createSquadRepsonse = await storeSquadDB(squadName.value, currentPlayer.faction, squadMemberAmount.value);
 
         if (createSquadRepsonse === 201) {
@@ -76,7 +75,8 @@ const SquadCreate = ({ history }) => {
             });
             let newSquadId = localStorage.getItem('Squad ID');
             if (squadMemberExists.status === 200) {
-                let response = await fetch('/api/update/squadmember/' + hasSquadMemberObject, {
+                let squadMemberBody = await squadMemberExists.json();
+                let response = await fetch('/api/update/squadmember/' + squadMemberBody.squadMemberId, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -94,8 +94,8 @@ const SquadCreate = ({ history }) => {
                 });
                 let body = await response.json();
                 localStorage.setItem('SquadMember ID', body.squadMemberId);
-
-                history.push('/squaddetails/');
+                localStorage.setItem('Squad Rank', 'LEADER');
+                history.push('/squaddetails');
             } else if (squadMemberExists.status === 404) {
                 let newSquadId = localStorage.getItem('Squad ID');
                 let response = await fetch('/api/create/squadmember/' + gameId + '/' + newSquadId + '/' + playerId, {
@@ -115,6 +115,7 @@ const SquadCreate = ({ history }) => {
                     let body = await response.json();
                     localStorage.setItem('SquadMember ID', body.squadMemberId);
                     localStorage.setItem('Squad Rank', 'LEADER');
+                    history.push('/squaddetails');
                 } else {
                     alert("Failed to create squad member!")
                 }
@@ -143,9 +144,7 @@ const SquadCreate = ({ history }) => {
                         <Header />
                         <div className="container">
                             <div id="squadCreateForm">
-                                <h2>Create Squad
-                                {console.log(currentPlayer)}
-                                </h2>
+                                <h2>Create Squad</h2>
                                 <Form onSubmit={handleCreateSquad}>
                                     <Form.Group controlId="formSquadName">
                                         <Form.Control id="squadName" name="squadName" type="text" placeholder="Squad Name" required></Form.Control>
@@ -156,7 +155,7 @@ const SquadCreate = ({ history }) => {
                                     </Form.Group>
 
                                     <Form.Group controlId="formSquadFaction">
-                                        <Form.Control name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
+                                        <Form.Control disabled={true} name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
                                     </Form.Group>
                                     <Button variant="dark" style={BUTTON_STYLES} type="submit">Create</Button>
                                     <Link to="squads">

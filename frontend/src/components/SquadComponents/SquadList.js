@@ -124,10 +124,6 @@ const SquadList = ({ history }) => {
                 <div className="container">
                     <Header />
                     <h1>Active Squads</h1>
-                    <div>
-                        {console.log("This is the current player: \n" + currentPlayer)}
-                        {console.log("This is the current squad member: \n" + squadMember)}
-                    </div>
 
                     <table>
                         <thead>
@@ -140,7 +136,7 @@ const SquadList = ({ history }) => {
                         </thead>
                         <tbody>
                             {squads.map((s) =>
-                                <tr>
+                                <tr key={s.squadName}>
                                     <td>{s.squadName}</td>
                                     <td>{s.numberOfRegisteredMembers} / {s.maxNumberOfMembers} ({s.numberOfDeadMembers})</td>
                                     <td>{s.faction}</td>
