@@ -22,7 +22,7 @@ const Home = (props) => {
   const userType = localStorage.getItem('Usertype');
 
   function handleAdminAccess() {
-    if (userType === 'Admin') {
+    if (userType === 'ADMINISTRATOR') {
         props.history.push('/admin')
     } else {
         alert('You do not have access to the admin menu')
