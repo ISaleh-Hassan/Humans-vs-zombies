@@ -74,15 +74,12 @@ public class MissionController {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println(authentication);
             UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
-            System.out.println(userDetails.getUsername());
             Player player = playerRepository.findDistinctByGameAndUserAccount(new Game(gameId), new UserAccount(userDetails.getId()));
             if (player == null) {
                 System.out.println("ERROR: player was null when trying to fetch missions based on gameId and faction");
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
-            System.out.println(player.getFaction());
             ArrayList<MissionObject> missionObjects = null;
             ArrayList<Mission> missions = missionRepository.findByGame(new Game(gameId));
             if (missions.size() > 0) {
