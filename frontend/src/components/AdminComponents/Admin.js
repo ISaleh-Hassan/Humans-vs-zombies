@@ -73,7 +73,7 @@ const Admin = () => {
                         <Button variant="dark" style={BUTTON_STYLES}>Create Mission Marker</Button>
                     </Link>
 
-                    <Link to="#">
+                    <Link to="/edit/missionmarker">
                         <Button variant="dark" style={BUTTON_STYLES}>Edit Mission Marker</Button>
                     </Link>
                     </div>

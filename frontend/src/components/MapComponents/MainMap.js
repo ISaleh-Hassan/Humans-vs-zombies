@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import { FetchAllMissions } from '../../utils/missionStorage';
 import { FetchAllSquadCheckin } from '../../utils/squadCheckinStorage';
 import { FetchAllKills } from '../../utils/KillStorage';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 //mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNramlpcXF6aTB5dHMydHFveHE0cDdleXMifQ.cOdCvVE4RuyE_0SRtC-1ww'
@@ -33,10 +34,11 @@ class MainMap extends Component {
 
     let faction = localStorage.getItem("Faction")
     let user = localStorage.getItem("Username")
+    let userType = localStorage.getItem("Usertype")
 
     async function fetchMissions() {
       let missions = await FetchAllMissions();
-      if (missions != null) {
+      if (missions != null && userType != null) {
         missions.map((m) => {
 
           let mission = document.createElement('div');
@@ -50,15 +52,20 @@ class MainMap extends Component {
             missionMarker
               .setLngLat([m.missionPoint.x, m.missionPoint.y]).setPopup(popup).addTo(map)
           }
+          if (m.missionPoint !== null && userType === 'ADMINISTRATOR') {
+            missionMarker
+              .setLngLat([m.missionPoint.x, m.missionPoint.y]).setPopup(popup).addTo(map)
+          }
         }
         )
-
+      } else {
+        console.log("Error!")
       }
     }
 
     async function fetchSquadCheckins() {
       let squadCheckins = await FetchAllSquadCheckin();
-      if (squadCheckins != null) {
+      if (squadCheckins != null && userType != null) {
         squadCheckins
           .map((sq) => {
 
@@ -73,14 +80,20 @@ class MainMap extends Component {
               squadCheckinMarker
                 .setLngLat([sq.position.x, sq.position.y]).setPopup(popup).addTo(map)
             }
+            if (userType === 'ADMINISTRATOR' && sq.position !== null && sq.squadId !== null || sq.squadId !== undefined) {
+              squadCheckinMarker
+                .setLngLat([sq.position.x, sq.position.y]).setPopup(popup).addTo(map)
+            }
           }
           )
+      } else {
+        console.log("Error!")
       }
     }
 
     async function fetchKills() {
       let kills = await FetchAllKills();
-      if (kills != null) {
+      if (kills != null && userType != null) {
         kills
           .map((k) => {
 
@@ -95,7 +108,8 @@ class MainMap extends Component {
               .setLngLat([k.position.x, k.position.y]).setPopup(popup).addTo(map)
           }
           )
-
+      } else {
+        console.log("Error!")
       }
     }
 
@@ -140,8 +154,8 @@ class MainMap extends Component {
   render() {
     return (
       <>
-        <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
-        <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js'></script>
         <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
         <label>Marker Location: </label>
         <p id="coordinates"></p>
