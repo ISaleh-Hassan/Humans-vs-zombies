@@ -6,6 +6,13 @@ import { FetchPlayer } from '../../utils/PlayerStorage';
 
 const Bite = ({ history }) => {
 
+    const BUTTON_STYLES = {
+        width: '150px',
+        height: '40px',
+        margin: '2px',
+        padding: '1px'
+    }
+
     let gameId = localStorage.getItem('Game ID');
     let userId = localStorage.getItem('User ID');
     let latitude = localStorage.getItem('Latitude');
@@ -185,9 +192,7 @@ const Bite = ({ history }) => {
         }
     }
 
-    
-    // Need to add a gravestone marker to the map
-    // Perhaps that is handled in the maps file?
+
     async function handleKill() {
         console.log('The player was killed');
         createKillObject();
@@ -233,7 +238,7 @@ const Bite = ({ history }) => {
                     <Form id="biteCodeForm">
                         <Form.Group>
                             <Form.Control onChange={onBiteCodeChange} id="biteCode" type="text" placeholder="Bite Code" required></Form.Control>
-                            <Button id="validation" type="button" variant="dark" onClick={masterValidation}>Validate Bite Code</Button>
+                            <Button id="validation" type="button" variant="dark" style={BUTTON_STYLES} onClick={masterValidation}>Validate Bite Code</Button>
                         </Form.Group>
                         <br/>
                         <Form.Control id="coordinates" as="textarea" rows={3} value={currentCoordinates} required></Form.Control>
@@ -241,8 +246,8 @@ const Bite = ({ history }) => {
                         <Form.Control onChange={onVictimDescriptionChange} id="victimDescription" name="victimDescription" placeholder="Enter victim description..." as="textarea" rows={3}></Form.Control>
                     </Form>
                     <br/>
-                    <Button type="submit" variant="dark" disabled={buttonStatus} onClick={handleZombie}>Turn into ZOMBIE</Button>
-                    <Button type="submit" variant="dark" disabled={buttonStatus} onClick={handleKill}>Kill victim</Button>
+                    <Button type="submit" variant="dark" style={BUTTON_STYLES} disabled={buttonStatus} onClick={handleZombie}>Turn into ZOMBIE</Button>
+                    <Button type="submit" variant="dark" style={BUTTON_STYLES} disabled={buttonStatus} onClick={handleKill}>Kill victim</Button>
                 </div>
             </div>
         );

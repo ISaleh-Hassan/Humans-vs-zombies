@@ -30,7 +30,7 @@ const Admin = () => {
     };
 
 
-    if (currentUser.userType !== "ADMINISTRATOR") {
+    if (currentUser.userType === "PLAYER") {
         return (
             <div>
                 <div className="container">
@@ -40,7 +40,7 @@ const Admin = () => {
                 </div>
             </div>
         );
-    } else {
+    } else if (currentUser.userType === "ADMINISTRATOR") {
         return (
             <>
             <section className="home">
@@ -55,6 +55,15 @@ const Admin = () => {
                 </div>
             </section>
             </>
+        );
+    } else {
+        return (
+            <div>
+                <div className="container">
+                    <Header />
+                    <h3>***</h3>
+                </div>
+            </div>
         );
     }
 };

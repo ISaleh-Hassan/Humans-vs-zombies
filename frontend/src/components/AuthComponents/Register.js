@@ -6,8 +6,16 @@ import firebase from "../../utils/firebase";
 import Form from 'react-bootstrap/Form'
 import { AuthContext } from "../../utils/Auth";
 import HeaderOutside from "../StylingComponents/HeaderOutside";
+import { Button } from 'react-bootstrap';
 
 const Register = ({ history }) => {
+
+    const BUTTON_STYLES = {
+        width: '120px',
+        height: '40px',
+        margin: '2px',
+        padding: '1px'
+    }
 
     let [userType, setUserType] = useState("PLAYER");
 
@@ -88,9 +96,9 @@ const Register = ({ history }) => {
                         <Form.Group controlId="formAdminCheckbox">
                             <Form.Check type="checkbox" label="Register as admin?" onChange={handleCheckbox} />
                         </Form.Group>
-                        <button type="submit">Register</button>
+                        <Button variant="dark" style={BUTTON_STYLES} type="submit">Register</Button>
                         <Link to="/register">
-                            <button>Cancel</button>
+                            <Button variant="danger" style={BUTTON_STYLES}>Cancel</Button>
                         </Link>
                     </Form>
                     <Link to="/login">Already have an account? Log in here.</Link>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FetchPlayer } from '../../utils/PlayerStorage';
 import { CreateSquadMember, FetchSquadMember, UpdateSquadMember } from '../../utils/SquadMemberStorage';
 import Header from '../StylingComponents/Header';
+import { Button } from 'react-bootstrap';
 
 const SquadList = ({ history }) => {
     let gameId = localStorage.getItem('Game ID');
@@ -124,7 +125,7 @@ const SquadList = ({ history }) => {
                                     <td>{s.numberOfRegisteredMembers} / {s.maxNumberOfMembers} ({s.numberOfDeadMembers})</td>
                                     <td>{s.faction}</td>
                                     <td>
-                                        <button type="button" disabled={s.faction !== currentFaction || s.numberOfRegisteredMembers >= s.maxNumberOfMembers} onClick={() => handleJoinSquad(s.squadId)}>JOIN</button>
+                                        <Button type="button" variant="dark" disabled={s.faction !== currentFaction || s.numberOfRegisteredMembers >= s.maxNumberOfMembers} onClick={() => handleJoinSquad(s.squadId)}>JOIN</Button>
                                     </td>
                                 </tr>
                             )}
@@ -133,7 +134,7 @@ const SquadList = ({ history }) => {
 
                     <br />
                     <Link to="createsquad">
-                        <button>Create New Squad</button>
+                        <Button variant="dark">Create New Squad</Button>
                     </Link>
                 </div>
             </section>

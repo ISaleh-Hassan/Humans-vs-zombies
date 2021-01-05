@@ -4,8 +4,16 @@ import Form from 'react-bootstrap/Form'
 import Header from '../StylingComponents/Header';
 import { storeSquadDB } from '../../utils/squadstorage';
 import { FetchPlayer } from '../../utils/PlayerStorage';
+import { Button } from 'react-bootstrap';
 
 const SquadCreate = ({ history }) => {
+
+    const BUTTON_STYLES = {
+        width: '120px',
+        height: '40px',
+        margin: '2px',
+        padding: '1px'
+    }
 
     let gameId = localStorage.getItem('Game ID');
     let userId = localStorage.getItem('User ID');
@@ -113,9 +121,9 @@ const SquadCreate = ({ history }) => {
                         <Form.Group controlId="formSquadFaction">
                             <Form.Control name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
                         </Form.Group>
-                        <button type="submit">Create</button>
+                        <Button variant="dark" style={BUTTON_STYLES} type="submit">Create</Button>
                         <Link to="squads">
-                            <button>Cancel</button>
+                            <Button variant="danger" style={BUTTON_STYLES}>Cancel</Button>
                         </Link>
                     </Form>
                 </div>
