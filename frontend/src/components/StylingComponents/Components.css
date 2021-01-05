@@ -113,9 +113,18 @@ table {
   cursor: pointer;
 }
 
+.squad {
+  background-image: url('../MapComponents/MapMarkers/user.png');
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 .coordinates, #current-position {
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
+  /* background: rgba(0, 0, 0, 0.5);
+  color: #fff; */
   bottom: 40px;
   left: 10px;
   padding: 5px 10px;

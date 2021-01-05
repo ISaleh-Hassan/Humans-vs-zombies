@@ -6,6 +6,7 @@ import { FetchPlayer } from '../../utils/PlayerStorage';
 import { FetchSquadMember } from '../../utils/SquadMemberStorage';
 import GameMenu from '../StylingComponents/GameMenu';
 import HeaderOutside from '../StylingComponents/HeaderOutside';
+import { Link } from 'react-router-dom';
 
 const LandingPage = (props) => {
 
@@ -100,10 +101,14 @@ const LandingPage = (props) => {
                     <div>
                         <span>
                             {hasJoined ?
-                                <Button variant="danger" onClick={handleLeaveGame}>Leave Game</Button> :
+                                <>
+                                <Button variant="danger" onClick={handleLeaveGame}>Leave Game</Button>
+                                </> :
+                                <>
                                 <Button variant="success" onClick={handleJoinGame}>Join Game</Button>
+                                </>
                             }
-                            <Button variant="secondary" onClick={handleLeaveGame}>Go Back</Button>
+                            <Link to="/currentgames"><Button variant="secondary">Go Back</Button></Link>
                         </span>
                     </div>
 

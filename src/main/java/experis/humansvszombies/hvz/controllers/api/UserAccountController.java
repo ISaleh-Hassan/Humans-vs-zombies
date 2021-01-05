@@ -172,10 +172,27 @@ public class UserAccountController {
     @PostMapping("/api/useraccount/login")
     public ResponseEntity<UserAccountObject> loginUser(@RequestBody UserAccount userAccount) {
         try {
+            
+        UserAccountObject userInfo = null;
+        HttpStatus status = HttpStatus.BAD_REQUEST;
             if (userAccount != null) {
                 UserAccount user = userAccountRepository.findDistinctByEmail(userAccount.getEmail());
                 if (user == null) {
-                    throw new RuntimeException();
+                    UserAccount userPhone = userAccountRepository.findDistinctByPhoneNumber(userAccount.getPhoneNumber());
+                    //Compare supplied phone number to account phone number and return SUCCESS message if login information is correct.
+                    if (userPhone.getPhoneNumber().equals(userAccount.getPhoneNumber())) {
+                        status = HttpStatus.OK;
+                        userInfo = new UserAccountObject(
+                                userPhone.getUserAccountId(),
+                                null,
+                                null,
+                                userPhone.getUserType(),
+                                userPhone.getUsername(),
+                                null,
+                                null,
+                                userPhone.getPhoneNumber()
+                        );
+                    }
                 }
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(user.getUsername(), userAccount.getPassword()));

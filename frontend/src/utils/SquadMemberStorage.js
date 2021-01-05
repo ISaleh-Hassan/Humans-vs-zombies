@@ -1,4 +1,5 @@
 import { getBaseUrl } from "./baseUrl";
+const token = localStorage.getItem('jwt');
 
 export async function FetchSquadMember(gameId, playerId) {
     const token = localStorage.getItem('jwt');

@@ -1,4 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
+import { CreateSquadCheckin } from '../../utils/squadCheckinStorage';
 import { UpdateSquadMember } from '../../utils/SquadMemberStorage';
 import Header from '../StylingComponents/Header';
 
@@ -9,6 +10,7 @@ const SquadDetail = ({ history }) => {
     let playerId = localStorage.getItem('Player ID');
     let squadMemberId = localStorage.getItem('SquadMember ID');
     let squadRank = localStorage.getItem('Squad Rank');
+    let dateObject = new Date();
 
     const [squadMembers, setSquadMembers] = useState([]);
 
@@ -36,15 +38,23 @@ const SquadDetail = ({ history }) => {
     
 
     function getLocation() {
+        let lng = localStorage.getItem("Squad Lng: ")
+        let lat = localStorage.getItem("Squad Lat: ")
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
         }
+        CreateSquadCheckin(gameId, squadId, squadMemberId, dateObject, lng, lat)
+        
     }
 
     function showPosition(position) {
+        let squadLng = position.coords.longitude.toFixed(4);
+        let squadLat = position.coords.latitude.toFixed(4);
         let currentPosition = document.getElementById("current-location");
-        currentPosition.innerHTML = "Latitude: " + position.coords.latitude +
-            "<br>Longitude: " + position.coords.longitude;
+        currentPosition.innerHTML = "Longitude: " + squadLng +
+            "<br>Latitude: " + squadLat;
+        localStorage.setItem("Squad Lng: ", squadLng)
+        localStorage.setItem("Squad Lat: ", squadLat)
     }
 
     const [squad, setSquad] = useState([]);
@@ -134,7 +144,7 @@ const SquadDetail = ({ history }) => {
             alert("You do not have permission to disband the squad.")
         }
     }
-    
+
 
     if (squadMemberId === 'null' || squadMemberId === 'undefined') {
         return (

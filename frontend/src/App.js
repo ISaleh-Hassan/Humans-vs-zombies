@@ -11,13 +11,14 @@ import EditGame from './components/AdminComponents/EditGame'
 import PlayerState from './components/AdminComponents/PlayerState'
 import Bite from './components/GameComponents/Bite'
 import CreateMissionMarker from './components/AdminComponents/CreateMissionMarker'
+import EditMissionMarker from './components/AdminComponents/EditMissionMarker'
 import BiteHuman from './components/GameComponents/BiteHuman'
 import BiteZombie from './components/GameComponents/BiteZombie'
 import ChooseFaction from './components/GameComponents/ChooseFaction'
 import CurrentGames from './components/GameComponents/CurrentGames'
 import Home from './components/HomeComponents/Home'
 import LandingPage from './components/HomeComponents/LandingPage'
-import MainMap from './components/MapComponents/MainMap'
+import GameMap from './components/GameComponents/GameMap'
 import SquadCreate from './components/SquadComponents/SquadCreate'
 import SquadDetail from './components/SquadComponents/SquadDetail'
 import SquadList from './components/SquadComponents/SquadList'
@@ -25,6 +26,7 @@ import NotFound from './components/StylingComponents/NotFound'
 import { AuthProvider } from "./utils/Auth";
 import './components/StylingComponents/Components.css'
 import AdminCreateGame from './components/AdminComponents/AdminCreateGame'
+import Missions from "./components/GameComponents/Missions";
 import Chat from "./components/ChatMessageComponents/Chat";
 
 const App = () => {
@@ -47,11 +49,13 @@ const App = () => {
           <PrivateRoute exact path="/currentgames" component={CurrentGames} />
           <PrivateRoute exact path="/admin" component={Admin} />
           <PrivateRoute exact path="/playerstate" component={PlayerState} />
-          <PrivateRoute exact path="/map" component={MainMap} />
+          <PrivateRoute exact path="/map" component={GameMap} />
           <PrivateRoute exact path="/choosefaction" component={ChooseFaction} />
           <PrivateRoute exact path="/creategame" component={AdminCreateGame} />
           <PrivateRoute exact path="/create/missionmarker" component={CreateMissionMarker} />
+          <PrivateRoute exact path="/edit/missionmarker" component={EditMissionMarker} />
           <PrivateRoute exact path="/editgame" component={EditGame} />
+          <PrivateRoute exact path="/missions" component={Missions} />
           <PrivateRoute exact path="/chat" component={Chat} />
           <Route path='*'>
             <NotFound header='Page not found' message='The page you requested does not exist' />
