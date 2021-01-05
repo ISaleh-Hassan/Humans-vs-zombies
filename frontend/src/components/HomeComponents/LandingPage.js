@@ -5,7 +5,6 @@ import { FetchGame } from '../../utils/GameStorage';
 import { FetchPlayer } from '../../utils/PlayerStorage';
 import { FetchSquadMember } from '../../utils/SquadMemberStorage';
 import HeaderOutside from '../StylingComponents/HeaderOutside';
-import { Link } from 'react-router-dom';
 
 const LandingPage = (props) => {
 
@@ -75,18 +74,6 @@ const LandingPage = (props) => {
     const handleJoinGame = () => {
         props.history.push('/choosefaction');
     };
-
-
-    // The styling below works when the page first loads, but if the page is reloaded it crashes...
-    let gameStartTime = gameDetails.startTime;
-    // gameStartTime = gameStartTime.replace('T', ' ');
-    // gameStartTime = gameStartTime.substring(0, gameStartTime.lastIndexOf('.'));
-
-    let gameEndTime = gameDetails.endTime;
-    // gameEndTime = gameEndTime.replace('T', ' ');
-    // gameEndTime = gameEndTime.substring(0, gameEndTime.lastIndexOf('.'));
-    
-
     
     // Need to remove the game id from the current player in the database as well?
     const handleLeaveGame = () => {
@@ -118,9 +105,9 @@ const LandingPage = (props) => {
                             <h3>Description: </h3>
                             <p> {gameDetails.description} </p>
                             <br />
-                            <h4>Start Time: {gameStartTime}</h4>
+                            <h4>Start Time: {gameDetails.stringStart}</h4>
                             <br />
-                            <h4>End Time: {gameEndTime}</h4>
+                            <h4>End Time: {gameDetails.stringEnd}</h4>
                             <br />
                         </div>
                     </div>
@@ -129,7 +116,7 @@ const LandingPage = (props) => {
                         <span>
                             {hasJoined ?
                                 <>
-                                <Button variant="danger" style={BUTTON_STYLES} onClick={handleLeaveGame}>Leave Game</Button>
+                                <Button disabled="true" variant="success" style={BUTTON_STYLES} >Already Joined</Button>
                                 </> :
                                 <>
                                 <Button variant="success" style={BUTTON_STYLES} disabled={currentUser.userType === 'ADMINISTRATOR'} onClick={handleJoinGame}>Join Game</Button>

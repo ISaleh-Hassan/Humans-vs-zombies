@@ -12,7 +12,7 @@ const CurrentGames = (props) => {
         margin: '2px',
         padding: '1px'
     }
-
+    
     const [games, setGames] = useState([]);
     const [gameFilter, setGameFilter] = useState('ALL');
 
@@ -130,8 +130,9 @@ const CurrentGames = (props) => {
                     <br/>
                     <div>
                         <Button variant="dark" style={BUTTON_STYLES} onClick={() => props.history.push("/")}>Profile</Button>
-                        <Button variant="dark" style={BUTTON_STYLES} onClick={handleAdminAccess}>Admin</Button>
-                        <Button variant="dark" style={BUTTON_STYLES} onClick={handleAdminCreateGameAccess}>Create Game</Button>
+                        {currentUser.userType === 'ADMINISTRATOR' ? <Button variant="dark" style={BUTTON_STYLES} onClick={handleAdminAccess}>Admin</Button> : null}
+                        {currentUser.userType === 'ADMINISTRATOR' ? <Button variant="dark" style={BUTTON_STYLES} onClick={handleAdminCreateGameAccess}>Create Game</Button> : null }
+                        
                     </div>
                 </div>
             </section>

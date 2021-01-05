@@ -173,10 +173,12 @@ public class GameController {
         String start = null;
         if (game.getStartTime() != null) {
             start = game.getStartTime().toString();
+            start = start.substring(0, start.length() - 2);
         }
         String end = null; 
         if (game.getEndTime() != null) {
             end = game.getEndTime().toString();
+            end = end.substring(0, end.length() - 2);
         }
         GameObject gameObject = new GameObject(
             game.getGameId(),
