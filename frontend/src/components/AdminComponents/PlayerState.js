@@ -2,17 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from '../StylingComponents/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FetchAllPlayers, GetPlayerData, UpdatePlayer, DeletePlayer } from "../../utils/PlayerStorage";
+import { FetchAllPlayers, GetPlayerData, UpdatePlayer, DeletePlayer, FetchAllPlayersByGameId } from "../../utils/PlayerStorage";
+import { FetchAllGames } from "../../utils/GameStorage";
 import { Form, Button } from 'react-bootstrap';
 
 
 const PlayerState = (props) => {
   const [allPlayers, setAllPlayers] = useState([])
-  const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [playerObject, setPlayerObject] = useState({})
+  const [allGames, setAllGames] = useState([])
+  const [selectedPlayerId, setSelectedPlayerId] = useState(null);
+  const [selectedGameId, setSelectedGameId] = useState(null);
 
   useEffect(() => {
-    fetchAllPlayers();
+    fetchAllGames();
   }, []);
 
   useEffect(() => {
@@ -25,15 +28,34 @@ const PlayerState = (props) => {
   }, [selectedPlayerId]);
 
   useEffect(() => {
+    if (selectedGameId !== null) {
+      fetchAllPlayersByGameId()
+    }
+    else {
+      setPlayerObject({})
+    }
+  }, [selectedGameId]);
+
+  useEffect(() => {
 
   }, [playerObject]);
 
-  async function fetchAllPlayers() {
-    let response = await FetchAllPlayers();
+  async function fetchAllGames() {
+    let response = await FetchAllGames();
     if (response !== null) {
-      setAllPlayers(response);
+      setAllGames(response);
     } else {
-      alert('Failed to fetch players');
+      alert('Failed to fetch games');
+      setAllGames([]);
+    }
+  }
+
+  async function fetchAllPlayersByGameId() {
+    let response = await FetchAllPlayersByGameId(selectedGameId);
+    if (response !== null) {
+      setAllPlayers(response)
+    } else {
+      alert('Failed to fetch player by id');
       setAllPlayers([]);
     }
   }
@@ -48,7 +70,7 @@ const PlayerState = (props) => {
     }
   }
 
-  function cancelEditingPlayer(){
+  function cancelEditingPlayer() {
     props.history.push("/admin");
   }
 
@@ -138,25 +160,51 @@ const PlayerState = (props) => {
       setSelectedPlayerId(null);
     }
   }
+
+  function handleChangeGame(ev) {
+    let selectedGame = ev.target.value;
+    if (selectedGame !== "0") {
+      setSelectedGameId(selectedGame)
+    }
+    else {
+      setSelectedGameId(null);
+      setSelectedPlayerId(null)
+    }
+  }
   return (
     <>
       <Header />
       <section className="home">
         <div className="container">
           <h1>Edit Player State</h1>
+
           <Form.Group>
-            <Form.Label>Player ID</Form.Label>
             <Form.Control
-              onChange={handleChangePlayerToUpdate}
+              onChange={handleChangeGame}
               className="mb-4"
               as="select">
-              <option value="0">Select player...</option>
-              {allPlayers.map(player => (
-                <option key={player.playerId} value={player.playerId}>
-                  {player.playerId}
+              <option value="0">Select game...</option>
+              {allGames.filter(game => game.gameState !== 'COMPLETED').map(filteredGame => (
+                <option key={filteredGame.gameId} value={filteredGame.gameId}>
+                  {filteredGame.name}
                 </option>
               ))}
             </Form.Control>
+            {selectedGameId !== null ?
+              <>
+                <Form.Label>All players</Form.Label>
+                <Form.Control
+                  onChange={handleChangePlayerToUpdate}
+                  className="mb-2"
+                  as="select">
+                  <option value="0">Select player...</option>
+                  {allPlayers.map(player => (
+                    <option key={player.playerId} value={player.playerId}>
+                      {player.playerId}
+                    </option>
+                  ))}
+                </Form.Control>
+              </>:null}
           </Form.Group>
 
           {selectedPlayerId !== null && !isEmpty(playerObject) ?
@@ -164,7 +212,7 @@ const PlayerState = (props) => {
               <Form.Label>Faction</Form.Label>
               <Form.Control
                 as="select"
-                className="mb-4"
+                className="mb-2"
                 onChange={handleChangePlayerFaction}>
                 {playerObject.faction === 'HUMAN' ?
                   <>
@@ -187,7 +235,7 @@ const PlayerState = (props) => {
                 <>
                   <Form.Label>Is alive</Form.Label>
                   <Form.Control
-                    className="mb-4"
+                    className="mb-2"
                     onChange={handleChangePlayerIsAlive}
                     as="select">
                     {playerObject.alive ?
@@ -233,7 +281,7 @@ const PlayerState = (props) => {
                 : null}
             </div> : null
           }
-          {selectedPlayerId ?
+          {selectedPlayerId && selectedGameId ?
             <>
               <Button
                 onClick={editPlayer}

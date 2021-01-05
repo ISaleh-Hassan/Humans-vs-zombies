@@ -2,7 +2,7 @@ import { getBaseUrl } from "./baseUrl";
 
 export async function GetPlayerData(playerId) {
     const token = localStorage.getItem('jwt');
-    let url = getBaseUrl() + "fetch/player/" + playerId;
+    let url = "fetch/player/" + playerId;
     const response = await fetch(getBaseUrl() + url, {
         method: 'GET',
         headers: {
@@ -22,6 +22,24 @@ export async function FetchAllPlayers() {
     let url = getBaseUrl() + "fetch/player/all";
     const token = localStorage.getItem('jwt');
     const response = await fetch(getBaseUrl() + url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    })
+    if (response.status === 200) {
+        let body = await response.json();
+        return body;
+    } else {
+        return null;
+    }
+}
+
+export async function FetchAllPlayersByGameId(gameId) {
+    let url = getBaseUrl() + "fetch/player/game="+ gameId;
+    const token = localStorage.getItem('jwt');
+    const response = await fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -97,11 +115,13 @@ export async function UpdateGame(gameData) {
 }
 
 export async function UpdatePlayer(playerData) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "update/player/" + playerData.playerId;
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify(
             {
