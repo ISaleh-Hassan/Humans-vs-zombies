@@ -7,7 +7,6 @@ import { FetchAllKills } from '../../utils/KillStorage';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 //mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
-mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNramszdGZiaDJ5NGQzMnNjZnZscjV1YTIifQ.U_P4O-0Z-ao0svLTf0W4kQ'
 
 class MainMap extends Component {
   constructor(props) {
@@ -20,10 +19,12 @@ class MainMap extends Component {
   }
 
   componentDidMount() {
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNramszdGZiaDJ5NGQzMnNjZnZscjV1YTIifQ.U_P4O-0Z-ao0svLTf0W4kQ'
+
     let coordinates = document.getElementById('coordinates');
     const map = new mapboxgl.Map({
       container: this.mapContainer,
-      style: 'mapbox://styles/mapbox/streets-v11',
+      style: 'mapbox://styles/mapbox/outdoors-v11',
       center: [this.state.lng, this.state.lat],
       zoom: this.state.zoom
     });
@@ -156,7 +157,7 @@ class MainMap extends Component {
       <>
         <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
         <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js'></script>
-        <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
+        <div ref={el => this.mapContainer = el} className='mapbox-gl'></div>
         <label>Marker Location: </label>
         <p id="coordinates"></p>
         {/* <label>Current Location: </label> */}
