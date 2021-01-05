@@ -4,7 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import { FetchAllMissions } from '../../utils/missionStorage';
 import { FetchAllSquadCheckin } from '../../utils/squadCheckinStorage';
 import { FetchAllKills } from '../../utils/KillStorage';
-import { fetchUser } from '../../utils/dbstorage';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 //mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNramlpcXF6aTB5dHMydHFveHE0cDdleXMifQ.cOdCvVE4RuyE_0SRtC-1ww'
