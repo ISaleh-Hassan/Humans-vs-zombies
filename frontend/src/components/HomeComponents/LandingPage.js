@@ -113,7 +113,7 @@ const LandingPage = (props) => {
                                 <Button variant="success" style={BUTTON_STYLES} onClick={handleJoinGame}>Join Game</Button>
                                 </>
                             }
-                            <Link to="/currentgames"><Button variant="secondary" style={BUTTON_STYLES}>Go Back</Button></Link>
+                                <Button variant="secondary" style={BUTTON_STYLES} onClick={handleLeaveGame}>Go Back</Button>
                         </span>
                     </div>
 

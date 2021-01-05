@@ -126,7 +126,6 @@ const SquadDetail = ({ history }) => {
         let response = await UpdateSquadMember(squadMemberId, null);
         if (response !== null) {
             localStorage.setItem('Squad ID', response.squadId);
-            localStorage.setItem('SquadMember ID', null)
             history.push('/squads');
         } else {
             alert('Failed to leave squad.');
@@ -172,10 +171,7 @@ const SquadDetail = ({ history }) => {
                     <div className="container">
                         <Header />
 
-                        <h1>{squad.name}
-                            {console.log(squad)}
-                            {console.log(squadMembers)}
-                            {console.log(currentPlayer)}</h1>
+                        <h1>{squad.name}</h1>
                         <br />
 
                         <table>
@@ -188,7 +184,7 @@ const SquadDetail = ({ history }) => {
                             </thead>
                             <tbody>
                                 {squadMembers.map((s) =>
-                                    <tr>
+                                    <tr key={s.username}>
                                         <td>{s.username}</td>
                                         <td>{handleAlive(s.alive.toString())}</td>
                                         <td>{s.squadRank}</td>

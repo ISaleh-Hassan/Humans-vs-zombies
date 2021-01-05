@@ -187,7 +187,6 @@ const ChatMessage = props => {
     }
 
     function handleClickEnterToSendMessage(ev) {
-        console.log(ev.keyCode)
         if (ev.keyCode === 13) {
             sendMessage();
         }

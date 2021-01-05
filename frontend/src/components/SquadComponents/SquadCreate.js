@@ -42,7 +42,6 @@ const SquadCreate = ({ history }) => {
         event.preventDefault();
         const token = localStorage.getItem('jwt');
         const { squadName, squadMemberAmount } = event.target.elements;
-        console.log(squadName.value, squadMemberAmount.value)
         let createSquadRepsonse = await storeSquadDB(squadName.value, currentPlayer.faction, squadMemberAmount.value);
 
         if (createSquadRepsonse === 201) {
@@ -54,7 +53,8 @@ const SquadCreate = ({ history }) => {
             });
             let newSquadId = localStorage.getItem('Squad ID');
             if (squadMemberExists.status === 200) {
-                let response = await fetch('/api/update/squadmember/' + hasSquadMemberObject, {
+                let squadMemberBody = await squadMemberExists.json();
+                let response = await fetch('/api/update/squadmember/' + squadMemberBody.squadMemberId, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -106,20 +106,18 @@ const SquadCreate = ({ history }) => {
             <Header />
             <div className="container">
                 <div id="squadCreateForm">
-                    <h2>Create Squad
-                    {console.log(currentPlayer)}
-                    </h2>
+                    <h2>Create Squad</h2>
                     <Form onSubmit={handleCreateSquad}>
                         <Form.Group controlId="formSquadName">
-                            <Form.Control id="squadName" name="squadName" type="text" placeholder="Squad Name" required></Form.Control>
+                            <Form.Control name="squadName" type="text" placeholder="Squad Name" required></Form.Control>
                         </Form.Group>
 
                         <Form.Group controlId="formSquadMemberLimit">
-                            <Form.Control id="squadMemberAmount" name="squadMemberAmount" type="text" maxLength="2" placeholder="Squad Members (99 max)" required></Form.Control>
+                            <Form.Control name="squadMemberAmount" type="text" maxLength="2" placeholder="Squad Members (99 max)" required></Form.Control>
                         </Form.Group>
 
                         <Form.Group controlId="formSquadFaction">
-                            <Form.Control name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
+                            <Form.Control disabled="true" name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
                         </Form.Group>
                         <Button variant="dark" style={BUTTON_STYLES} type="submit">Create</Button>
                         <Link to="squads">
