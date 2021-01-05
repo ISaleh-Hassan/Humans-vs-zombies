@@ -79,6 +79,8 @@ table {
 
 .leaflet-container{
   position:absolute; 
+  top:0%;
+  bottom:0%;
   height: 500px;
   width: 100%
 }
