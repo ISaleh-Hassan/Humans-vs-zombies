@@ -22,6 +22,7 @@ const Bite = ({ history }) => {
     let currentCoordinates = ('Coordinates: \nLatitude: ' + latitude + ' \nLongitude: ' + longitude);
 
     const [currentPlayer, setCurrentPlayer] = useState([]);
+    const [currentUser, setCurrentUser] = useState([]);
     const [validBiteCodeLength, setValidBiteCodeLength] = useState(false);
     const [currentBiteCode, setCurrentBiteCode] = useState('');  // This is the bite code input from the form
     const [currentVictim, setCurrentVictim] = useState([]);
@@ -35,6 +36,7 @@ const Bite = ({ history }) => {
     
     useEffect(() => {
         fetchCurrentPlayer();
+        fetchCurrentUser();
     }, []);
 
     useEffect(() => {
@@ -59,6 +61,23 @@ const Bite = ({ history }) => {
         } else {
             alert("Could not find player object.")
             setCurrentPlayer({});
+        }
+    };
+
+
+    async function fetchCurrentUser() {
+        const response = await fetch('/api/fetch/useraccount/' + userId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
+        if (response.status === 200) {
+            let body = await response.json();
+            setCurrentUser(body);
+        } else {
+            alert("Could not find user object.")
+            setCurrentUser({});
         }
     };
 
@@ -220,44 +239,68 @@ const Bite = ({ history }) => {
     }
 
 
-    if (currentPlayer.faction === 'HUMAN') {
+    if (currentUser.userType === 'ADMINISTRATOR') {
         return (
-            <div>
-                <Header />
-                <h2>BITE CODE</h2>
-                <div id="biteHuman">{currentPlayer.biteCode}</div>
-            </div>
+            <>
+                <section className="home">
+                    <div className="container">
+                        <Header />
+                        <h3>Forbidden</h3>
+                        <p>You do not have access to the bite page.</p>
+                    </div>
+                </section>
+            </>
+        );
+    } else if (currentPlayer.faction === 'HUMAN') {
+        return (
+            <>
+                <section className="home">
+                    <div className="container">
+                        <Header />
+                        <h2>BITE CODE</h2>
+                        <div id="biteHuman">{currentPlayer.biteCode}</div>
+                    </div>
+                </section>
+            </>
         );
 
     } else if (currentPlayer.faction === 'ZOMBIE') {
         return (
-            <div>
-                <Header />
-                <div id="codeEntryContainer">
-                    <h2>BITE CODE ENTRY</h2>
-                    <Form id="biteCodeForm">
-                        <Form.Group>
-                            <Form.Control onChange={onBiteCodeChange} id="biteCode" type="text" placeholder="Bite Code" required></Form.Control>
-                            <Button id="validation" type="button" variant="dark" style={BUTTON_STYLES} onClick={masterValidation}>Validate Bite Code</Button>
-                        </Form.Group>
-                        <br/>
-                        <Form.Control id="coordinates" as="textarea" rows={3} value={currentCoordinates} required></Form.Control>
-                        <br/>
-                        <Form.Control onChange={onVictimDescriptionChange} id="victimDescription" name="victimDescription" placeholder="Enter victim description..." as="textarea" rows={3}></Form.Control>
-                    </Form>
-                    <br/>
-                    <Button type="submit" variant="dark" style={BUTTON_STYLES} disabled={buttonStatus} onClick={handleZombie}>Turn into ZOMBIE</Button>
-                    <Button type="submit" variant="dark" style={BUTTON_STYLES} disabled={buttonStatus} onClick={handleKill}>Kill victim</Button>
-                </div>
-            </div>
+            <>
+                <section className="home">
+                    <div className="container">
+                        <Header />
+                        <div id="codeEntryContainer">
+                            <h2>BITE CODE ENTRY</h2>
+                            <Form id="biteCodeForm">
+                                <Form.Group>
+                                    <Form.Control onChange={onBiteCodeChange} id="biteCode" type="text" placeholder="Bite Code" required></Form.Control>
+                                    <Button id="validation" type="button" variant="dark" style={BUTTON_STYLES} onClick={masterValidation}>Validate Bite Code</Button>
+                                </Form.Group>
+                                <br/>
+                                <Form.Control id="coordinates" as="textarea" rows={3} value={currentCoordinates} required></Form.Control>
+                                <br/>
+                                <Form.Control onChange={onVictimDescriptionChange} id="victimDescription" name="victimDescription" placeholder="Enter victim description..." as="textarea" rows={3}></Form.Control>
+                            </Form>
+                            <br/>
+                            <Button type="submit" variant="dark" style={BUTTON_STYLES} disabled={buttonStatus} onClick={handleZombie}>Turn into ZOMBIE</Button>
+                            <Button type="submit" variant="dark" style={BUTTON_STYLES} disabled={buttonStatus} onClick={handleKill}>Kill victim</Button>
+                        </div>
+                    </div>
+                </section>
+            </>
         );
 
     } else {
         return (
-            <div>
-                <Header />
-                <h3>***</h3>
-            </div>
+            <>
+                <section className="home">
+                    <div className="container">
+                        <Header />
+                        <h3>***</h3>
+                    </div>
+                </section>
+            </>
         )
     }
 }
