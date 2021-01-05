@@ -24,88 +24,88 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class PlayerTests {
-    @Autowired
-    PlayerController pc;
+    // @Autowired
+    // PlayerController pc;
 
-    @Autowired
-    UserAccountController uac;
+    // @Autowired
+    // UserAccountController uac;
 
-    @Autowired
-    GameController gc;
+    // @Autowired
+    // GameController gc;
 
-    private int playerId;
-    private int userAccountId;
-    private int gameId;
+    // private int playerId;
+    // private int userAccountId;
+    // private int gameId;
 
-    @BeforeEach
-    void initTest() {
-        this.userAccountId= createTestUserAccount();
-        this.gameId = createTestGame();
-        ResponseEntity<PlayerObject> response = pc.addPlayer(new Player(), this.userAccountId, this.gameId);
-        this.playerId = response.getBody().getPlayerId();
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    }
+    // @BeforeEach
+    // void initTest() {
+    //     this.userAccountId= createTestUserAccount();
+    //     this.gameId = createTestGame();
+    //     ResponseEntity<PlayerObject> response = pc.addPlayer(new Player(), this.userAccountId, this.gameId);
+    //     this.playerId = response.getBody().getPlayerId();
+    //     assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    // }
 
-    @AfterEach
-    void cleanTest() {
-        ResponseEntity<String> response = pc.deletePlayer(this.playerId);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ResponseEntity<PlayerObject> response2 = pc.getPlayerById(this.playerId);
-        assertEquals(HttpStatus.NOT_FOUND, response2.getStatusCode());
-        response = gc.deleteGame(this.gameId);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ResponseEntity<String> userDeleteResponse = uac.deleteUserAccount(this.userAccountId);
-        assertEquals(HttpStatus.OK, userDeleteResponse.getStatusCode());
-        ResponseEntity<UserAccountObject> userFindResponse = uac.getUserById(this.userAccountId);
-        assertEquals(HttpStatus.NOT_FOUND, userFindResponse.getStatusCode());
-        ResponseEntity<GameObject> response3 = gc.getGameById(this.gameId);
-        assertEquals(HttpStatus.NOT_FOUND, response3.getStatusCode());
-    }
+    // @AfterEach
+    // void cleanTest() {
+    //     ResponseEntity<String> response = pc.deletePlayer(this.playerId);
+    //     assertEquals(HttpStatus.OK, response.getStatusCode());
+    //     ResponseEntity<PlayerObject> response2 = pc.getPlayerById(this.playerId);
+    //     assertEquals(HttpStatus.NOT_FOUND, response2.getStatusCode());
+    //     response = gc.deleteGame(this.gameId);
+    //     assertEquals(HttpStatus.OK, response.getStatusCode());
+    //     ResponseEntity<String> userDeleteResponse = uac.deleteUserAccount(this.userAccountId);
+    //     assertEquals(HttpStatus.OK, userDeleteResponse.getStatusCode());
+    //     ResponseEntity<UserAccountObject> userFindResponse = uac.getUserById(this.userAccountId);
+    //     assertEquals(HttpStatus.NOT_FOUND, userFindResponse.getStatusCode());
+    //     ResponseEntity<GameObject> response3 = gc.getGameById(this.gameId);
+    //     assertEquals(HttpStatus.NOT_FOUND, response3.getStatusCode());
+    // }
 
-    @Test
-    void getAllPlayer() {
-        ResponseEntity<ArrayList<PlayerObject>> response = pc.getAllPlayers();
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+    // @Test
+    // void getAllPlayer() {
+    //     ResponseEntity<ArrayList<PlayerObject>> response = pc.getAllPlayers();
+    //     assertEquals(HttpStatus.OK, response.getStatusCode());
+    // }
 
-    @Test
-    void getPlayerById() {
-        ResponseEntity<PlayerObject> response = pc.getPlayerById(this.playerId);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+    // @Test
+    // void getPlayerById() {
+    //     ResponseEntity<PlayerObject> response = pc.getPlayerById(this.playerId);
+    //     assertEquals(HttpStatus.OK, response.getStatusCode());
+    // }
 
-    @Test
-    void createPlayer() {
-        ResponseEntity<PlayerObject> response = pc.addPlayer(new Player(Faction.HUMAN,true,false), this.userAccountId , this.gameId);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        pc.deletePlayer(response.getBody().getPlayerId());
-    }
+    // @Test
+    // void createPlayer() {
+    //     ResponseEntity<PlayerObject> response = pc.addPlayer(new Player(Faction.HUMAN,true,false), this.userAccountId , this.gameId);
+    //     assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    //     pc.deletePlayer(response.getBody().getPlayerId());
+    // }
 
-    @Test
-    void updatePlayer() {
-        ResponseEntity<PlayerObject> response = pc.updatePlayer((new Player(Faction.HUMAN,true,false)), this.playerId);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(Faction.HUMAN, response.getBody().getFaction());
-        assertEquals(true, response.getBody().isAlive());
-        assertEquals(false, response.getBody().isPatientZero());
-        assertEquals(8, response.getBody().getBiteCode().length());
-    }
+    // @Test
+    // void updatePlayer() {
+    //     ResponseEntity<PlayerObject> response = pc.updatePlayer((new Player(Faction.HUMAN,true,false)), this.playerId);
+    //     assertEquals(HttpStatus.OK, response.getStatusCode());
+    //     assertEquals(Faction.HUMAN, response.getBody().getFaction());
+    //     assertEquals(true, response.getBody().isAlive());
+    //     assertEquals(false, response.getBody().isPatientZero());
+    //     assertEquals(8, response.getBody().getBiteCode().length());
+    // }
 
-    @Test
-    void createPlayerAndCheckBiteCode() {
-        ResponseEntity<PlayerObject> response = pc.addPlayer(new Player(Faction.HUMAN,true,false), this.userAccountId , this.gameId);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(8, response.getBody().getBiteCode().length());
-        pc.deletePlayer(response.getBody().getPlayerId());
-    }
+    // @Test
+    // void createPlayerAndCheckBiteCode() {
+    //     ResponseEntity<PlayerObject> response = pc.addPlayer(new Player(Faction.HUMAN,true,false), this.userAccountId , this.gameId);
+    //     assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    //     assertEquals(8, response.getBody().getBiteCode().length());
+    //     pc.deletePlayer(response.getBody().getPlayerId());
+    // }
 
-    int createTestUserAccount() {
-        ResponseEntity<UserAccountObject> response = uac.addUserAccount(new UserAccount());
-        return response.getBody().getUserAccountId();
-    }
+    // int createTestUserAccount() {
+    //     ResponseEntity<UserAccountObject> response = uac.addUserAccount(new UserAccount());
+    //     return response.getBody().getUserAccountId();
+    // }
 
-    int createTestGame() {
-        ResponseEntity<GameObject> response = gc.addGame(new Game());
-        return response.getBody().getGameId();
-    }
+    // int createTestGame() {
+    //     ResponseEntity<GameObject> response = gc.addGame(new Game());
+    //     return response.getBody().getGameId();
+    // }
 }
