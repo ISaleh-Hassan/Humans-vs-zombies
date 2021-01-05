@@ -12,11 +12,14 @@ const SquadList = ({ history }) => {
     let storageSquadId = localStorage.getItem('Squad ID');
     let squadMemberId = localStorage.getItem('SquadMember ID');
     let currentFaction = localStorage.getItem('Faction');
+    let token = localStorage.getItem('jwt');
 
     const [squads, setSquads] = useState([]);
+    const [currentUser, setCurrentUser] = useState([]);
 
     useEffect(() => {
         fetchSquads();
+        fetchCurrentUser();
     }, [])
 
     async function fetchSquads() {
@@ -35,6 +38,23 @@ const SquadList = ({ history }) => {
         }
         setSquads(body);
     }
+
+
+    async function fetchCurrentUser() {
+        const response = await fetch('/api/fetch/useraccount/' + userId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
+        if (response.status === 200) {
+            let body = await response.json();
+            setCurrentUser(body);
+        } else {
+            alert("Could not find user object.")
+            setCurrentUser({});
+        }
+    };
 
 
     const [currentPlayer, setCurrentPlayer] = useState([]);
@@ -121,7 +141,7 @@ const SquadList = ({ history }) => {
                                     <td>{s.numberOfRegisteredMembers} / {s.maxNumberOfMembers} ({s.numberOfDeadMembers})</td>
                                     <td>{s.faction}</td>
                                     <td>
-                                        <Button type="button" variant="dark" disabled={s.faction !== currentFaction || s.numberOfRegisteredMembers >= s.maxNumberOfMembers} onClick={() => handleJoinSquad(s.squadId)}>JOIN</Button>
+                                        <Button type="button" variant="dark" disabled={s.faction !== currentFaction || s.numberOfRegisteredMembers >= s.maxNumberOfMembers || currentUser.userType === 'ADMINISTRATOR'} onClick={() => handleJoinSquad(s.squadId)}>JOIN</Button>
                                     </td>
                                 </tr>
                             )}
