@@ -1,11 +1,10 @@
 import { getBaseUrl } from "./baseUrl";
 import { storeUser } from "./localstorage";
-const token = localStorage.getItem('jwt');
 
 // export a variable userType then create a function that gets usertype or just get direct
 
 export async function storeUserDB(username, firstname, lastname, usertype, password, email) {
-    console.log(usertype);
+    const token = localStorage.getItem('jwt');
     const response = await fetch("/api/create/useraccount", {
         method: 'POST',
         headers: {
@@ -55,6 +54,7 @@ export async function loginUser(email, password) {
 }
 
 export async function loginPhone(phone) {
+    const token = localStorage.getItem('jwt');
     const response = await fetch("/api/useraccount/login", {
         method: 'POST',
         headers: {
@@ -87,6 +87,7 @@ export const getUserInfo = () => {
 }
 
 export async function fetchUser(userId) {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "fetch/useraccount/" + userId;
     const response = await fetch(url, {
         headers: {
@@ -102,6 +103,7 @@ export async function fetchUser(userId) {
 }
 
 export async function storePhone(userAccountId, phone) {
+    const token = localStorage.getItem('jwt');
     const response = await fetch("/api/update/useraccount/" + userAccountId, {
         method: 'PATCH',
         headers: {
