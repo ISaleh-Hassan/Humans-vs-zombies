@@ -94,8 +94,8 @@ const SquadCreate = ({ history }) => {
                 });
                 let body = await response.json();
                 localStorage.setItem('SquadMember ID', body.squadMemberId);
-
-                history.push('/squaddetails/');
+                localStorage.setItem('Squad Rank', 'LEADER');
+                history.push('/squaddetails');
             } else if (squadMemberExists.status === 404) {
                 let newSquadId = localStorage.getItem('Squad ID');
                 let response = await fetch('/api/create/squadmember/' + gameId + '/' + newSquadId + '/' + playerId, {
@@ -115,6 +115,7 @@ const SquadCreate = ({ history }) => {
                     let body = await response.json();
                     localStorage.setItem('SquadMember ID', body.squadMemberId);
                     localStorage.setItem('Squad Rank', 'LEADER');
+                    history.push('/squaddetails');
                 } else {
                     alert("Failed to create squad member!")
                 }
@@ -143,9 +144,7 @@ const SquadCreate = ({ history }) => {
                         <Header />
                         <div className="container">
                             <div id="squadCreateForm">
-                                <h2>Create Squad
-                                {console.log(currentPlayer)}
-                                </h2>
+                                <h2>Create Squad</h2>
                                 <Form onSubmit={handleCreateSquad}>
                                     <Form.Group controlId="formSquadName">
                                         <Form.Control id="squadName" name="squadName" type="text" placeholder="Squad Name" required></Form.Control>
@@ -156,7 +155,7 @@ const SquadCreate = ({ history }) => {
                                     </Form.Group>
 
                                     <Form.Group controlId="formSquadFaction">
-                                        <Form.Control name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
+                                        <Form.Control disabled={true} name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
                                     </Form.Group>
                                     <Button variant="dark" style={BUTTON_STYLES} type="submit">Create</Button>
                                     <Link to="squads">

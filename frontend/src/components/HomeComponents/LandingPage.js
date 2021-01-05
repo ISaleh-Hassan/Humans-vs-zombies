@@ -116,7 +116,7 @@ const LandingPage = (props) => {
                         <span>
                             {hasJoined ?
                                 <>
-                                {gameDetails.calculatedGameState === 'PREPARATION' ? <Button disabled="true" variant="success" style={BUTTON_STYLES} >Already Joined</Button> : null }
+                                {gameDetails.calculatedGameState === 'PREPARATION' ? <Button disabled={true} variant="success" style={BUTTON_STYLES} >Already Joined</Button> : null }
                                 </> :
                                 <>
                                 {gameDetails.calculatedGameState === 'PREPARATION' ? <Button variant="success" style={BUTTON_STYLES} disabled={currentUser.userType === 'ADMINISTRATOR'} onClick={handleJoinGame}>Join Game</Button> : null }

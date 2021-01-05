@@ -17,13 +17,14 @@ public class ChatMessageObject {
     private String stringTimestamp;
     private boolean alive;
     private SquadRank squadRank;
+    private Faction playerFaction;
 
     public ChatMessageObject() {
 
     }
 
     public ChatMessageObject(Integer chatMessageId, String message, Faction faction, Timestamp timestamp, Integer gameId, 
-            Integer playerId, Integer squadId, String username, String sTimestamp, boolean alive, SquadRank squadRank) {
+            Integer playerId, Integer squadId, String username, String sTimestamp, boolean alive, SquadRank squadRank, Faction playerFaction) {
         this.chatMessageId = chatMessageId;
         this.message = message;
         this.faction = faction;
@@ -35,6 +36,7 @@ public class ChatMessageObject {
         this.stringTimestamp = sTimestamp;
         this.alive = alive;
         this.squadRank = squadRank;
+        this.playerFaction = playerFaction;
     }
 
     public Integer getChatMessageId() {
@@ -123,5 +125,13 @@ public class ChatMessageObject {
 
     public void setSquadRank(SquadRank squadRank) {
         this.squadRank = squadRank;
+    }
+
+    public Faction getPlayerFaction() {
+        return playerFaction;
+    }
+
+    public void setPlayerFaction(Faction playerFaction) {
+        this.playerFaction = playerFaction;
     }
 }

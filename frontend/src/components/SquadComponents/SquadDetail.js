@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
 import { CreateSquadCheckin } from '../../utils/squadCheckinStorage';
-import { UpdateSquadMember } from '../../utils/SquadMemberStorage';
+import { FetchSquadMember, UpdateSquadMember } from '../../utils/SquadMemberStorage';
 import Header from '../StylingComponents/Header';
 import { Button } from 'react-bootstrap';
 
@@ -113,8 +113,8 @@ const SquadDetail = ({ history }) => {
     }
 
 
-    function handleAlive() {
-        if (squadMembers.alive === true) {
+    function handleAlive(alive) {
+        if (alive === true) {
             return 'Alive';
         } else {
             return 'Dead';
@@ -123,6 +123,12 @@ const SquadDetail = ({ history }) => {
 
 
     async function handleLeaveSquad() {
+        let squadMemberBody = await FetchSquadMember(gameId, playerId);
+        if (squadMemberBody !== null) {
+            if (squadMemberBody.squadRank === 'LEADER') {
+                handleDisbandSquad();
+            }
+        }
         let response = await UpdateSquadMember(squadMemberId, null);
         if (response !== null) {
             localStorage.setItem('Squad ID', response.squadId);
@@ -145,7 +151,7 @@ const SquadDetail = ({ history }) => {
                 .then(res => res.json())
                 .then(res => console.log(res));
             localStorage.setItem('Squad ID', 'null');
-            localStorage.setItem('Squad Member ID', 'null');
+            localStorage.setItem('SquadMember ID', 'null');
             localStorage.setItem('Squad Rank', 'null');
             history.push('/squads');
         } else {
@@ -178,7 +184,7 @@ const SquadDetail = ({ history }) => {
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Alive</th>
+                                    <th>Status</th>
                                     <th>Rank</th>
                                 </tr>
                             </thead>
@@ -186,7 +192,7 @@ const SquadDetail = ({ history }) => {
                                 {squadMembers.map((s) =>
                                     <tr key={s.username}>
                                         <td>{s.username}</td>
-                                        <td>{handleAlive(s.alive.toString())}</td>
+                                        <td>{handleAlive(s.alive)}</td>
                                         <td>{s.squadRank}</td>
                                     </tr>
                                 )}
@@ -196,8 +202,8 @@ const SquadDetail = ({ history }) => {
 
                         <Button variant="dark" style={BUTTON_STYLES} onClick={getLocation}>Mark location</Button>
                         <p id="current-location"></p>
-                        <Button type="button" variant="dark" style={BUTTON_STYLES} onClick={() => handleLeaveSquad()}>Leave Squad</Button>
-                        <Button type="button" variant="dark" style={BUTTON_STYLES} disabled={squadRank !== 'LEADER'} onClick={() => handleDisbandSquad()}>Disband Squad</Button>
+                        { squadRank === 'MEMBER' ? <Button type="button" variant="dark" style={BUTTON_STYLES} onClick={() => handleLeaveSquad()}>Leave Squad</Button> : null }
+                        { squadRank === 'LEADER' ? <Button type="button" variant="dark" style={BUTTON_STYLES} disabled={squadRank !== 'LEADER'} onClick={() => handleDisbandSquad()}>Disband Squad</Button> : null }
                     </div>
                 </section>
             </div>

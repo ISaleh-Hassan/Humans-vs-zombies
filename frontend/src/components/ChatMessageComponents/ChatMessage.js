@@ -261,8 +261,16 @@ const ChatMessage = props => {
             <br />
             <ThemeProvider>
                 <ChatList >
+                    {chatRoom === "ALL" ?
+                        <Subtitle>GLOBAL CHAT</Subtitle>
+                        : null
+                    }
                     {chatRoom === "FACTION" ?
                         <Subtitle>{playerFaction} CHAT</Subtitle>
+                        : null
+                    }
+                    {chatRoom === "SQUAD" ?
+                        <Subtitle>SQUAD CHAT</Subtitle>
                         : null
                     }
                     {chatMessages.map((chatMessage) =>
@@ -270,20 +278,22 @@ const ChatMessage = props => {
                             <Avatar imgUrl="https://livechat.s3.amazonaws.com/default/avatars/male_8.jpg" />
                             <Column fill>
                                 <Row>
-                                    <Title>{chatMessage.username}</Title>
-
-                                    {chatRoom === "SQUAD" ?
-                                        <Subtitle>{chatMessage.squadRank}</Subtitle>
-                                        :
-                                        chatRoom === "FACTION" && chatMessage.alive ?
-                                            <Subtitle> Alive </Subtitle>
-                                            : null}
-
-                                    <Subtitle>{chatMessage.stringTimestamp}</Subtitle>
+                                    <Column>
+                                        {chatRoom === "SQUAD" ? <Title>{chatMessage.username}   {chatMessage.squadRank}</Title> : null}
+                                        {chatRoom === "FACTION" && chatMessage.alive ? <Title> {chatMessage.username}   Alive</Title> : null}
+                                        {chatRoom === "FACTION" && !chatMessage.alive ? <Title> {chatMessage.username}   Dead</Title> : null}
+                                        {chatRoom === "ALL" ? <Title>{chatMessage.username}    {chatMessage.playerFaction}</Title> : null}                   
+                                    </Column>
+                                    
+                                </Row>
+                                <Row>
+                                    <Column>
+                                        {chatMessage.stringTimestamp}
+                                    </Column>
                                 </Row>
                                 <Subtitle >
                                     <div>
-                                      
+
                                         {handleUpdateMessage(chatMessage.chatMessageId) && isEditingMessage ?
                                             <Form.Group>
                                                 <Form.Control type="text"
