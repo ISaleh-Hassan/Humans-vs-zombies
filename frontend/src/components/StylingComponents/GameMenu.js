@@ -32,11 +32,14 @@ const GameMenu = ({history}) => {
 
     let gameId = localStorage.getItem('Game ID');
     let userId = localStorage.getItem('User ID');
+    let token = localStorage.getItem('jwt');
 
     const [currentPlayer, setCurrentPlayer] = useState([]);
+    const [currentUser, setCurrentUser] = useState([]);
 
     useEffect(() => {
         fetchCurrentPlayer();
+        fetchCurrentUser();
     }, [])
 
     async function fetchCurrentPlayer() {
@@ -48,6 +51,23 @@ const GameMenu = ({history}) => {
             setCurrentPlayer({});
         }
     }
+
+
+    async function fetchCurrentUser() {
+        const response = await fetch('/api/fetch/useraccount/' + userId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
+        if (response.status === 200) {
+            let body = await response.json();
+            setCurrentUser(body);
+        } else {
+            alert("Could not find user object.")
+            setCurrentUser({});
+        }
+    };
 
 
     function handleBitePage() {
@@ -64,43 +84,77 @@ const GameMenu = ({history}) => {
         history.push('/bite');
     }
 
+    if (currentUser.userType === 'PLAYER') {
+        return (
+            <div>
+                <div onClick={() => console.log("clicked")}>
+                    <Button variant="dark" onClick={() => setIsOpen(true)}>Menu</Button>
+                
+                    <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+                        <Link to="landing">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Landing/Rules</div></Button>
+                        </Link>
 
-    return (
-        <div>
-            <div onClick={() => console.log("clicked")}>
-                <Button variant="dark" onClick={() => setIsOpen(true)}>Menu</Button>
-            
-                <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-                    <Link to="landing">
-                        <Button variant="dark" style={BUTTON_STYLES}><div>Landing/Rules</div></Button>
-                    </Link>
-                    <Link to="map">
-                        <Button variant="dark" style={BUTTON_STYLES}><div>Map</div></Button>
-                    </Link>
-                    
-                    <Button variant="dark" style={BUTTON_STYLES}>
-                        <div onClick={handleBitePage}>Bite</div>
-                    </Button>
+                        <Link to="map">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Map</div></Button>
+                        </Link>
+                        
+                        <Button variant="dark" style={BUTTON_STYLES}>
+                            <div onClick={handleBitePage}>Bite</div>
+                        </Button>
 
-                    <Link to="chat">
-                        <Button variant="dark" style={BUTTON_STYLES}><div>Chat</div></Button>
-                    </Link>
-                    <Link to="squads">
-                        <Button variant="dark" style={BUTTON_STYLES}><div>Squads</div></Button>
-                    </Link>
-                    <Link to="squaddetails">
-                        <Button variant="dark" style={BUTTON_STYLES}><div>Squad Details</div></Button>
-                    </Link>
-                    <Link to="admin">
-                        <Button variant="dark" style={BUTTON_STYLES}><div>Admin</div></Button>
-                    </Link>
-                    <div>
-                        <Button variant="danger" style={BUTTON_STYLES} onClick={handleSignOut}>Sign out</Button>
-                    </div>
-                </Modal>
+                        <Link to="chat">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Chat</div></Button>
+                        </Link>
+
+                        <Link to="squads">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Squads</div></Button>
+                        </Link>
+
+                        <Link to="squaddetails">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Squad Details</div></Button>
+                        </Link>
+
+                        <Link to="admin">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Admin</div></Button>
+                        </Link>
+                        <div>
+                            <Button variant="danger" style={BUTTON_STYLES} onClick={handleSignOut}>Sign out</Button>
+                        </div>
+                    </Modal>
+                </div>
             </div>
-        </div>
-    )
+        )
+    } else {
+        return (
+            <div>
+                <div onClick={() => console.log("clicked")}>
+                    <Button variant="dark" onClick={() => setIsOpen(true)}>Menu</Button>
+                
+                    <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+                        <Link to="admin">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Admin Tools</div></Button>
+                        </Link>
+
+                        <Link to="map">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Map</div></Button>
+                        </Link>
+
+                        <Link to="chat">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Chat</div></Button>
+                        </Link>
+
+                        <Link to="squads">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Squads</div></Button>
+                        </Link>
+                        <div>
+                            <Button variant="danger" style={BUTTON_STYLES} onClick={handleSignOut}>Sign out</Button>
+                        </div>
+                    </Modal>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default withRouter (GameMenu);

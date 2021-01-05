@@ -11,10 +11,12 @@ const LandingPage = (props) => {
 
     const [hasJoined, setHasJoined] = useState(false);
     const [gameDetails, setGameDetails] = useState({});
+    const [currentUser, setCurrentUser] = useState([]);
 
     useEffect(() => {
         let gameId = localStorage.getItem('Game ID');
         let userId = localStorage.getItem('User ID');
+        fetchCurrentUser();
         FetchGame(gameId).then(data => {
             if (data !== null) {
                 setGameDetails(data);
@@ -49,6 +51,26 @@ const LandingPage = (props) => {
             })
         });
     }, []);
+
+
+    async function fetchCurrentUser() {
+        const token = localStorage.getItem('jwt');
+        const userId = localStorage.getItem('User ID');
+        const response = await fetch('/api/fetch/useraccount/' + userId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
+        if (response.status === 200) {
+            let body = await response.json();
+            setCurrentUser(body);
+        } else {
+            alert("Could not find user object.")
+            setCurrentUser({});
+        }
+    };
+    
 
     const handleJoinGame = () => {
         props.history.push('/choosefaction');
@@ -110,7 +132,7 @@ const LandingPage = (props) => {
                                 <Button variant="danger" style={BUTTON_STYLES} onClick={handleLeaveGame}>Leave Game</Button>
                                 </> :
                                 <>
-                                <Button variant="success" style={BUTTON_STYLES} onClick={handleJoinGame}>Join Game</Button>
+                                <Button variant="success" style={BUTTON_STYLES} disabled={currentUser.userType === 'ADMINISTRATOR'} onClick={handleJoinGame}>Join Game</Button>
                                 </>
                             }
                             <Link to="/currentgames"><Button variant="secondary" style={BUTTON_STYLES}>Go Back</Button></Link>

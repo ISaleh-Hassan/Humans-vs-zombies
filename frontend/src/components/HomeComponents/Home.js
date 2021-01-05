@@ -57,7 +57,7 @@ const Home = (props) => {
             <br />
             <Button variant="dark" onClick={handleAdminAccess}>ADMIN</Button>
             <br />
-            <Button variant="dark" onClick={handleSignOut}>Sign out</Button>
+            <Button variant="danger" onClick={handleSignOut}>Sign out</Button>
           </div>
         </section>
       </>
