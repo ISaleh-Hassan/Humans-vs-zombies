@@ -6,8 +6,8 @@ import { FetchAllSquadCheckin } from '../../utils/squadCheckinStorage';
 import { FetchAllKills } from '../../utils/KillStorage';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-//mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
 // mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNramlpcXF6aTB5dHMydHFveHE0cDdleXMifQ.cOdCvVE4RuyE_0SRtC-1ww'
+// mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNramszdGZiaDJ5NGQzMnNjZnZscjV1YTIifQ.U_P4O-0Z-ao0svLTf0W4kQ'
 
 class MainMap extends Component {
   constructor(props) {
@@ -20,7 +20,7 @@ class MainMap extends Component {
   }
 
   componentDidMount() {
-    mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNramszdGZiaDJ5NGQzMnNjZnZscjV1YTIifQ.U_P4O-0Z-ao0svLTf0W4kQ'
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
     let coordinates = document.getElementById('coordinates');
     const map = new mapboxgl.Map({
       container: this.mapContainer,
@@ -155,9 +155,11 @@ class MainMap extends Component {
   render() {
     return (
       <>
-        <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet" />
-        <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js'></script>
-        <div ref={el => this.mapContainer = el} className='leaflet-container'></div>
+
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css' rel='stylesheet' />
+
+        <div ref={el => this.mapContainer = el} className='mapbox-gl'></div>
         <label>Marker Location: </label>
         <p id="coordinates"></p>
         {/* <label>Current Location: </label> */}
