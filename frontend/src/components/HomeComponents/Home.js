@@ -9,21 +9,26 @@ import { fetchUser } from "../../utils/dbstorage";
 
 const Home = (props) => {
 
-  const user = getUser();
+  const username = getUser();
   const isVerified = firebase.auth().currentUser.emailVerified;
   const userPhone = firebase.auth().currentUser.phoneNumber;
   const userId = localStorage.getItem("User ID")
   const usersPhone = localStorage.getItem("User Phone")
+  const user = localStorage.getItem('Usertype');
 
   useEffect(() => {
-    fetchUserID();
+    if (localStorage.getItem('jwt') === 'undefined') {
+      handleSignOut();
+    } else {
+      fetchUserID();
+    }
   }, [])
 
   async function fetchUserID() {
-    const userzPhone = await fetchUser(userId);
-    if (userzPhone != null) {
-      console.log(userzPhone)
-    } 
+    // user = await fetchUser(userId);
+    // if (user != null) {
+    //   console.log(user)
+    // } 
 }
 
   const handleSignOut = () => {
@@ -53,9 +58,9 @@ const Home = (props) => {
             <h1>Home</h1>
             <p>Welcome, {user}</p>
             <p>A verification link has been sent to your email. Please verify your email to register your phone.</p>
-            <Button variant="dark" onClick={() => props.history.push("/currentgames")}>Browse Games</Button>
+            {userType === 'ADMINISTRATOR' ? <Button variant="dark" onClick={handleAdminAccess}>ADMIN</Button> : null}
             <br />
-            <Button variant="dark" onClick={handleAdminAccess}>ADMIN</Button>
+            <Button variant="dark" onClick={() => props.history.push("/currentgames")}>Browse Games</Button>
             <br />
             <Button variant="danger" onClick={handleSignOut}>Sign out</Button>
           </div>
@@ -77,11 +82,11 @@ const Home = (props) => {
           <div className="container">
             <HeaderOutside />
             <h1>Home</h1>
-            <p>Welcome, {user}</p>
+            <p>Welcome, {username}</p>
             <p><Link to="/registerphone">You may now register your phone!</Link></p>
-            <Button variant="dark" onClick={() => props.history.push("/currentgames")}>Browse Games</Button>
+            {userType === 'ADMINISTRATOR' ? <Button variant="dark" onClick={handleAdminAccess}>ADMIN</Button> : null}
             <br />
-            <Button variant="dark" onClick={handleAdminAccess}>ADMIN</Button>
+            <Button variant="dark" onClick={() => props.history.push("/currentgames")}>Browse Games</Button>
             <br />
             <Button variant="dark" onClick={handleSignOut}>Sign out</Button>
           </div>
@@ -96,9 +101,9 @@ const Home = (props) => {
             <HeaderOutside />
             <h1>Home</h1>
             <p>Welcome, {user}</p>
-            <Button variant="dark" onClick={() => props.history.push("/currentgames")}>Browse Games</Button>
+            {userType === 'ADMINISTRATOR' ? <Button variant="dark" onClick={handleAdminAccess}>ADMIN</Button> : null}
             <br />
-            <Button variant="dark" onClick={handleAdminAccess}>ADMIN</Button>
+            <Button variant="dark" onClick={() => props.history.push("/currentgames")}>Browse Games</Button>
             <br />
             <Button variant="dark" onClick={handleSignOut}>Sign out</Button>
           </div>

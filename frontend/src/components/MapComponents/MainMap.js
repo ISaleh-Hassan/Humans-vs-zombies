@@ -7,6 +7,7 @@ import { FetchAllKills } from '../../utils/KillStorage';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 //mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNraWhqYTJqejF2engyc3BvbTdrcHhsNzIifQ.SE5ympIl6CiI_0GCnrRNnA';
+// mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNramlpcXF6aTB5dHMydHFveHE0cDdleXMifQ.cOdCvVE4RuyE_0SRtC-1ww'
 
 class MainMap extends Component {
   constructor(props) {
@@ -20,7 +21,6 @@ class MainMap extends Component {
 
   componentDidMount() {
     mapboxgl.accessToken = 'pk.eyJ1IjoicGVyY2hyaXN0ZXI3IiwiYSI6ImNramszdGZiaDJ5NGQzMnNjZnZscjV1YTIifQ.U_P4O-0Z-ao0svLTf0W4kQ'
-
     let coordinates = document.getElementById('coordinates');
     const map = new mapboxgl.Map({
       container: this.mapContainer,

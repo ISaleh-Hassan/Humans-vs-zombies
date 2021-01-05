@@ -202,7 +202,8 @@ public class ChatMessageController {
                         tempUser.getUsername(),
                         stringTime,
                         tempPlayer.isAlive(),
-                        rank
+                        rank,
+                        tempPlayer.getFaction()
                     );   
                 }
             }
