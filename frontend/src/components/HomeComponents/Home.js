@@ -15,16 +15,16 @@ const Home = (props) => {
   const userId = localStorage.getItem("User ID")
   const usersPhone = localStorage.getItem("User Phone")
 
-  // useEffect(() => {
-  //   fetchUserID();
-  // }, [])
+  useEffect(() => {
+    fetchUserID();
+  }, [])
 
-  // async function fetchUserID() {
-  //   const token = localStorage.getItem('jwt');
-  //   await fetchUser(userId).then(result => {
-  //     localStorage.setItem("User Phone", result.phoneNumber)
-  //   })
-  // }
+  async function fetchUserID() {
+    const userzPhone = await fetchUser(userId);
+    if (userzPhone != null) {
+      console.log(userzPhone)
+    } 
+}
 
   const handleSignOut = () => {
     firebase.auth().signOut()
@@ -37,8 +37,8 @@ const Home = (props) => {
   const userType = localStorage.getItem('Usertype');
 
   function handleAdminAccess() {
-    if (userType === 'ADMINISTRATOR') {
-        props.history.push('/admin')
+    if (userType === 'Admin') {
+      props.history.push('/admin')
     } else {
       alert('You do not have access to the admin menu')
     }
@@ -62,35 +62,33 @@ const Home = (props) => {
         </section>
       </>
     );
-  } 
-  // else if (isVerified && !usersPhone) {
-  //   if (window.localStorage) {
-  //     if (!localStorage.getItem('firstLoad')) {
-  //       localStorage['firstLoad'] = true;
-  //       window.location.reload();
-  //     }
-  //     else
-  //       localStorage.removeItem('firstLoad');
-  //   }
-  //   return (
-  //     <>
-  //       <section className="home">
-  //         <div className="container">
-  //           <HeaderOutside />
-  //           <h1>Home</h1>
-  //           <p>Welcome, {user}</p>
-  //           <p><Link to="/registerphone">You may now register your phone!</Link></p>
-  //           <Button variant="dark" onClick={() => props.history.push("/currentgames")}>Browse Games</Button>
-  //           <br />
-  //           <Button variant="dark" onClick={handleAdminAccess}>ADMIN</Button>
-  //           <br />
-  //           <Button variant="dark" onClick={handleSignOut}>Sign out</Button>
-  //         </div>
-  //       </section>
-  //     </>
-  //   );
-  // } 
-  else {
+  } else if (isVerified && !usersPhone) {
+    // if (window.localStorage) {
+    //   if (!localStorage.getItem('firstLoad')) {
+    //     localStorage['firstLoad'] = true;
+    //     window.location.reload();
+    //   }
+    //   else
+    //     localStorage.removeItem('firstLoad');
+    // }
+    return (
+      <>
+        <section className="home">
+          <div className="container">
+            <HeaderOutside />
+            <h1>Home</h1>
+            <p>Welcome, {user}</p>
+            <p><Link to="/registerphone">You may now register your phone!</Link></p>
+            <Button variant="dark" onClick={() => props.history.push("/currentgames")}>Browse Games</Button>
+            <br />
+            <Button variant="dark" onClick={handleAdminAccess}>ADMIN</Button>
+            <br />
+            <Button variant="dark" onClick={handleSignOut}>Sign out</Button>
+          </div>
+        </section>
+      </>
+    );
+  } else {
     return (
       <>
         <section className="home">

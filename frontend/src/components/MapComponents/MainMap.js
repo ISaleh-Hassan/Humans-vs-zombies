@@ -31,10 +31,6 @@ class MainMap extends Component {
       draggable: true
     });
 
-    // let missions = FetchAllMissions();
-    // let squadCheckins = FetchAllSquadCheckin();
-    // let kills = FetchAllKills();
-
     let faction = localStorage.getItem("Faction")
     let user = localStorage.getItem("Username")
 
