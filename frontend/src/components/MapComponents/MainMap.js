@@ -52,7 +52,8 @@ class MainMap extends Component {
           }
         }
         )
-
+      } else {
+        console.log("Error!")
       }
     }
 
@@ -75,6 +76,8 @@ class MainMap extends Component {
             }
           }
           )
+      } else {
+        console.log("Error!")
       }
     }
 
@@ -95,7 +98,8 @@ class MainMap extends Component {
               .setLngLat([k.position.x, k.position.y]).setPopup(popup).addTo(map)
           }
           )
-
+      } else {
+        console.log("Error!")
       }
     }
 
