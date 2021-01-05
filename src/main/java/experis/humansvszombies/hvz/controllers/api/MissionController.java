@@ -6,12 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.datastructures.MissionObject;
+import experis.humansvszombies.hvz.models.enums.Faction;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Mission;
+import experis.humansvszombies.hvz.models.tables.Player;
+import experis.humansvszombies.hvz.models.tables.UserAccount;
 import experis.humansvszombies.hvz.repositories.MissionRepository;
+import experis.humansvszombies.hvz.repositories.PlayerRepository;
+import experis.humansvszombies.hvz.repositories.UserAccountRepository;
+import experis.humansvszombies.hvz.security.services.UserDetailsImpl;
 
 
 
@@ -19,6 +27,12 @@ import experis.humansvszombies.hvz.repositories.MissionRepository;
 public class MissionController {
     @Autowired
     MissionRepository missionRepository;
+
+    @Autowired
+    UserAccountRepository userRepository;
+
+    @Autowired
+    PlayerRepository playerRepository;
 
     @CrossOrigin
     @GetMapping("/api/fetch/mission/all")
@@ -49,6 +63,46 @@ public class MissionController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @CrossOrigin()
+    @GetMapping("/api/fetch/mission/game={gameId}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR') or hasAuthority('PLAYER')")
+    public ResponseEntity<ArrayList<MissionObject>> getMissionByGameAndFaction(@PathVariable Integer gameId) {
+        try {
+            if (gameId == null) {
+                System.out.println("ERROR: gameId was null when trying to fetch missions based on gameId and faction");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println(authentication);
+            UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
+            System.out.println(userDetails.getUsername());
+            Player player = playerRepository.findDistinctByGameAndUserAccount(new Game(gameId), new UserAccount(userDetails.getId()));
+            if (player == null) {
+                System.out.println("ERROR: player was null when trying to fetch missions based on gameId and faction");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            System.out.println(player.getFaction());
+            ArrayList<MissionObject> missionObjects = null;
+            ArrayList<Mission> missions = missionRepository.findByGame(new Game(gameId));
+            if (missions.size() > 0) {
+                missionObjects = new ArrayList<MissionObject>();
+                for (Mission mission : missions) {
+                    if (mission.getFactionVisibility() == Faction.ALL || mission.getFactionVisibility() == player.getFaction()) {
+                        MissionObject m = this.createMissionObject(mission);
+                        missionObjects.add(m);
+                    }
+                }
+            }
+            return new ResponseEntity<>(missionObjects, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Exception thrown: gameId was null");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println("Exception thrown: Something unexpected went wrong when fetching Missions based on gameId.");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    } 
 
     @CrossOrigin
     @PostMapping("/api/create/mission/{gameId}")
