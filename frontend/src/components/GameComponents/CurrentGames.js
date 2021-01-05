@@ -114,14 +114,14 @@ const CurrentGames = (props) => {
                         <tbody>
                             {games.map((g) =>
                                 <tr key={g.gameId}>
-                                    {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.name}</td> : null}
-                                    {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.stringStart}</td> : null}
-                                    {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.stringEnd}</td> : null}
-                                    {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>{g.numberOfRegisteredPlayers}/{g.maxNumberOfPlayers}</td> : null}
-                                    {g.gameState === gameFilter || gameFilter === 'ALL' ? <td>
-                                        {g.gameState === 'PREPARATION' ? <Button type="button" variant="warning" disabled={g.gameState === 'COMPLETED'} onClick={() => handlePreview(g.gameId)}>Preview</Button> : null}
-                                        {g.gameState === 'IN_PROGRESS' ? <Button type="button" variant="success" disabled={g.gameState === 'COMPLETED'} onClick={() => handlePreview(g.gameId)}>Preview</Button> : null}
-                                        {g.gameState === 'COMPLETED' ? <Button type="button" variant="dark" disabled={g.gameState === 'COMPLETED'} onClick={() => handlePreview(g.gameId)}>Preview</Button> : null}
+                                    {g.calculatedGameState === gameFilter || gameFilter === 'ALL' ? <td>{g.name}</td> : null}
+                                    {g.calculatedGameState === gameFilter || gameFilter === 'ALL' ? <td>{g.stringStart}</td> : null}
+                                    {g.calculatedGameState === gameFilter || gameFilter === 'ALL' ? <td>{g.stringEnd}</td> : null}
+                                    {g.calculatedGameState === gameFilter || gameFilter === 'ALL' ? <td>{g.numberOfRegisteredPlayers}/{g.maxNumberOfPlayers}</td> : null}
+                                    {g.calculatedGameState === gameFilter || gameFilter === 'ALL' ? <td>
+                                        {g.calculatedGameState === 'PREPARATION' ? <Button type="button" variant="warning" disabled={g.gameState === 'COMPLETED'} onClick={() => handlePreview(g.gameId)}>Preview</Button> : null}
+                                        {g.calculatedGameState === 'IN_PROGRESS' ? <Button type="button" variant="success" disabled={g.gameState === 'COMPLETED'} onClick={() => handlePreview(g.gameId)}>Preview</Button> : null}
+                                        {g.calculatedGameState === 'COMPLETED' ? <Button type="button" variant="dark" disabled={g.gameState === 'COMPLETED'} onClick={() => handlePreview(g.gameId)}>Preview</Button> : null}
                                     </td> : null}
                                 </tr>
                             )}
