@@ -1,9 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { CreateSquadCheckin } from '../../utils/squadCheckinStorage';
 import { UpdateSquadMember } from '../../utils/SquadMemberStorage';
-import GameMenu from '../StylingComponents/GameMenu';
 import Header from '../StylingComponents/Header';
-import NavBar from '../StylingComponents/NavBar';
 
 const SquadDetail = ({ history }) => {
     let gameId = localStorage.getItem('Game ID');
@@ -207,7 +205,7 @@ const SquadDetail = ({ history }) => {
                         <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
 
                         <br />
-                        <button type="button" onClick={() => handleDisbandSquad()}>Disband Squad (only available to the leader)</button>
+                        <button type="button" disabled={squadRank !== 'LEADER'} onClick={() => handleDisbandSquad()}>Disband Squad</button>
                     </div>
                 </section>
             </div>

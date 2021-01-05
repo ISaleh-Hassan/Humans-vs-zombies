@@ -130,7 +130,7 @@ const Bite = ({ history }) => {
 
 
     async function createKillObject() {
-        let timeStamp = new Date().getTime();
+        let timeStamp = new Date();
         let killResponse = await fetch('/api/create/kill', {
             method: 'POST',
             headers: {

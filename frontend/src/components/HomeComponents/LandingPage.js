@@ -55,7 +55,19 @@ const LandingPage = (props) => {
         props.history.push('/choosefaction');
     };
 
-    // Need to remove the game id from the current player in the database as well
+
+    // The styling below works when the page first loads, but if the page is reloaded it crashes...
+    let gameStartTime = gameDetails.startTime;
+    // gameStartTime = gameStartTime.replace('T', ' ');
+    // gameStartTime = gameStartTime.substring(0, gameStartTime.lastIndexOf('.'));
+
+    let gameEndTime = gameDetails.endTime;
+    // gameEndTime = gameEndTime.replace('T', ' ');
+    // gameEndTime = gameEndTime.substring(0, gameEndTime.lastIndexOf('.'));
+    
+
+    
+    // Need to remove the game id from the current player in the database as well?
     const handleLeaveGame = () => {
         localStorage.removeItem('Game ID');
         localStorage.removeItem('Player ID');
@@ -79,10 +91,9 @@ const LandingPage = (props) => {
                             <h3>Description: </h3>
                             <p> {gameDetails.description} </p>
                             <br />
-                            <h4>Start Time: {gameDetails.startTime}
-                                <br />
-                            End Time: {gameDetails.endTime}
-                            </h4>
+                            <h4>Start Time: {gameStartTime}</h4>
+                            <br />
+                            <h4>End Time: {gameEndTime}</h4>
                             <br />
                         </div>
                     </div>

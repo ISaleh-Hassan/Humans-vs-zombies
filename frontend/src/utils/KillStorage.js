@@ -1,7 +1,7 @@
 import { getBaseUrl } from "./baseUrl";
-const token = localStorage.getItem('jwt');
 
 export async function FetchAllKills() {
+    const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "fetch/kill/all";
     const response = await fetch(url, {
         headers: {
