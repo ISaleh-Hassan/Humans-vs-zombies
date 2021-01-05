@@ -6,13 +6,6 @@ import { clearUser } from "../../utils/localstorage";
 import { Button } from 'react-bootstrap';
 import { FetchPlayer } from '../../utils/PlayerStorage';
 
-const BUTTON_WRAPPER_STYLES = {
-    position: 'relative',
-    zIndex: 1,
-    backgroundColor: 'rgb(221, 221, 221)',
-    height: '60px',
-    width: '60px'
-}
 
 const BUTTON_STYLES = {
     width: '150px',
@@ -87,7 +80,7 @@ const GameMenu = ({history}) => {
     if (currentUser.userType === 'PLAYER') {
         return (
             <div>
-                <div onClick={() => console.log("clicked")}>
+                <div>
                     <Button variant="dark" onClick={() => setIsOpen(true)}>Menu</Button>
                 
                     <Modal open={isOpen} onClose={() => setIsOpen(false)}>
@@ -115,9 +108,6 @@ const GameMenu = ({history}) => {
                             <Button variant="dark" style={BUTTON_STYLES}><div>Squad Details</div></Button>
                         </Link>
 
-                        <Link to="admin">
-                            <Button variant="dark" style={BUTTON_STYLES}><div>Admin</div></Button>
-                        </Link>
                         <div>
                             <Button variant="danger" style={BUTTON_STYLES} onClick={handleSignOut}>Sign out</Button>
                         </div>
@@ -146,6 +136,10 @@ const GameMenu = ({history}) => {
 
                         <Link to="squads">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Squads</div></Button>
+                        </Link>
+                        
+                        <Link to="currentgames">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Game List</div></Button>
                         </Link>
                         <div>
                             <Button variant="danger" style={BUTTON_STYLES} onClick={handleSignOut}>Sign out</Button>
