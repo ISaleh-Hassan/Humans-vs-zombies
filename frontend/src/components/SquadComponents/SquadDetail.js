@@ -1,8 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
 import { UpdateSquadMember } from '../../utils/SquadMemberStorage';
-import GameMenu from '../StylingComponents/GameMenu';
 import Header from '../StylingComponents/Header';
-import NavBar from '../StylingComponents/NavBar';
 
 const SquadDetail = ({ history }) => {
     let gameId = localStorage.getItem('Game ID');
@@ -35,18 +33,7 @@ const SquadDetail = ({ history }) => {
         }
         setSquadMembers(body);
     }
-
-    // The below function doesn't work as is, but should be implemented instead of the one above
-    // async function fetchSquadMembers() {
-    //     const response = await (await fetch('/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId)).json();
-    //     let body;
-    //     if (response.status === 200) {
-    //         body = response.json();
-    //     } else {
-    //         body = [];
-    //     }
-    //     setSquadMembers(body);
-    // }
+    
 
     function getLocation() {
         if (navigator.geolocation) {
@@ -107,6 +94,15 @@ const SquadDetail = ({ history }) => {
     }
 
 
+    function handleAlive() {
+        if (squadMembers.alive === true) {
+            return 'Alive';
+        } else {
+            return 'Dead';
+        }
+    }
+
+
     async function handleLeaveSquad() {
         let response = await UpdateSquadMember(squadMemberId, null);
         if (response !== null) {
@@ -135,7 +131,7 @@ const SquadDetail = ({ history }) => {
             localStorage.setItem('Squad Rank', 'null');
             history.push('/squads');
         } else {
-            alert("You must be a leader to disband the squad.")
+            alert("You do not have permission to disband the squad.")
         }
     }
     
@@ -175,7 +171,7 @@ const SquadDetail = ({ history }) => {
                                 {squadMembers.map((s) =>
                                     <tr>
                                         <td>{s.username}</td>
-                                        <td>{s.alive.toString()}</td>
+                                        <td>{handleAlive(s.alive.toString())}</td>
                                         <td>{s.squadRank}</td>
                                     </tr>
                                 )}
@@ -188,7 +184,7 @@ const SquadDetail = ({ history }) => {
                         <button type="button" onClick={() => handleLeaveSquad()}>Leave Squad</button>
 
                         <br />
-                        <button type="button" onClick={() => handleDisbandSquad()}>Disband Squad (only available to the leader)</button>
+                        <button type="button" disabled={squadRank !== 'LEADER'} onClick={() => handleDisbandSquad()}>Disband Squad</button>
                     </div>
                 </section>
             </div>

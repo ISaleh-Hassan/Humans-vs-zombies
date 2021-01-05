@@ -2,7 +2,6 @@ import React, { Component, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form'
 import Header from '../StylingComponents/Header';
-import NavBar from '../StylingComponents/NavBar';
 import { storeSquadDB } from '../../utils/squadstorage';
 import { FetchPlayer } from '../../utils/PlayerStorage';
 
@@ -20,8 +19,7 @@ const SquadCreate = ({ history }) => {
         fetchCurrentPlayer();
     }, [])
 
-    // The userId doesn't work properly (it only works with the dummy data), so we can't fetch the current player
-    async function fetchCurrentPlayer() {                                                                    // user should be set to userId, not 1
+    async function fetchCurrentPlayer() {  
         const playerResponse = await FetchPlayer(gameId, userId);
         if(playerResponse !== null) {
             setCurrentPlayer(playerResponse);
@@ -95,17 +93,6 @@ const SquadCreate = ({ history }) => {
     }
 
 
-    // function handleSquadName() {
-    //     console.log(document.getElementById('squadName').value);
-    //     localStorage.setItem('squadName', (document.getElementById('squadName').value));
-    // }
-
-    // function handleSquadMemberAmount() {
-    //     console.log(document.getElementById('squadMemberAmount').value);
-    //     localStorage.setItem('squadMemberAmount', (document.getElementById('squadMemberAmount').value));
-    // }
-
-
     return (
         <div>
             <Header />
@@ -116,17 +103,14 @@ const SquadCreate = ({ history }) => {
                     </h2>
                     <Form onSubmit={handleCreateSquad}>
                         <Form.Group controlId="formSquadName">
-                            {/* <Form.Label>Squad Name: </Form.Label> */}
                             <Form.Control id="squadName" name="squadName" type="text" placeholder="Squad Name" required></Form.Control>
                         </Form.Group>
 
                         <Form.Group controlId="formSquadMemberLimit">
-                            {/* <Form.Label>Squad Member Amount: </Form.Label> */}
-                            <Form.Control id="squadMemberAmount" name="squadMemberAmount" type="text" placeholder="Squad Members (XX max)" required></Form.Control>
+                            <Form.Control id="squadMemberAmount" name="squadMemberAmount" type="text" maxLength="2" placeholder="Squad Members (99 max)" required></Form.Control>
                         </Form.Group>
 
                         <Form.Group controlId="formSquadFaction">
-                            {/* <Form.Label>Squad Faction: </Form.Label> */}
                             <Form.Control name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
                         </Form.Group>
                         <button type="submit">Create</button>
