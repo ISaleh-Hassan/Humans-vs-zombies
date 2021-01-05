@@ -20,11 +20,15 @@ const SquadCreate = ({ history }) => {
     let squadId = localStorage.getItem('Squad ID');
     let playerId = localStorage.getItem('Player ID');
     let hasSquadMemberObject = localStorage.getItem('SquadMember ID');
+    let token = localStorage.getItem('jwt');
 
     const [currentPlayer, setCurrentPlayer] = useState([]);
+    const [currentUser, setCurrentUser] = useState([]);
+
 
     useEffect(() => {
         fetchCurrentPlayer();
+        fetchCurrentUser();
     }, [])
 
     async function fetchCurrentPlayer() {  
@@ -35,6 +39,24 @@ const SquadCreate = ({ history }) => {
             alert("Could not find Player object.");
         }
     }
+
+
+    async function fetchCurrentUser() {
+        const response = await fetch('/api/fetch/useraccount/' + userId, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token 
+            }
+        });
+        if (response.status === 200) {
+            let body = await response.json();
+            setCurrentUser(body);
+        } else {
+            alert("Could not find user object.")
+            setCurrentUser({});
+        }
+    };
+
 
     localStorage.setItem('Faction', currentPlayer.faction);
 
@@ -101,35 +123,64 @@ const SquadCreate = ({ history }) => {
     }
 
 
-    return (
-        <div>
-            <Header />
-            <div className="container">
-                <div id="squadCreateForm">
-                    <h2>Create Squad
-                    {console.log(currentPlayer)}
-                    </h2>
-                    <Form onSubmit={handleCreateSquad}>
-                        <Form.Group controlId="formSquadName">
-                            <Form.Control id="squadName" name="squadName" type="text" placeholder="Squad Name" required></Form.Control>
-                        </Form.Group>
+    if (currentUser.userType === 'ADMINISTRATOR') {
+        return (
+            <>
+                <section className="home">
+                    <div className="container">
+                        <Header />
+                        <h3>Forbidden</h3>
+                        <p>You do not have access to the squad creation page.</p>
+                    </div>
+                </section>
+            </>
+        );
+    } else if (currentUser.userType === 'PLAYER') {
+        return (
+            <>
+                <section className="home">
+                    <div className="container">
+                        <Header />
+                        <div className="container">
+                            <div id="squadCreateForm">
+                                <h2>Create Squad
+                                {console.log(currentPlayer)}
+                                </h2>
+                                <Form onSubmit={handleCreateSquad}>
+                                    <Form.Group controlId="formSquadName">
+                                        <Form.Control id="squadName" name="squadName" type="text" placeholder="Squad Name" required></Form.Control>
+                                    </Form.Group>
 
-                        <Form.Group controlId="formSquadMemberLimit">
-                            <Form.Control id="squadMemberAmount" name="squadMemberAmount" type="text" maxLength="2" placeholder="Squad Members (99 max)" required></Form.Control>
-                        </Form.Group>
+                                    <Form.Group controlId="formSquadMemberLimit">
+                                        <Form.Control id="squadMemberAmount" name="squadMemberAmount" type="text" maxLength="2" placeholder="Squad Members (99 max)" required></Form.Control>
+                                    </Form.Group>
 
-                        <Form.Group controlId="formSquadFaction">
-                            <Form.Control name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
-                        </Form.Group>
-                        <Button variant="dark" style={BUTTON_STYLES} type="submit">Create</Button>
-                        <Link to="squads">
-                            <Button variant="danger" style={BUTTON_STYLES}>Cancel</Button>
-                        </Link>
-                    </Form>
-                </div>
-            </div>
-        </div>
-    );
+                                    <Form.Group controlId="formSquadFaction">
+                                        <Form.Control name="squadFaction" type="text" value={currentPlayer.faction} required></Form.Control>
+                                    </Form.Group>
+                                    <Button variant="dark" style={BUTTON_STYLES} type="submit">Create</Button>
+                                    <Link to="squads">
+                                        <Button variant="danger" style={BUTTON_STYLES}>Cancel</Button>
+                                    </Link>
+                                </Form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </>
+        );
+    } else {
+        return (
+            <>
+                <section className="home">
+                    <div className="container">
+                        <Header />
+                        <h3>***</h3>
+                    </div>
+                </section>
+            </>
+        );
+    }
 }
 
 export default SquadCreate
