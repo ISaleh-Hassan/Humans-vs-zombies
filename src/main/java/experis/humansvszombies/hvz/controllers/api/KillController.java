@@ -7,12 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import experis.humansvszombies.hvz.models.datastructures.KillObject;
-import experis.humansvszombies.hvz.models.enums.UserType;
 import experis.humansvszombies.hvz.models.tables.Game;
 import experis.humansvszombies.hvz.models.tables.Kill;
 import experis.humansvszombies.hvz.models.tables.Player;
