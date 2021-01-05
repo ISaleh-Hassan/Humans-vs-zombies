@@ -30,7 +30,7 @@ const Admin = () => {
     };
 
 
-    if (currentUser.userType !== "ADMIN") {
+    if (currentUser.userType !== "ADMINISTRATOR") {
         return (
             <div>
                 <div className="container">
