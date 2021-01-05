@@ -14,6 +14,13 @@ const BUTTON_WRAPPER_STYLES = {
     width: '60px'
 }
 
+const BUTTON_STYLES = {
+    width: '150px',
+    height: '40px',
+    margin: '2px',
+    padding: '1px'
+}
+
 const GameMenu = ({history}) => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -58,16 +65,6 @@ const GameMenu = ({history}) => {
     }
 
 
-    // function handleBitePage() {
-    //     if (currentPlayer.faction === 'HUMAN') {
-    //         history.push('/bitehuman');
-    //     } else if (currentPlayer.faction === 'ZOMBIE') {
-    //         history.push('/bitezombie');
-    //     } else {
-    //         alert('Something went wrong, please try again.');
-    //     }
-    // }
-
     return (
         <div>
             <div onClick={() => console.log("clicked")}>
@@ -75,35 +72,30 @@ const GameMenu = ({history}) => {
             
                 <Modal open={isOpen} onClose={() => setIsOpen(false)}>
                     <Link to="landing">
-                        <div>Landing/Rules</div>
+                        <Button variant="dark" style={BUTTON_STYLES}><div>Landing/Rules</div></Button>
                     </Link>
                     <Link to="map">
-                        <div>Map</div>
+                        <Button variant="dark" style={BUTTON_STYLES}><div>Map</div></Button>
                     </Link>
                     
-                    <div onClick={handleBitePage}>Bite</div>
-                    
-                    {/* <div onClick={handleBitePage}>Bite</div>
-                    <Link to="bitehuman">
-                        <div>Bite Human</div>
-                    </Link>
-                    <Link to="bitezombie">
-                        <div>Bite Zombie</div>
-                    </Link> */}
+                    <Button variant="dark" style={BUTTON_STYLES}>
+                        <div onClick={handleBitePage}>Bite</div>
+                    </Button>
+
                     <Link to="chat">
-                        <div>Chat</div>
+                        <Button variant="dark" style={BUTTON_STYLES}><div>Chat</div></Button>
                     </Link>
                     <Link to="squads">
-                        <div>Squads</div>
+                        <Button variant="dark" style={BUTTON_STYLES}><div>Squads</div></Button>
                     </Link>
                     <Link to="squaddetails">
-                        <div>Squad Details</div>
+                        <Button variant="dark" style={BUTTON_STYLES}><div>Squad Details</div></Button>
                     </Link>
                     <Link to="admin">
-                        <div>Admin</div>
+                        <Button variant="dark" style={BUTTON_STYLES}><div>Admin</div></Button>
                     </Link>
                     <div>
-                        <button onClick={handleSignOut}>Sign out</button>
+                        <Button variant="danger" style={BUTTON_STYLES} onClick={handleSignOut}>Sign out</Button>
                     </div>
                 </Modal>
             </div>
