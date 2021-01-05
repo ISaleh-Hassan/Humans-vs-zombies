@@ -40,7 +40,7 @@ const RegisterPhone = ({ history }) => {
                                     <Form.Control name="phone" type="tel" required />
                                 </Form.Group>
                                 <button type="submit">Register</button>
-                                <Link to="/registerphone">
+                                <Link to="/">
                                     <button>Cancel</button>
                                 </Link>
                             </Form>
