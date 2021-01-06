@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { CreateMission } from '../../utils/missionStorage'
 import MainMap from "../MapComponents/MainMap";
+import { FetchAllGames, FetchGame } from "../../utils/GameStorage";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -20,24 +21,57 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateMissionMarker = (props) => {
-  let gameId = localStorage.getItem("Game ID")
-  let userId = localStorage.getItem("User ID")
 
-  const [currentPlayer, setCurrentPlayer] = useState([]);
+  const [allGames, setAllGames] = useState([])
+  const [selectedGameId, setSelectedGameId] = useState(null);
+  const [gameObject, setGameObject] = useState({})
 
   useEffect(() => {
-    fetchCurrentPlayer();
-  }, [])
+    fetchAllGames();
+  }, []);
 
-  async function fetchCurrentPlayer() {                                                                    // user should be set to userId, not 1
-    const playerResponse = await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId);
-    let body;
-    if (playerResponse.status === 200) {
-      body = await playerResponse.json();
-    } else {
-      body = null;
+  useEffect(() => {
+    if (selectedGameId !== null) {
+      fetchGame()
     }
-    setCurrentPlayer(body);
+    else {
+      setGameObject({})
+    }
+  }, [selectedGameId]);
+
+  useEffect(() => {
+
+  }, [gameObject]);
+
+  async function fetchAllGames() {
+    let response = await FetchAllGames();
+    if (response !== null) {
+      setAllGames(response);
+    } else {
+      alert('Failed to fetch games');
+      setAllGames([]);
+    }
+  }
+
+  async function fetchGame() {
+    let game = await FetchGame(selectedGameId);
+    if (game !== null) {
+      setGameObject(
+        {
+          name: game.name,
+          description: game.description,
+          gameState: game.gameState,
+          gameId: game.gameId,
+          startTime: game.startTime,
+          endTime: game.endTime,
+          maxNumberOfPlayers: game.maxNumberOfPlayers,
+          description: game.description
+        }
+      );
+    } else {
+      alert('Failed to fetch games');
+      setGameObject({});
+    }
   }
 
   const [validMissionName, setValidMissionName] = useState(false);
@@ -59,7 +93,7 @@ const CreateMissionMarker = (props) => {
     if (validMissionName === true) {
       let createMissionResponse = await CreateMission(missionObject);
       if (createMissionResponse.status === 201) {
-        props.history.push("/missions");
+        props.history.push("/map");
       } else if (createMissionResponse.status === 400) {
         alert("Mission name must be unique!");
       } else {
@@ -176,6 +210,25 @@ const CreateMissionMarker = (props) => {
 
     alert("Copied the text: " + copyText.value);
   }
+  function handleChangeGameToUpdate(ev) {
+    let selectedGame = ev.target.value;
+    if (selectedGame !== "0") {
+      localStorage.setItem("Game ID", selectedGame)
+      setSelectedGameId(selectedGame)
+      setGameObject({})
+    }
+    else {
+      setSelectedGameId(null);
+    }
+  }
+
+  function isEmpty(obj) {
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop))
+        return false;
+    }
+    return true;
+  }
 
   return (
     <>
@@ -184,53 +237,70 @@ const CreateMissionMarker = (props) => {
           <Header />
           <h1>Create Mission Marker</h1>
           <Form.Group>
-            <Form.Control type="text" placeholder="Enter mission name" onChange={onMissionNameChange} />
-            <br />
-            <Form.Control type="text" placeholder="Mission description..." onChange={onDescriptionChange} />
-            <br />
-            <label>Faction: </label>
-            <Form.Control as="select" placeholder="Faction" onChange={onFactionChange}>
-              <option>HUMAN</option>
-              <option>ZOMBIE</option>
-              <option>ALL</option>
+
+            <Form.Control
+              onChange={handleChangeGameToUpdate}
+              className="mb-4"
+              as="select">
+              <option value="0">Select game...</option>
+              {allGames.filter(game => game.gameState !== 'COMPLETED').map(filteredGame => (
+                <option key={filteredGame.gameId} value={filteredGame.gameId}>
+                  {filteredGame.name}
+                </option>
+              ))}
             </Form.Control>
-            <br />
-            <Form.Control type="text" placeholder="Longitude" onChange={onLngChange} />
-            <Form.Control type="text" placeholder="Latitude" onChange={onLatChange} />
-            <br />
-            <MainMap />
-            <input id="p-lng" />
-            <button onClick={getLng}>Copy Lng</button>
-            <input id="p-lat" />
-            <button onClick={getLat}>Copy Lat</button>
-            <br></br>
-            <button onClick={getCoordinates}>Get Coords</button>
-            <br />
-            <br />
-            <TextField
-              id="datetime-local"
-              label="Start time"
-              type="datetime-local"
-              defaultValue="2021-01-01T08:00"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={onStartTimeChange}
-            />
-            <br />  <br />
-            <TextField
-              id="datetime-local"
-              label="End time"
-              type="datetime-local"
-              defaultValue="2021-01-02T08:00"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={onEndTimeChange}
-            />
-            <br /><br />
-            <Button disabled={!validMissionName || !validDescription} onClick={createMission}>Create</Button><Link to="/admin"><Button>Cancel</Button></Link>
-            <br></br>
+
+            {selectedGameId !== null && !isEmpty(gameObject) ?
+              <div>
+                <Form.Control type="text" placeholder="Enter mission name" onChange={onMissionNameChange} />
+                <br />
+                <Form.Control type="text" placeholder="Mission description..." onChange={onDescriptionChange} />
+                <br />
+                <label>Faction: </label>
+                <Form.Control as="select" placeholder="Faction" onChange={onFactionChange}>
+                  <option>HUMAN</option>
+                  <option>ZOMBIE</option>
+                  <option>ALL</option>
+                </Form.Control>
+                <br />
+                <Form.Control type="text" placeholder="Longitude" onChange={onLngChange} />
+                <Form.Control type="text" placeholder="Latitude" onChange={onLatChange} />
+                <br />
+                <MainMap />
+                <input id="p-lng" />
+                <button onClick={getLng}>Copy Lng</button>
+                <input id="p-lat" />
+                <button onClick={getLat}>Copy Lat</button>
+                <br></br>
+                <button onClick={getCoordinates}>Get Coords</button>
+                <br />
+                <br />
+                <TextField
+                  id="datetime-local"
+                  label="Start time"
+                  type="datetime-local"
+                  defaultValue="2021-01-01T08:00"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={onStartTimeChange}
+                />
+                <br />  <br />
+                <TextField
+                  id="datetime-local"
+                  label="End time"
+                  type="datetime-local"
+                  defaultValue="2021-01-02T08:00"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={onEndTimeChange}
+                />
+                <br /><br />
+                <Button disabled={!validMissionName || !validDescription} onClick={createMission}>Create</Button><Link to="/admin"><Button>Cancel</Button></Link>
+                <br></br>
+              </div>
+              : null}
           </Form.Group>
         </div>
       </section>

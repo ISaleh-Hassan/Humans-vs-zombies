@@ -1,7 +1,5 @@
 import { getBaseUrl } from "./baseUrl";
 
-let gameId = localStorage.getItem("Game ID");
-
 export async function FetchAllMissions() {
     const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "fetch/mission/all";
@@ -23,7 +21,7 @@ export async function FetchMission(missionId) {
     let url = getBaseUrl() + "fetch/mission/" + missionId;
     const response = await fetch(url, {
         headers: {
-            'Authorization': 'Bearer ' + token 
+            'Authorization': 'Bearer ' + token
         }
     });
     if (response.status === 200) {
@@ -35,6 +33,7 @@ export async function FetchMission(missionId) {
 }
 
 export async function CreateMission(missionData) {
+    let gameId = localStorage.getItem("Game ID");
     const token = localStorage.getItem('jwt');
     let url = getBaseUrl() + "create/mission/" + gameId
     const response = await fetch(url, {
