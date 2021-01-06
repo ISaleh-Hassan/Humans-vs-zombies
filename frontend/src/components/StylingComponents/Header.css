@@ -14,7 +14,7 @@ img {
 }
 
 #gameMenu {
-    float: left;
+    float: right;
     margin: 10px;
     margin-left: 15px;
     line-height: 54px;

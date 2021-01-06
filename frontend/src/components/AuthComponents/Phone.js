@@ -1,10 +1,19 @@
 import React from 'react'
+import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { loginPhone } from '../../utils/dbstorage';
 import firebase from '../../utils/firebase'
 import HeaderOutside from '../StylingComponents/HeaderOutside';
 
 const Phone = ({ history }) => {
+
+  const BUTTON_STYLES = {
+    width: '120px',
+    height: '40px',
+    margin: '2px',
+    padding: '1px'
+  }
+  
   const handleClick = async event => {
     firebase.auth().languageCode = 'se';
     var recaptcha = new firebase.auth.RecaptchaVerifier('recaptcha');
@@ -46,13 +55,14 @@ const Phone = ({ history }) => {
         <div className="container">
           <div id="recaptcha"></div>
           <div>
-            <label for="phone">Phone Number</label>
+            <label for="phone">Phone Number</label><br />
             <input type="tel" id="phone" name="phone" required />
           </div>
 
           <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase.js"></script>
 
-          <button onClick={handleClick}>Get code</button>
+          <br />
+          <Button variant="dark" style={BUTTON_STYLES} onClick={handleClick}>Get code</Button>
           <Link to="/login">Login with email instead.</Link>
 
         </div>

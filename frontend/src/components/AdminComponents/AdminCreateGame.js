@@ -5,7 +5,6 @@ import { Form, Button } from 'react-bootstrap';
 import { CreateGame } from "../../utils/GameStorage";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import GameMenu from "../StylingComponents/GameMenu";
 
 const useStyles = makeStyles((theme) => ({
     container: {
