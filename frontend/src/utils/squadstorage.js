@@ -1,3 +1,5 @@
+import { getBaseUrl } from "./baseUrl";
+
 export async function storeSquadDB(squadName, squadFaction, squadMemberAmount) {
     const token = localStorage.getItem('jwt');
     let gameId = localStorage.getItem('Game ID');
@@ -19,4 +21,20 @@ export async function storeSquadDB(squadName, squadFaction, squadMemberAmount) {
         localStorage.setItem('Squad ID', body.squadId)
     }   
     return status;
+}
+
+export async function FetchAllSquadsByGameId(gameId) {
+    const token = localStorage.getItem('jwt');
+    let url = getBaseUrl() + "fetch/squad/game=" + gameId;
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': 'Bearer ' + token 
+        }
+    });
+    if (response.status === 200) {
+        let body = await response.json();
+        return body;
+    } else {
+        return null;
+    }
 }
