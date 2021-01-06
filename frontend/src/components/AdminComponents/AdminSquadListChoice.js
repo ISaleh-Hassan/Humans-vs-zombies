@@ -5,7 +5,7 @@ import { FetchAllGames, FetchGame } from "../../utils/GameStorage";
 import { Link } from 'react-router-dom';
 
 
-const AdminMapChoice = (props) => {
+const AdminSquadListChoice = (props) => {
 
     const BUTTON_STYLES = {
         width: '150px',
@@ -91,7 +91,7 @@ const AdminMapChoice = (props) => {
     function confirmChoice() {
         localStorage.setItem('Game ID', selectedGameId);
         if (selectedGameId !== null) {
-            props.history.push('map');
+            props.history.push('squads');
         }
     }
 
@@ -128,4 +128,4 @@ const AdminMapChoice = (props) => {
     );
 }
 
-export default AdminMapChoice;
+export default AdminSquadListChoice;

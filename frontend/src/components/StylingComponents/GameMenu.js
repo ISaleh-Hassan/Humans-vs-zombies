@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import Modal from './Modal';
 import firebase from '../../utils/firebase'
@@ -130,11 +130,11 @@ const GameMenu = ({history}) => {
                             <Button variant="dark" style={BUTTON_STYLES}><div>Map</div></Button>
                         </Link>
 
-                        <Link to="chat">
+                        <Link to="adminchatchoice">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Chat</div></Button>
                         </Link>
 
-                        <Link to="squads">
+                        <Link to="adminsquadlistchoice">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Squads</div></Button>
                         </Link>
                         
