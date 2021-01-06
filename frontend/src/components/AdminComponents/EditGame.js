@@ -164,7 +164,6 @@ const EditGame = (props) => {
       <section className="home">
         <div className="container">
           <Header />
-          <GameMenu />
           <h1>Edit game</h1>
           <br />
           <Form.Group>
@@ -229,8 +228,12 @@ const EditGame = (props) => {
 
                 </Form.Control>
                 <br /> <br />
-                <Button disabled={!validGameName || !validGameDescription} onClick={editGame}>Update Game</Button>
-                <Button disabled={!deleteGame} onClick={onDeleteClicked}>Delete Game</Button>
+                <Button disabled={!validGameName || !validGameDescription}
+                  className="mr-2"
+                  onClick={editGame}>Update Game</Button>
+                <Button disabled={!deleteGame}
+                  variant="danger"
+                  onClick={onDeleteClicked}>Delete Game</Button>
                 <Form.Group controlId="deleteGameCheckbox">
                   <Form.Check type="checkbox" label="Delete Game?" onChange={onCheckBoxChanged} />
                 </Form.Group>

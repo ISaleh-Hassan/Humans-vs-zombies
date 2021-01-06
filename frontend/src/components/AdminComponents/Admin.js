@@ -65,7 +65,7 @@ const Admin = () => {
                         <Button variant="dark" style={BUTTON_STYLES}>Edit Game</Button>
                     </Link>
 
-                    <Link to="#">
+                    <Link to="playerstate">
                         <Button variant="dark" style={BUTTON_STYLES}>Edit Player State</Button>
                     </Link>
 
