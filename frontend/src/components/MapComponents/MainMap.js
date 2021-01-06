@@ -162,7 +162,6 @@ class MainMap extends Component {
         <div ref={el => this.mapContainer = el} className='mapbox-gl'></div>
         <label>Marker Location: </label>
         <p id="coordinates"></p>
-        {/* <label>Current Location: </label> */}
         <p id="current-position"></p>
       </>
     )

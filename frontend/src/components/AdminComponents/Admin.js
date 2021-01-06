@@ -57,11 +57,11 @@ const Admin = () => {
                     <div className="container">
                     <Header />
                     <h1>Admin</h1>
-                    <Link to="/creategame">
+                    <Link to="/create/game">
                         <Button variant="dark" style={BUTTON_STYLES}>Create Game</Button>
                     </Link>
 
-                    <Link to="/editgame">
+                    <Link to="/edit/game">
                         <Button variant="dark" style={BUTTON_STYLES}>Edit Game</Button>
                     </Link>
 
