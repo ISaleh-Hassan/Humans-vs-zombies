@@ -2,7 +2,6 @@ import { TextField } from "@material-ui/core";
 import { Form, Button } from 'react-bootstrap';
 import React, { useEffect, useState } from "react";
 import Header from '../StylingComponents/Header';
-import NavBar from "../StylingComponents/NavBar";
 import { makeStyles } from '@material-ui/core/styles';
 import { DeleteMission, UpdateMission, FetchMission, FetchAllMissions } from '../../utils/missionStorage'
 import MainMap from "../MapComponents/MainMap";
@@ -234,10 +233,9 @@ const EditMissionMarker = (props) => {
 
     return (
         <>
-            <Header />
-            <NavBar />
             <section className="home">
                 <div className="container">
+                    <Header />
                     <h1>Edit Mission Marker</h1>
                     <Form.Group>
 

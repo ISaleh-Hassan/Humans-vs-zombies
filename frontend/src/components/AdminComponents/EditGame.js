@@ -4,8 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button } from 'react-bootstrap';
 import { UpdateGame, FetchAllGames, FetchGame, DeleteGame } from "../../utils/GameStorage";
 import TextField from '@material-ui/core/TextField';
-import GameMenu from "../StylingComponents/GameMenu";
-
 
 const EditGame = (props) => {
   const [validGameName, setValidGameName] = useState(false);
@@ -164,7 +162,6 @@ const EditGame = (props) => {
       <section className="home">
         <div className="container">
           <Header />
-          <GameMenu />
           <h1>Edit game</h1>
           <br />
           <Form.Group>

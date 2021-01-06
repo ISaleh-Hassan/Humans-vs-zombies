@@ -2,7 +2,6 @@ import { TextField } from "@material-ui/core";
 import { Form, Button } from 'react-bootstrap';
 import React, { useEffect, useState } from "react";
 import Header from '../StylingComponents/Header';
-import NavBar from "../StylingComponents/NavBar";
 import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { CreateMission } from '../../utils/missionStorage'
@@ -123,27 +122,27 @@ const CreateMissionMarker = (props) => {
     }));
   }
 
- const onLngChange = ev => {
-  let lng = ev.target.value;
-  setMissionObject((prevState) => ({
-    ...prevState,
-    missionPoint: {
-      x: lng,
-      y: missionObject.missionPoint.y
-    }
-  }));
-}
+  const onLngChange = ev => {
+    let lng = ev.target.value;
+    setMissionObject((prevState) => ({
+      ...prevState,
+      missionPoint: {
+        x: lng,
+        y: missionObject.missionPoint.y
+      }
+    }));
+  }
 
-const onLatChange = ev => {
-  let lat = ev.target.value;
-  setMissionObject((prevState) => ({
-    ...prevState,
-    missionPoint: {
-      x: missionObject.missionPoint.x,
-      y: lat
-    }
-  }));
-}
+  const onLatChange = ev => {
+    let lat = ev.target.value;
+    setMissionObject((prevState) => ({
+      ...prevState,
+      missionPoint: {
+        x: missionObject.missionPoint.x,
+        y: lat
+      }
+    }));
+  }
 
   function getCoordinates() {
     let lngValue = localStorage.getItem("Lng: ")
@@ -180,10 +179,9 @@ const onLatChange = ev => {
 
   return (
     <>
-      <Header />
-      <NavBar />
       <section className="home">
         <div className="container">
+          <Header />
           <h1>Create Mission Marker</h1>
           <Form.Group>
             <Form.Control type="text" placeholder="Enter mission name" onChange={onMissionNameChange} />
