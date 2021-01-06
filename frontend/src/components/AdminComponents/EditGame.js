@@ -23,9 +23,9 @@ const EditGame = (props) => {
     if (selectedGameId !== null) {
       fetchGame()
     }
-    else {
-      setGameObject({})
-    }
+    // else {
+    //   setGameObject({})
+    // }
   }, [selectedGameId]);
 
   useEffect(() => {
@@ -164,7 +164,6 @@ const EditGame = (props) => {
       <section className="home">
         <div className="container">
           <Header />
-          <GameMenu />
           <h1>Edit game</h1>
           <br />
           <Form.Group>

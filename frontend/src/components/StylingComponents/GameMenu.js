@@ -126,7 +126,7 @@ const GameMenu = ({history}) => {
                             <Button variant="dark" style={BUTTON_STYLES}><div>Admin Tools</div></Button>
                         </Link>
 
-                        <Link to="map">
+                        <Link to="adminmapchoice">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Map</div></Button>
                         </Link>
 
