@@ -104,7 +104,6 @@ const AdminCreateGame = (props) => {
             <section className="home">
                 <div className="container">
                     <Header />
-                    <GameMenu />
                     <h1>Create game</h1>
                     <br />
                     <Form.Group>
