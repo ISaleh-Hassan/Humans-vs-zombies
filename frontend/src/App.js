@@ -51,10 +51,10 @@ const App = () => {
           <PrivateRoute exact path="/playerstate" component={PlayerState} />
           <PrivateRoute exact path="/map" component={GameMap} />
           <PrivateRoute exact path="/choosefaction" component={ChooseFaction} />
-          <PrivateRoute exact path="/creategame" component={AdminCreateGame} />
+          <PrivateRoute exact path="/create/game" component={AdminCreateGame} />
           <PrivateRoute exact path="/create/missionmarker" component={CreateMissionMarker} />
           <PrivateRoute exact path="/edit/missionmarker" component={EditMissionMarker} />
-          <PrivateRoute exact path="/editgame" component={EditGame} />
+          <PrivateRoute exact path="/edit/game" component={EditGame} />
           <PrivateRoute exact path="/missions" component={Missions} />
           <PrivateRoute exact path="/chat" component={Chat} />
           <Route path='*'>

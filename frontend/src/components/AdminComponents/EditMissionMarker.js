@@ -2,10 +2,10 @@ import { TextField } from "@material-ui/core";
 import { Form, Button } from 'react-bootstrap';
 import React, { useEffect, useState } from "react";
 import Header from '../StylingComponents/Header';
-import NavBar from "../StylingComponents/NavBar";
 import { makeStyles } from '@material-ui/core/styles';
-import { DeleteMission, UpdateMission, FetchMission, FetchAllMissions } from '../../utils/missionStorage'
+import { DeleteMission, UpdateMission, FetchMission, FetchAllMissions, FetchAllMissionsByGameId } from '../../utils/missionStorage'
 import MainMap from "../MapComponents/MainMap";
+import { FetchAllGames, FetchGame } from "../../utils/GameStorage";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -21,12 +21,65 @@ const useStyles = makeStyles((theme) => ({
 
 const EditMissionMarker = (props) => {
 
-    const [validMissionName, setValidMissionName] = useState(false);
-    const [validDescription, setValidDescription] = useState(true);
-    const [deleteMission, setDeleteMission] = useState(false);
+    const [allGames, setAllGames] = useState([])
+    const [selectedGameId, setSelectedGameId] = useState(null);
+    const [gameObject, setGameObject] = useState({})
+
     const [allMissions, setAllMissions] = useState([])
     const [selectedMissionId, setSelectedMissionId] = useState(null);
     const [missionObject, setMissionObject] = useState({})
+
+    const [validMissionName, setValidMissionName] = useState(false);
+    const [validDescription, setValidDescription] = useState(true);
+    const [deleteMission, setDeleteMission] = useState(false);
+
+    useEffect(() => {
+        fetchAllGames();
+    }, []);
+
+    useEffect(() => {
+        if (selectedGameId !== null) {
+            fetchGame()
+        }
+        else {
+            setGameObject({})
+        }
+    }, [selectedGameId]);
+
+    useEffect(() => {
+
+    }, [gameObject]);
+
+    async function fetchAllGames() {
+        let response = await FetchAllGames();
+        if (response !== null) {
+            setAllGames(response);
+        } else {
+            alert('Failed to fetch games');
+            setAllGames([]);
+        }
+    }
+
+    async function fetchGame() {
+        let game = await FetchGame(selectedGameId);
+        if (game !== null) {
+            setGameObject(
+                {
+                    name: game.name,
+                    description: game.description,
+                    gameState: game.gameState,
+                    gameId: game.gameId,
+                    startTime: game.startTime,
+                    endTime: game.endTime,
+                    maxNumberOfPlayers: game.maxNumberOfPlayers,
+                    description: game.description
+                }
+            );
+        } else {
+            alert('Failed to fetch games');
+            setGameObject({});
+        }
+    }
 
     useEffect(() => {
         fetchAllMissions();
@@ -40,6 +93,15 @@ const EditMissionMarker = (props) => {
             setMissionObject({})
         }
     }, [selectedMissionId]);
+
+    useEffect(() => {
+        if (selectedGameId !== null) {
+            fetchAllMissionsByGameId()
+        }
+        else {
+            setMissionObject({})
+        }
+    }, [selectedGameId]);
 
     useEffect(() => {
 
@@ -76,6 +138,16 @@ const EditMissionMarker = (props) => {
         } else {
             alert('Failed to fetch missions');
             setMissionObject({});
+        }
+    }
+
+    async function fetchAllMissionsByGameId() {
+        let response = await FetchAllMissionsByGameId(selectedGameId);
+        if (response !== null) {
+            setAllMissions(response)
+        } else {
+            alert('Failed to fetch mission by id');
+            setAllMissions([]);
         }
     }
 
@@ -211,10 +283,31 @@ const EditMissionMarker = (props) => {
         setDeleteMission(!deleteMission);
     }
 
+    function handleChangeGameToUpdate(ev) {
+        let selectedGame = ev.target.value;
+        if (selectedGame !== "0") {
+            setSelectedGameId(selectedGame)
+        }
+        else {
+            setSelectedGameId(null);
+            setSelectedMissionId(null)
+        }
+    }
+
+    function isEmpty(obj) {
+        for (var prop in obj) {
+            if (obj.hasOwnProperty(prop))
+                return false;
+        }
+        return true;
+    }
+
+
     function handleChangeMissionToUpdate(ev) {
         let selectedMission = ev.target.value;
         localStorage.setItem("Mission ID", selectedMission)
         if (selectedMission !== "0") {
+            localStorage.setItem("Mission ID", selectedMission)
             setSelectedMissionId(selectedMission)
             setMissionObject({})
         }
@@ -234,26 +327,43 @@ const EditMissionMarker = (props) => {
 
     return (
         <>
-            <Header />
-            <NavBar />
             <section className="home">
                 <div className="container">
+                    <Header />
                     <h1>Edit Mission Marker</h1>
-                    <Form.Group>
 
+                    <Form.Group>
                         <Form.Control
-                            onChange={handleChangeMissionToUpdate}
+                            onChange={handleChangeGameToUpdate}
                             className="mb-4"
                             as="select">
-                            <option value="0">Select mission...</option>
-                            {allMissions.filter(mission => mission.factionVisibility !== 'ALL').map(filteredMission => (
-                                <option key={filteredMission.missionId} value={filteredMission.missionId}>
-                                    {filteredMission.name}
+                            <option value="0">Select game...</option>
+                            {allGames.filter(game => game.gameState !== 'COMPLETED').map(filteredGame => (
+                                <option key={filteredGame.gameId} value={filteredGame.gameId}>
+                                    {filteredGame.name}
                                 </option>
                             ))}
                         </Form.Control>
 
+                        {selectedGameId !== null ?
+                            <>
+                                <Form.Label>All missions</Form.Label>
 
+                                <Form.Control
+                                    onChange={handleChangeMissionToUpdate}
+                                    className="mb-4"
+                                    as="select">
+                                    <option value="0">Select mission...</option>
+                                    {allMissions.filter(mission => mission.factionVisibility !== 'ALL').map(filteredMission => (
+                                        <option key={filteredMission.missionId} value={filteredMission.missionId}>
+                                            {filteredMission.name}
+                                        </option>
+                                    ))}
+                                </Form.Control>
+                            </> : null}
+                    </Form.Group>
+
+                    <Form.Group>
                         {selectedMissionId !== null && !isEmpty(missionObject) ?
                             <div>
                                 <Form.Control type="text" placeholder="Enter mission name" defaultValue={missionObject.name} onChange={onMissionNameChange} />
