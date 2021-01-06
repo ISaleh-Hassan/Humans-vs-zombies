@@ -32,6 +32,26 @@ export async function FetchMission(missionId) {
     }
 }
 
+let gameId = localStorage.getItem("Game ID");
+
+export async function FetchAllMissionsByGameId(gameId) {
+    let url = getBaseUrl() + "fetch/mission/game=" + gameId;
+    const token = localStorage.getItem('jwt');
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    })
+    if (response.status === 200) {
+        let body = await response.json();
+        return body;
+    } else {
+        return null;
+    }
+}
+
 export async function CreateMission(missionData) {
     let gameId = localStorage.getItem("Game ID");
     const token = localStorage.getItem('jwt');

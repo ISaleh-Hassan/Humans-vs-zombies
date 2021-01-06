@@ -210,6 +210,7 @@ const CreateMissionMarker = (props) => {
 
     alert("Copied the text: " + copyText.value);
   }
+
   function handleChangeGameToUpdate(ev) {
     let selectedGame = ev.target.value;
     if (selectedGame !== "0") {
