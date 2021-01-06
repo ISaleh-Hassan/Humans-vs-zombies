@@ -24,12 +24,14 @@ const EditMissionMarker = (props) => {
     const [allGames, setAllGames] = useState([])
     const [selectedGameId, setSelectedGameId] = useState(null);
     const [gameObject, setGameObject] = useState({})
-    const [validMissionName, setValidMissionName] = useState(false);
-    const [validDescription, setValidDescription] = useState(true);
-    const [deleteMission, setDeleteMission] = useState(false);
+
     const [allMissions, setAllMissions] = useState([])
     const [selectedMissionId, setSelectedMissionId] = useState(null);
     const [missionObject, setMissionObject] = useState({})
+
+    const [validMissionName, setValidMissionName] = useState(false);
+    const [validDescription, setValidDescription] = useState(true);
+    const [deleteMission, setDeleteMission] = useState(false);
 
     useEffect(() => {
         fetchAllGames();
@@ -94,12 +96,12 @@ const EditMissionMarker = (props) => {
 
     useEffect(() => {
         if (selectedGameId !== null) {
-          fetchAllMissionsByGameId()
+            fetchAllMissionsByGameId()
         }
         else {
-          setMissionObject({})
+            setMissionObject({})
         }
-      }, [selectedGameId]);
+    }, [selectedGameId]);
 
     useEffect(() => {
 
@@ -142,12 +144,12 @@ const EditMissionMarker = (props) => {
     async function fetchAllMissionsByGameId() {
         let response = await FetchAllMissionsByGameId(selectedGameId);
         if (response !== null) {
-          setAllMissions(response)
+            setAllMissions(response)
         } else {
-          alert('Failed to fetch mission by id');
-          setAllMissions([]);
+            alert('Failed to fetch mission by id');
+            setAllMissions([]);
         }
-      }
+    }
 
     async function editMission() {
         let editMissionResponse = await UpdateMission(missionObject);
@@ -284,13 +286,13 @@ const EditMissionMarker = (props) => {
     function handleChangeGameToUpdate(ev) {
         let selectedGame = ev.target.value;
         if (selectedGame !== "0") {
-          setSelectedGameId(selectedGame)
+            setSelectedGameId(selectedGame)
         }
         else {
-          setSelectedGameId(null);
-          setSelectedMissionId(null)
+            setSelectedGameId(null);
+            setSelectedMissionId(null)
         }
-      }
+    }
 
     function isEmpty(obj) {
         for (var prop in obj) {

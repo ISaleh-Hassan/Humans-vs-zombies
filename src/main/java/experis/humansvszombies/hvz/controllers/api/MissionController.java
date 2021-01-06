@@ -76,18 +76,25 @@ public class MissionController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
             Player player = playerRepository.findDistinctByGameAndUserAccount(new Game(gameId), new UserAccount(userDetails.getId()));
-            if (player == null) {
+            String auth = authentication.getAuthorities().toString();
+            if (player == null && !(auth.contains("ADMINISTRATOR"))) {
                 System.out.println("ERROR: player was null when trying to fetch missions based on gameId and faction");
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
-            ArrayList<MissionObject> missionObjects = null;
+            ArrayList<MissionObject> missionObjects = new ArrayList<MissionObject>();
             ArrayList<Mission> missions = missionRepository.findByGame(new Game(gameId));
             if (missions.size() > 0) {
-                missionObjects = new ArrayList<MissionObject>();
-                for (Mission mission : missions) {
-                    if (mission.getFactionVisibility() == Faction.ALL || mission.getFactionVisibility() == player.getFaction()) {
+                if (auth.contains("ADMINISTRATOR")) {
+                    for (Mission mission : missions) {
                         MissionObject m = this.createMissionObject(mission);
                         missionObjects.add(m);
+                    }
+                } else {
+                    for (Mission mission : missions) {
+                        if (mission.getFactionVisibility() == Faction.ALL || mission.getFactionVisibility() == player.getFaction()) {
+                            MissionObject m = this.createMissionObject(mission);
+                            missionObjects.add(m);
+                        }
                     }
                 }
             }
@@ -96,6 +103,7 @@ public class MissionController {
             System.out.println("Exception thrown: gameId was null");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
+            System.out.println(e);
             System.out.println("Exception thrown: Something unexpected went wrong when fetching Missions based on gameId.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

@@ -21,7 +21,8 @@ export async function FetchMission(missionId) {
     let url = getBaseUrl() + "fetch/mission/" + missionId;
     const response = await fetch(url, {
         headers: {
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
         }
     });
     if (response.status === 200) {
@@ -31,8 +32,6 @@ export async function FetchMission(missionId) {
         return null;
     }
 }
-
-let gameId = localStorage.getItem("Game ID");
 
 export async function FetchAllMissionsByGameId(gameId) {
     let url = getBaseUrl() + "fetch/mission/game=" + gameId;
@@ -75,7 +74,6 @@ export async function CreateMission(missionData) {
             endTime: missionData.endTime
         })
     })
-    console.log(response)
     return response;
 }
 
