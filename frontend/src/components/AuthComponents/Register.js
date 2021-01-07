@@ -7,7 +7,6 @@ import Form from 'react-bootstrap/Form'
 import { AuthContext } from "../../utils/Auth";
 import HeaderOutside from "../StylingComponents/HeaderOutside";
 import { Button } from 'react-bootstrap';
-import { clearUser } from "../../utils/localstorage";
 
 const Register = ({ history }) => {
 
@@ -35,23 +34,81 @@ const Register = ({ history }) => {
                         alert(err.message);
                     });
             } else {
-                alert("Username or email already in use!")
+                if (password.length < 6) {
+                    alert("Password should be more than 6")
+                }
             }
         } catch (error) {
             alert("Username or email already in use!");
-            if (password.length < 6) {
-                alert("Password should be more than 6")
-            }
         }
     }
 
     const handleCheckbox = e => {
-        const target = e.target;
+        const target = e.value;
         let isChecked = target.checked;
         if (isChecked) {
             setUserType('ADMINISTRATOR')
         } else {
             setUserType('PLAYER')
+        }
+    }
+
+    const firstNameChange = async e => {
+        let firstname = e.target.value;
+        if (firstname.length < 2) {
+            let firstNameDiv = document.getElementById("firstname-div")
+            const firstName =
+                `<div>First name must be at least 1 character!</div>`;
+            firstNameDiv.innerHTML = firstName;
+        } else if (firstname.length > 1) {
+            let firstNameDiv = document.getElementById("firstname-div")
+            const firstName =
+                `<div></div>`;
+            firstNameDiv.innerHTML = firstName;
+        }
+    }
+
+    const lastNameChange = async e => {
+        let lastname = e.target.value;
+        if (lastname.length < 2) {
+            let lastNameDiv = document.getElementById("lastname-div")
+            const lastName =
+                `<div>Last name must be at least 1 character!</div>`;
+            lastNameDiv.innerHTML = lastName;
+        } else if (lastname.length > 1) {
+            let lastNameDiv = document.getElementById("lastname-div")
+            const lastName =
+                `<div></div>`;
+            lastNameDiv.innerHTML = lastName;
+        }
+    }
+    const userNameChange = async e => {
+        let username = e.target.value;
+        if (username.length < 2) {
+            let userNameDiv = document.getElementById("username-div")
+            const userName =
+                `<div>User name must be at least 1 character!</div>`;
+            userNameDiv.innerHTML = userName;
+        } else if (username.length > 1) {
+            let userNameDiv = document.getElementById("username-div")
+            const userName =
+                `<div></div>`;
+            userNameDiv.innerHTML = userName;
+        }
+    }
+
+    const passwordChange = async e => {
+        let password = e.target.value;
+        if (password.length < 6) {
+            let passwordDiv = document.getElementById("password-div")
+            const passWord =
+                `<div>Password must be at least 6 characters!</div>`;
+            passwordDiv.innerHTML = passWord;
+        } else if (password.length > 1) {
+            let passwordDiv = document.getElementById("password-div")
+            const passWord =
+                `<div></div>`;
+            passwordDiv.innerHTML = passWord;
         }
     }
 
@@ -70,22 +127,26 @@ const Register = ({ history }) => {
                     <Form onSubmit={handleRegister}>
                         <Form.Group controlId="formFirstName">
                             <Form.Label>First Name: </Form.Label>
-                            <Form.Control name="firstname" type="text" placeholder="First Name" required />
+                            <Form.Control name="firstname" type="text" placeholder="First Name" onChange={firstNameChange} required />
+                            <div id="firstname-div"> </div>
                         </Form.Group>
 
                         <Form.Group controlId="formLastName">
                             <Form.Label>Last Name: </Form.Label>
-                            <Form.Control name="lastname" type="text" placeholder="Last Name" required />
+                            <Form.Control name="lastname" type="text" placeholder="Last Name" onChange={lastNameChange} required />
+                            <div id="lastname-div"> </div>
                         </Form.Group>
 
                         <Form.Group controlId="formUserName">
                             <Form.Label>User Name: </Form.Label>
-                            <Form.Control name="username" type="text" placeholder="Username" required />
+                            <Form.Control name="username" type="text" placeholder="Username" onChange={userNameChange} required />
+                            <div id="username-div"> </div>
                         </Form.Group>
 
                         <Form.Group controlId="formPassword">
                             <Form.Label>Password: </Form.Label>
-                            <Form.Control name="password" type="password" placeholder="Password" required />
+                            <Form.Control name="password" type="password" placeholder="Password" onChange={passwordChange} required />
+                            <div id="password-div"> </div>
                         </Form.Group>
 
                         <Form.Group controlId="formEmail">

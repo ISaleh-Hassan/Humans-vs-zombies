@@ -118,7 +118,7 @@ const AdminSquadListChoice = (props) => {
                         
                         <Button variant="dark" disabled={buttonStatus} style={BUTTON_STYLES} onClick={confirmChoice}>Confirm</Button>
                         
-                        <Link to="admin">
+                        <Link to="/admin">
                             <Button variant="danger" style={BUTTON_STYLES}>Cancel</Button>
                         </Link> 
                     </Form.Group>
