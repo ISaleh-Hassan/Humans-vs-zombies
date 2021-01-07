@@ -11,7 +11,10 @@ https://obscure-lowlands-09633.herokuapp.com/
 
 1. Clone the repo https://github.com/ISaleh-Hassan/Humans-vs-zombies
 2. Open the project in your preferred IDE
-3. Run the project from the main class
+3. Run the project from the main class (..\src\main\java\experis\humansvszombies\hvz\HvzApplication.java)
+4. Open an extra terminal in the IDE and change directory to frontend
+5. Write the 'npm install' command to install all the necessary plugins and dependencies
+6. Write the 'npm start' command to start the react project
 
 # Getting Started with Create React App
 
