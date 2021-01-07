@@ -21,9 +21,9 @@ const EditGame = (props) => {
     if (selectedGameId !== null) {
       fetchGame()
     }
-    else {
-      setGameObject({})
-    }
+    // else {
+    //   setGameObject({})
+    // }
   }, [selectedGameId]);
 
   useEffect(() => {

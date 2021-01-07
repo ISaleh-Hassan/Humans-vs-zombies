@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import Modal from './Modal';
 import firebase from '../../utils/firebase'
@@ -6,13 +6,6 @@ import { clearUser } from "../../utils/localstorage";
 import { Button } from 'react-bootstrap';
 import { FetchPlayer } from '../../utils/PlayerStorage';
 
-const BUTTON_WRAPPER_STYLES = {
-    position: 'relative',
-    zIndex: 1,
-    backgroundColor: 'rgb(221, 221, 221)',
-    height: '60px',
-    width: '60px'
-}
 
 const BUTTON_STYLES = {
     width: '150px',
@@ -87,7 +80,7 @@ const GameMenu = ({history}) => {
     if (currentUser.userType === 'PLAYER') {
         return (
             <div>
-                <div onClick={() => console.log("clicked")}>
+                <div>
                     <Button variant="dark" onClick={() => setIsOpen(true)}>Menu</Button>
                 
                     <Modal open={isOpen} onClose={() => setIsOpen(false)}>
@@ -115,9 +108,6 @@ const GameMenu = ({history}) => {
                             <Button variant="dark" style={BUTTON_STYLES}><div>Squad Details</div></Button>
                         </Link>
 
-                        <Link to="admin">
-                            <Button variant="dark" style={BUTTON_STYLES}><div>Admin</div></Button>
-                        </Link>
                         <div>
                             <Button variant="danger" style={BUTTON_STYLES} onClick={handleSignOut}>Sign out</Button>
                         </div>
@@ -136,16 +126,20 @@ const GameMenu = ({history}) => {
                             <Button variant="dark" style={BUTTON_STYLES}><div>Admin Tools</div></Button>
                         </Link>
 
-                        <Link to="/map">
+                        <Link to="adminmapchoice">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Map</div></Button>
                         </Link>
 
-                        <Link to="/chat">
+                        <Link to="adminchatchoice">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Chat</div></Button>
                         </Link>
 
-                        <Link to="/squads">
+                        <Link to="adminsquadlistchoice">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Squads</div></Button>
+                        </Link>
+                        
+                        <Link to="currentgames">
+                            <Button variant="dark" style={BUTTON_STYLES}><div>Game List</div></Button>
                         </Link>
                         <div>
                             <Button variant="danger" style={BUTTON_STYLES} onClick={handleSignOut}>Sign out</Button>
