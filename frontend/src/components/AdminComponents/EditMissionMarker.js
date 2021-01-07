@@ -273,7 +273,7 @@ const EditMissionMarker = (props) => {
     async function onDeleteClicked() {
         let missionResponse = await DeleteMission(missionObject.missionId);
         if (missionResponse === 200) {
-            props.history.push("/missions");
+            props.history.push("/map");
         } else {
             console.log("Something went wrong when trying to delete the mission.");
         }
