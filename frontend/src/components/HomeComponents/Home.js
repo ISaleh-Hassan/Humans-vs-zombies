@@ -14,7 +14,7 @@ const Home = (props) => {
   const userPhone = firebase.auth().currentUser.phoneNumber;
   const userId = localStorage.getItem("User ID")
   const usersPhone = localStorage.getItem("User Phone")
-  const user = localStorage.getItem('Usertype');
+  const user = localStorage.getItem('Username');
 
   useEffect(() => {
     if (localStorage.getItem('jwt') === 'undefined') {
