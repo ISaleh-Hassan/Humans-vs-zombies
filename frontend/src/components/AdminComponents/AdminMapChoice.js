@@ -80,6 +80,7 @@ const AdminMapChoice = (props) => {
             let finished = await fetchGame();
             if (finished !== null) {
                 localStorage.setItem('Game ID', selectedGameId);
+                localStorage.setItem("Game name", gameObject.name);
                 setButtonStatus(false);
             }
         } else {
@@ -90,7 +91,8 @@ const AdminMapChoice = (props) => {
 
     function confirmChoice() {
         localStorage.setItem('Game ID', selectedGameId);
-        if (selectedGameId !== null) {
+        localStorage.setItem("Game name", gameObject.name);
+        if (selectedGameId !== null && gameObject.name !== undefined) {
             props.history.push('map');
         }
     }

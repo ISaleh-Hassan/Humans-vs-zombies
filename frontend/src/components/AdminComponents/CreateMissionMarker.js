@@ -20,6 +20,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const BUTTON_STYLES = {
+    width: '120px',
+    height: '40px',
+    margin: '2px',
+    padding: '1px'
+}
+
 const CreateMissionMarker = (props) => {
 
   const [allGames, setAllGames] = useState([])
@@ -269,11 +276,11 @@ const CreateMissionMarker = (props) => {
                 <br />
                 <MainMap />
                 <input id="p-lng" />
-                <button onClick={getLng}>Copy Lng</button>
+                <Button variant="dark" style={BUTTON_STYLES} onClick={getLng}>Copy Lng</Button>
                 <input id="p-lat" />
-                <button onClick={getLat}>Copy Lat</button>
+                <Button variant="dark" style={BUTTON_STYLES} onClick={getLat}>Copy Lat</Button>
                 <br></br>
-                <button onClick={getCoordinates}>Get Coords</button>
+                <Button variant="dark" style={BUTTON_STYLES} onClick={getCoordinates}>Get Coords</Button>
                 <br />
                 <br />
                 <TextField
@@ -298,7 +305,10 @@ const CreateMissionMarker = (props) => {
                   onChange={onEndTimeChange}
                 />
                 <br /><br />
-                <Button disabled={!validMissionName || !validDescription} onClick={createMission}>Create</Button><Link to="/admin"><Button>Cancel</Button></Link>
+                <Button variant="dark" style={BUTTON_STYLES} disabled={!validMissionName || !validDescription} onClick={createMission}>Create</Button>
+                <Link to="/admin">
+                    <Button variant="danger" style={BUTTON_STYLES}>Cancel</Button>
+                </Link>
                 <br></br>
               </div>
               : null}
