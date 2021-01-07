@@ -79,7 +79,7 @@ export async function CreateMission(missionData) {
 
 export async function UpdateMission(missionData) {
     const token = localStorage.getItem('jwt');
-    let url = getBaseUrl() + "/update/mission/" + missionData.missionId;
+    let url = getBaseUrl() + "update/mission/" + missionData.missionId;
     const response = await fetch(url, {
         method: 'PATCH',
         headers: {
