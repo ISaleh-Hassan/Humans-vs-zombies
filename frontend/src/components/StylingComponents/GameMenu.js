@@ -84,11 +84,11 @@ const GameMenu = ({history}) => {
                     <Button variant="dark" onClick={() => setIsOpen(true)}>Menu</Button>
                 
                     <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-                        <Link to="landing">
+                        <Link to="/landing">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Landing/Rules</div></Button>
                         </Link>
 
-                        <Link to="map">
+                        <Link to="/map">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Map</div></Button>
                         </Link>
                         
@@ -96,15 +96,15 @@ const GameMenu = ({history}) => {
                             <div onClick={handleBitePage}>Bite</div>
                         </Button>
 
-                        <Link to="chat">
+                        <Link to="/chat">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Chat</div></Button>
                         </Link>
 
-                        <Link to="squads">
+                        <Link to="/squads">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Squads</div></Button>
                         </Link>
 
-                        <Link to="squaddetails">
+                        <Link to="/squaddetails">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Squad Details</div></Button>
                         </Link>
 
@@ -126,19 +126,19 @@ const GameMenu = ({history}) => {
                             <Button variant="dark" style={BUTTON_STYLES}><div>Admin Tools</div></Button>
                         </Link>
 
-                        <Link to="adminmapchoice">
+                        <Link to="/adminmapchoice">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Map</div></Button>
                         </Link>
 
-                        <Link to="adminchatchoice">
+                        <Link to="/adminchatchoice">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Chat</div></Button>
                         </Link>
 
-                        <Link to="adminsquadlistchoice">
+                        <Link to="/adminsquadlistchoice">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Squads</div></Button>
                         </Link>
                         
-                        <Link to="currentgames">
+                        <Link to="/currentgames">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Game List</div></Button>
                         </Link>
                         <div>
