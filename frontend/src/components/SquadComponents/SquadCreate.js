@@ -142,7 +142,6 @@ const SquadCreate = ({ history }) => {
                 <section className="home">
                     <div className="container">
                         <Header />
-                        <div className="container">
                             <div id="squadCreateForm">
                                 <h2>Create Squad</h2>
                                 <Form onSubmit={handleCreateSquad}>
@@ -163,7 +162,6 @@ const SquadCreate = ({ history }) => {
                                     </Link>
                                 </Form>
                             </div>
-                        </div>
                     </div>
                 </section>
             </>
