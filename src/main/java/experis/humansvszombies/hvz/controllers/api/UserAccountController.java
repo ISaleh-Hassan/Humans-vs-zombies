@@ -205,17 +205,11 @@ public class UserAccountController {
                     UserAccount userPhone = userAccountRepository.findDistinctByPhoneNumber(userAccount.getPhoneNumber());
                     //Compare supplied phone number to account phone number and return SUCCESS message if login information is correct.
                     if (userPhone.getPhoneNumber().equals(userAccount.getPhoneNumber())) {
-                        status = HttpStatus.OK;
-                        userInfo = new UserAccountObject(
-                                userPhone.getUserAccountId(),
-                                null,
-                                null,
-                                userPhone.getUserType(),
-                                userPhone.getUsername(),
-                                null,
-                                null,
-                                userPhone.getPhoneNumber()
-                        );
+
+                        UserAccountObject response = new UserAccountObject(userPhone.getUserAccountId(), null, null,
+                                userPhone.getUserType(), userPhone.getUsername(), null, null, null);
+
+                        return ResponseEntity.ok(response);
                     }
                 }
                 Authentication authentication = authenticationManager.authenticate(
@@ -236,7 +230,8 @@ public class UserAccountController {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            System.out.println("Exception thrown: Something unexpected went wrong when loging in.");
+            System.out.println(e);
+            System.out.println("Exception thrown: Something unexpected went wrong when logging in.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

@@ -1,6 +1,7 @@
 import React from "react";
 import { CreatePlayer } from "../../utils/PlayerStorage";
 import HeaderOutside from '../StylingComponents/HeaderOutside';
+import { Button } from 'react-bootstrap';
 
 const ChooseFaction = (props) => {
 
@@ -30,8 +31,8 @@ const ChooseFaction = (props) => {
                 <div className="container">
                     <h1>Choose your faction!</h1>
                     <br></br>
-                    <button type="button" onClick={() => joinHumans()}>Humans</button>
-                    <button type="button" onClick={() => joinZombies()}>Zombies</button>
+                    <Button variant="dark" type="button" onClick={() => joinHumans()}>Humans</Button>
+                    <Button variant="dark" type="button" onClick={() => joinZombies()}>Zombies</Button>
                 </div>
             </section>
         </>

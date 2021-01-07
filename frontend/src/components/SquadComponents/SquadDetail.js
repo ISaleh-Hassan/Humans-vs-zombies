@@ -162,17 +162,19 @@ const SquadDetail = ({ history }) => {
 
     if (squadMemberId === 'null' || squadMemberId === 'undefined') {
         return (
-            <div>
-                <div className="container">
-                    <Header />
-                    <h3>Forbidden</h3>
-                    <p>You must first join a squad to gain access to the squad detail page.</p>
-                </div>
-            </div>
+            <>
+                <section className="home">
+                    <div className="container">
+                        <Header />
+                        <h3>Forbidden</h3>
+                        <p>You must first join a squad to gain access to the squad detail page.</p>
+                    </div>
+                </section>
+            </>
         )
     } else {
         return (
-            <div>
+            <>
                 <section className="home">
                     <div className="container">
                         <Header />
@@ -206,7 +208,7 @@ const SquadDetail = ({ history }) => {
                         {squadRank === 'LEADER' ? <Button type="button" variant="dark" style={BUTTON_STYLES} disabled={squadRank !== 'LEADER'} onClick={() => handleDisbandSquad()}>Disband Squad</Button> : null}
                     </div>
                 </section>
-            </div>
+            </>
         );
     }
 }

@@ -19,6 +19,7 @@ const GameMap = (props) => {
 
     let gameName = localStorage.getItem("Game name")
 
+    // The name of the game should be the title, not only the gameId
     return (
         <>
             <section className="home">

@@ -28,6 +28,9 @@ import './components/StylingComponents/Components.css'
 import AdminCreateGame from './components/AdminComponents/AdminCreateGame'
 import Missions from "./components/GameComponents/Missions";
 import Chat from "./components/ChatMessageComponents/Chat";
+import AdminMapChoice from "./components/AdminComponents/AdminMapChoice";
+import AdminSquadListChoice from "./components/AdminComponents/AdminSquadListChoice";
+import AdminChatChoice from "./components/AdminComponents/AdminChatChoice";
 
 const App = () => {
   return (
@@ -48,6 +51,9 @@ const App = () => {
           <PrivateRoute exact path="/createsquad" component={SquadCreate} />
           <PrivateRoute exact path="/currentgames" component={CurrentGames} />
           <PrivateRoute exact path="/admin" component={Admin} />
+          <PrivateRoute exact path="/adminmapchoice" component={AdminMapChoice} />
+          <PrivateRoute exact path="/adminsquadlistchoice" component={AdminSquadListChoice} />
+          <PrivateRoute exact path="/adminchatchoice" component={AdminChatChoice} />
           <PrivateRoute exact path="/playerstate" component={PlayerState} />
           <PrivateRoute exact path="/map" component={GameMap} />
           <PrivateRoute exact path="/choosefaction" component={ChooseFaction} />
