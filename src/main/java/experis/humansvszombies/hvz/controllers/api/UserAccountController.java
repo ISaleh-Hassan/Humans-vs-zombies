@@ -74,6 +74,30 @@ public class UserAccountController {
     @PostMapping("/api/create/useraccount")
     public ResponseEntity<UserAccountObject> addUserAccount(@RequestBody UserAccount newUserAccount) {
         try {
+            if (newUserAccount == null) {
+                System.out.println("ERROR: newUserAccount was null when trying to create new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            if (newUserAccount.getPassword() == null || newUserAccount.getPassword().length() < 6) {
+                System.out.println("ERROR: password was too short when trying to create a new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            if (newUserAccount.getUsername() == null || newUserAccount.getUsername().length() < 2) {
+                System.out.println("ERROR: username was too short when trying to create a new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            if (newUserAccount.getFirstName() == null || newUserAccount.getFirstName().length() < 1) {
+                System.out.println("ERROR: firstname was too short when trying to create a new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            if (newUserAccount.getLastName() == null || newUserAccount.getLastName().length() < 1) {
+                System.out.println("ERROR: lastname was too short when trying to create a new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            if (newUserAccount.getEmail() == null) {
+                System.out.println("ERROR: email was null when trying to create a new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
             HttpStatus response = HttpStatus.CREATED;
             BCryptPasswordEncoder encrypter = new BCryptPasswordEncoder();
             newUserAccount.setPassword(encrypter.encode(newUserAccount.getPassword()));
