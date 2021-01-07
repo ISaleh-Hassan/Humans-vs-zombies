@@ -44,9 +44,8 @@ const Register = ({ history }) => {
     }
 
     const handleCheckbox = e => {
-        const target = e.value;
-        let isChecked = target.checked;
-        if (isChecked) {
+        const target = e.target.checked;
+        if (target) {
             setUserType('ADMINISTRATOR')
         } else {
             setUserType('PLAYER')
