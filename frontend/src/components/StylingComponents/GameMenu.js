@@ -14,7 +14,7 @@ const BUTTON_STYLES = {
     padding: '1px'
 }
 
-const GameMenu = ({history}) => {
+const GameMenu = ({ history }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const handleSignOut = () => {
@@ -39,7 +39,7 @@ const GameMenu = ({history}) => {
         const response = FetchPlayer(gameId, userId);
         if (response !== null) {
             setCurrentPlayer(response);
-        }else {
+        } else {
             alert('Could not fetch current player.');
             setCurrentPlayer({});
         }
@@ -50,7 +50,7 @@ const GameMenu = ({history}) => {
         const response = await fetch('/api/fetch/useraccount/' + userId, {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + token 
+                'Authorization': 'Bearer ' + token
             }
         });
         if (response.status === 200) {
@@ -82,7 +82,7 @@ const GameMenu = ({history}) => {
             <div>
                 <div>
                     <Button variant="dark" onClick={() => setIsOpen(true)}>Menu</Button>
-                
+
                     <Modal open={isOpen} onClose={() => setIsOpen(false)}>
                         <Link to="landing">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Landing/Rules</div></Button>
@@ -91,7 +91,7 @@ const GameMenu = ({history}) => {
                         <Link to="map">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Map</div></Button>
                         </Link>
-                        
+
                         <Button variant="dark" style={BUTTON_STYLES}>
                             <div onClick={handleBitePage}>Bite</div>
                         </Button>
@@ -118,9 +118,9 @@ const GameMenu = ({history}) => {
     } else {
         return (
             <div>
-                <div onClick={() => console.log("clicked")}>
+                <div>
                     <Button variant="dark" onClick={() => setIsOpen(true)}>Menu</Button>
-                
+
                     <Modal open={isOpen} onClose={() => setIsOpen(false)}>
                         <Link to="/admin">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Admin Tools</div></Button>
@@ -151,4 +151,4 @@ const GameMenu = ({history}) => {
     }
 }
 
-export default withRouter (GameMenu);
+export default withRouter(GameMenu);

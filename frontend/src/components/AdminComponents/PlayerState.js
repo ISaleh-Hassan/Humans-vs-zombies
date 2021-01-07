@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import Header from '../StylingComponents/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FetchAllPlayers, GetPlayerData, UpdatePlayer, DeletePlayer, FetchAllPlayersByGameId } from "../../utils/PlayerStorage";
+import {
+  GetPlayerData,
+  UpdatePlayer,
+  DeletePlayer,
+  FetchAllPlayersByGameId
+} from "../../utils/PlayerStorage";
 import { FetchAllGames } from "../../utils/GameStorage";
 import { Form, Button } from 'react-bootstrap';
+import { FetchAllSquadsByGameId } from "../../utils/squadstorage";
+import { CreateSquadMember, GetSquadMemberById, DeleteSquadMember } from "../../utils/SquadMemberStorage";
 
 
 const PlayerState = (props) => {
   const [allPlayers, setAllPlayers] = useState([])
   const [playerObject, setPlayerObject] = useState({})
   const [allGames, setAllGames] = useState([])
+  const [allSquads, setAllSquads] = useState([])
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [selectedGameId, setSelectedGameId] = useState(null);
+  const [selectedSquadId, setSelectedSquadId] = useState(0);
 
   useEffect(() => {
     fetchAllGames();
@@ -21,6 +29,7 @@ const PlayerState = (props) => {
   useEffect(() => {
     if (selectedPlayerId !== null) {
       fetchPlayer()
+      fetchSquadMemberById()
     }
     else {
       setPlayerObject({})
@@ -30,6 +39,7 @@ const PlayerState = (props) => {
   useEffect(() => {
     if (selectedGameId !== null) {
       fetchAllPlayersByGameId()
+      fetchAllSquadsByGameId()
     }
     else {
       setPlayerObject({})
@@ -37,7 +47,7 @@ const PlayerState = (props) => {
   }, [selectedGameId]);
 
   useEffect(() => {
-
+    fetchSquadMemberById()
   }, [playerObject]);
 
   async function fetchAllGames() {
@@ -55,8 +65,30 @@ const PlayerState = (props) => {
     if (response !== null) {
       setAllPlayers(response)
     } else {
-      alert('Failed to fetch player by id');
+      alert('Failed to fetch players by game id ' + selectedGameId);
       setAllPlayers([]);
+    }
+  }
+
+  async function fetchSquadMemberById() {
+    if (!isEmpty(playerObject) && playerObject.squadMemberId != null) {
+      let response = await GetSquadMemberById(playerObject.squadMemberId);
+      if (response !== null) {
+        setPlayerObject((prevState) => ({
+          ...prevState,
+          squadId: response.squadId
+        }));
+      }
+    }
+  }
+
+  async function fetchAllSquadsByGameId() {
+    let response = await FetchAllSquadsByGameId(selectedGameId)
+    if (response !== null) {
+      setAllSquads(response)
+    } else {
+      alert('Failed to fetch squads by game id ' + selectedGameId);
+      setAllSquads([]);
     }
   }
 
@@ -70,19 +102,57 @@ const PlayerState = (props) => {
     }
   }
 
+  async function fetchPlayer() {
+    let response = await GetPlayerData(selectedPlayerId);
+    if (response !== null) {
+      setPlayerObject(response);
+    } else {
+      alert('Failed to fetch squad');
+      setPlayerObject({});
+    }
+  }
+
   function cancelEditingPlayer() {
     props.history.push("/admin");
+  }
+
+  async function addPlayerToSquad() {
+    if (!playerObject.squadMemberId && selectedSquadId && selectedSquadId !== "0") {
+      let response = await CreateSquadMember(playerObject.gameId, selectedSquadId, playerObject.playerId, "MEMBER")
+      if (response.status === 200) {
+        props.history.push("/admin");
+      }
+    }
+  }
+
+  async function deleteFromSquad() {
+    if (playerObject.squadMemberId && selectedSquadId == null) {
+      let response = await DeleteSquadMember(playerObject.squadMemberId)
+      if (response.status === 200) {
+        props.history.push("/admin");
+      }
+    }
+  }
+
+   function  moveFromSquad() {
+    if (playerObject.squadMemberId && selectedSquadId !== null && selectedSquadId !== 0) {
+      deleteFromSquad()
+      addPlayerToSquad()
+      console.log("Hello")
+    }
   }
 
   async function editPlayer() {
     let response = await UpdatePlayer(playerObject);
     if (response.status === 200) {
       props.history.push("/admin");
-    } else if (response.status === 400) {
-      alert("Game name must be unique!");
-    } else {
+    }
+    else {
       alert("Something went wrong while updating the player.");
     }
+    deleteFromSquad()
+    addPlayerToSquad()
+     moveFromSquad()
   }
 
   async function deletePlayer() {
@@ -163,12 +233,37 @@ const PlayerState = (props) => {
 
   function handleChangeGame(ev) {
     let selectedGame = ev.target.value;
-    if (selectedGame !== "0") {
-      setSelectedGameId(selectedGame)
-    }
-    else {
+    if (selectedGame === "0") {
       setSelectedGameId(null);
       setSelectedPlayerId(null)
+      setPlayerObject({})
+      setAllSquads([])
+      setAllPlayers([])
+      setSelectedSquadId(0)
+    }
+    else {
+      setSelectedGameId(selectedGame)
+    }
+  }
+
+  function handleChangeSquad(ev) {
+    let selectedSquad = ev.target.value;
+    if (selectedSquad === "none") {
+      setSelectedSquadId(null)
+    }
+    else if (selectedSquad === "0") {
+      setSelectedSquadId(0);
+    }
+    else {
+      setSelectedSquadId(selectedSquad)
+    }
+  }
+
+  function getSquadNameById(id) {
+    for (let i = 0; i < allSquads.length; i++) {
+      if (allSquads[i].squadId === id) {
+        return allSquads[i].name;
+      }
     }
   }
   return (
@@ -204,7 +299,7 @@ const PlayerState = (props) => {
                     </option>
                   ))}
                 </Form.Control>
-              </>:null}
+              </> : null}
           </Form.Group>
 
           {selectedPlayerId !== null && !isEmpty(playerObject) ?
@@ -233,6 +328,34 @@ const PlayerState = (props) => {
 
               {playerObject.faction === "HUMAN" ?
                 <>
+                  <Form.Label>Human squads</Form.Label>
+                  <Form.Control
+                    className="mb-2"
+                    id="squadComboBox"
+                    onChange={handleChangeSquad}
+                    as="select">
+                    <option value="0">Select squad...</option>
+
+                    {allSquads.filter(squad => squad.faction = 'HUMAN' &&
+                      playerObject.squadId !== squad.squadId).map(filteredSquad => (
+                        <option key={filteredSquad.squadId} value={filteredSquad.squadId}>
+                          {filteredSquad.name}
+                        </option>
+                      ))}
+
+
+                    {playerObject.squadId ?
+                      <>
+                        <option value="none">None</option>
+                        <option selected value={playerObject.squadId}>
+                          {getSquadNameById(playerObject.squadId)}
+                        </option>
+                      </> :
+                      <option selected value="none">None</option>
+                    }
+
+                  </Form.Control>
+
                   <Form.Label>Is alive</Form.Label>
                   <Form.Control
                     className="mb-2"
@@ -261,6 +384,33 @@ const PlayerState = (props) => {
 
               {playerObject.faction === "ZOMBIE" ?
                 <>
+                  <Form.Label>Zombie squads</Form.Label>
+                  <Form.Control
+                    className="mb-2"
+                    id="zombieSquadComboBox"
+                    onChange={handleChangeSquad}
+                    as="select">
+                    <option value="0">Select squad...</option>
+                    {allSquads.filter(squad => squad.faction = 'ZOMBIE' &&
+                      playerObject.squadId !== squad.squadId).map(filteredSquad => (
+                        <option key={filteredSquad.squadId} value={filteredSquad.squadId}>
+                          {filteredSquad.name}
+                        </option>
+                      ))
+                    }
+
+
+                    {playerObject.squadId ?
+                      <>
+                        <option value="none">None</option>
+                        <option selected value={playerObject.squadId}>
+                          {getSquadNameById(playerObject.squadId)}
+                        </option>
+                      </> :
+                      <option selected value="none">None</option>
+                    }
+                  </Form.Control>
+
                   <Form.Label>Is patient zero</Form.Label>
                   <Form.Control
                     onChange={handleChangePlayerIsPatientZero}
