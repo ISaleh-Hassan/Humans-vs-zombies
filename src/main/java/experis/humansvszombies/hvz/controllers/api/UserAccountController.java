@@ -188,6 +188,7 @@ public class UserAccountController {
                         return ResponseEntity.ok(response);
                     }
                 }
+
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(user.getUsername(), userAccount.getPassword()));
 
