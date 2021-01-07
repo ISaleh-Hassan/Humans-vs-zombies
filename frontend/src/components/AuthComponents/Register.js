@@ -36,7 +36,6 @@ const Register = ({ history }) => {
                     });
             } else {
                 alert("Username or email already in use!")
-
             }
         } catch (error) {
             alert("Username or email already in use!");
