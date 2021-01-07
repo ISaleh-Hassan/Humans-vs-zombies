@@ -235,7 +235,6 @@ const EditMissionMarker = (props) => {
     return (
         <>
             <Header />
-            <NavBar />
             <section className="home">
                 <div className="container">
                     <h1>Edit Mission Marker</h1>
