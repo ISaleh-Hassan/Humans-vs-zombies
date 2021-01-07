@@ -74,6 +74,30 @@ public class UserAccountController {
     @PostMapping("/api/create/useraccount")
     public ResponseEntity<UserAccountObject> addUserAccount(@RequestBody UserAccount newUserAccount) {
         try {
+            if (newUserAccount == null) {
+                System.out.println("ERROR: newUserAccount was null when trying to create new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            if (newUserAccount.getPassword() == null || newUserAccount.getPassword().length() < 6) {
+                System.out.println("ERROR: password was too short when trying to create a new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            if (newUserAccount.getUsername() == null || newUserAccount.getUsername().length() < 2) {
+                System.out.println("ERROR: username was null or too short when trying to create a new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            if (newUserAccount.getFirstName() == null || newUserAccount.getFirstName().length() < 1) {
+                System.out.println("ERROR: firstname was null or too short when trying to create a new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            if (newUserAccount.getLastName() == null || newUserAccount.getLastName().length() < 1) {
+                System.out.println("ERROR: lastname was null or too short when trying to create a new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            if (newUserAccount.getEmail() == null || newUserAccount.getEmail().length() < 5) {
+                System.out.println("ERROR: email was null or too when trying to create a new account.");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
             HttpStatus response = HttpStatus.CREATED;
             BCryptPasswordEncoder encrypter = new BCryptPasswordEncoder();
             newUserAccount.setPassword(encrypter.encode(newUserAccount.getPassword()));
@@ -181,17 +205,11 @@ public class UserAccountController {
                     UserAccount userPhone = userAccountRepository.findDistinctByPhoneNumber(userAccount.getPhoneNumber());
                     //Compare supplied phone number to account phone number and return SUCCESS message if login information is correct.
                     if (userPhone.getPhoneNumber().equals(userAccount.getPhoneNumber())) {
-                        status = HttpStatus.OK;
-                        userInfo = new UserAccountObject(
-                                userPhone.getUserAccountId(),
-                                null,
-                                null,
-                                userPhone.getUserType(),
-                                userPhone.getUsername(),
-                                null,
-                                null,
-                                userPhone.getPhoneNumber()
-                        );
+
+                        UserAccountObject response = new UserAccountObject(userPhone.getUserAccountId(), null, null,
+                                userPhone.getUserType(), userPhone.getUsername(), null, null, null);
+
+                        return ResponseEntity.ok(response);
                     }
                 }
                 Authentication authentication = authenticationManager.authenticate(
@@ -212,7 +230,8 @@ public class UserAccountController {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            System.out.println("Exception thrown: Something unexpected went wrong when loging in.");
+            System.out.println(e);
+            System.out.println("Exception thrown: Something unexpected went wrong when logging in.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
