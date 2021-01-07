@@ -5,7 +5,7 @@ This is a fullstack web application that uses React for the frontend and Java, S
 https://obscure-lowlands-09633.herokuapp.com/
 
 ## Made by
-[Beatrice Asplund]( https://github.com/BeatriceAsplund),  [Saleh Hassan]( https://github.com/ISaleh-Hassan), [Hampus Olsson](https://github.com/Heso113) & [Per Christer Vågsäter] (https://github.com/PerChrister) 
+[Beatrice Asplund]( https://github.com/BeatriceAsplund),  [Saleh Hassan]( https://github.com/ISaleh-Hassan), [Hampus Olsson](https://github.com/Heso113), [Per Christer Vågsäter] (https://github.com/PerChrister) 
 
 # Getting Started with Create React App
 
