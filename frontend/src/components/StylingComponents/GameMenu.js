@@ -122,7 +122,7 @@ const GameMenu = ({history}) => {
                     <Button variant="dark" onClick={() => setIsOpen(true)}>Menu</Button>
                 
                     <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-                        <Link to="admin">
+                        <Link to="/admin">
                             <Button variant="dark" style={BUTTON_STYLES}><div>Admin Tools</div></Button>
                         </Link>
 

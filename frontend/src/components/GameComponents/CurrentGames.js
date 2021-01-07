@@ -71,7 +71,7 @@ const CurrentGames = (props) => {
 
   function handleAdminCreateGameAccess() {
     if (currentUser.userType === 'ADMINISTRATOR') {
-        props.history.push('/creategame')
+        props.history.push('/create/game')
     } else {
         alert('You do not have permission to create a new game')
     }

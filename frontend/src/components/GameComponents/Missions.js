@@ -39,7 +39,6 @@ const Missions = (props) => {
 
     return (
         <>
-            <section className="home">
                 <div>
                     <h2>Current Missions</h2>
                     <table>
@@ -58,15 +57,13 @@ const Missions = (props) => {
                                     {m.name && m.factionVisibility === faction ? <td>{m.name}</td> : null}
                                     {m.missionDescription && m.factionVisibility === faction ? <td>{m.missionDescription}</td> : null}
                                     {m.factionVisibility  && m.factionVisibility === faction ? <td>{m.factionVisibility}</td> : null}
-                                    {m.startTime && m.factionVisibility === faction ? <td>{m.startTime}</td> : null}
-                                    {m.endTime && m.factionVisibility === faction ? <td>{m.endTime}</td> : null}
+                                    {m.startTime && m.factionVisibility === faction ? <td>{m.startTime.replace('T', ' ').substring(0, m.startTime.lastIndexOf('.'))}</td> : null}
+                                    {m.endTime && m.factionVisibility === faction ? <td>{m.endTime.replace('T', ' ').substring(0, m.endTime.lastIndexOf('.'))}</td> : null}
                                 </tr>
                             )}
                         </tbody>
                     </table>
-                    <br></br>
                 </div>
-            </section>
         </>
     );
 };

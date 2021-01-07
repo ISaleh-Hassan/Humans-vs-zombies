@@ -47,7 +47,7 @@ class MainMap extends Component {
           let missionMarker = new mapboxgl.Marker(mission);
 
           let popup = new mapboxgl.Popup({ offset: 25 })
-            .setText('Name: ' + m.name);
+            .setText('Mission: ' + m.name);
 
           if (m.missionPoint !== null && m.factionVisibility === faction) {
             missionMarker
@@ -75,7 +75,7 @@ class MainMap extends Component {
             let squadCheckinMarker = new mapboxgl.Marker(squadCheckin);
 
             let popup = new mapboxgl.Popup({ offset: 25 })
-              .setText('Hello, ' + user);
+              .setText("Squad Member ID: " + sq.squadMemberId + ' checked in: ' + sq.position.x + " " +  sq.position.y);
 
             if (sq.position !== null && sq.squadId !== null || sq.squadId !== undefined) {
               squadCheckinMarker
@@ -162,7 +162,6 @@ class MainMap extends Component {
         <div ref={el => this.mapContainer = el} className='mapbox-gl'></div>
         <label>Marker Location: </label>
         <p id="coordinates"></p>
-        {/* <label>Current Location: </label> */}
         <p id="current-position"></p>
       </>
     )

@@ -33,7 +33,7 @@ const SquadDetail = ({ history }) => {
         const memberResponse = await fetch('/api/fetch/squadmember/details/game=' + gameId + '/squad=' + squadId, {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + token 
+                'Authorization': 'Bearer ' + token
             }
         });
         let body;
@@ -44,16 +44,16 @@ const SquadDetail = ({ history }) => {
         }
         setSquadMembers(body);
     }
-    
+
 
     function getLocation() {
         let lng = localStorage.getItem("Squad Lng: ")
         let lat = localStorage.getItem("Squad Lat: ")
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
+            CreateSquadCheckin(gameId, squadId, squadMemberId, dateObject, lng, lat)
         }
-        CreateSquadCheckin(gameId, squadId, squadMemberId, dateObject, lng, lat)
-        
+
     }
 
     function showPosition(position) {
@@ -77,7 +77,7 @@ const SquadDetail = ({ history }) => {
         const response = await fetch('/api/fetch/squad/' + squadId, {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + token 
+                'Authorization': 'Bearer ' + token
             }
         });
         let body;
@@ -101,7 +101,7 @@ const SquadDetail = ({ history }) => {
         const playerResponse = await fetch('/api/fetch/player/game=' + gameId + '/user=' + userId, {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + token 
+                'Authorization': 'Bearer ' + token
             }
         });
         if (playerResponse.status === 200) {
@@ -145,7 +145,7 @@ const SquadDetail = ({ history }) => {
             fetch('/api/delete/squad/' + squadId, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': 'Bearer ' + token 
+                    'Authorization': 'Bearer ' + token
                 }
             })
                 .then(res => res.json())
@@ -204,8 +204,8 @@ const SquadDetail = ({ history }) => {
 
                         <Button variant="dark" style={BUTTON_STYLES} onClick={getLocation}>Mark location</Button>
                         <p id="current-location"></p>
-                        { squadRank === 'MEMBER' ? <Button type="button" variant="dark" style={BUTTON_STYLES} onClick={() => handleLeaveSquad()}>Leave Squad</Button> : null }
-                        { squadRank === 'LEADER' ? <Button type="button" variant="dark" style={BUTTON_STYLES} disabled={squadRank !== 'LEADER'} onClick={() => handleDisbandSquad()}>Disband Squad</Button> : null }
+                        {squadRank === 'MEMBER' ? <Button type="button" variant="dark" style={BUTTON_STYLES} onClick={() => handleLeaveSquad()}>Leave Squad</Button> : null}
+                        {squadRank === 'LEADER' ? <Button type="button" variant="dark" style={BUTTON_STYLES} disabled={squadRank !== 'LEADER'} onClick={() => handleDisbandSquad()}>Disband Squad</Button> : null}
                     </div>
                 </section>
             </>

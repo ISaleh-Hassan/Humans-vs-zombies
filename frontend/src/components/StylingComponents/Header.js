@@ -1,14 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import './Header.css';
 import GameMenu from './GameMenu';
+import { Link } from "react-router-dom";
 
 const Header = () => {
     return (
         <div>
             <div id="headerContainer">
                 <div id="logoContainer">
-                    <img src="zombie_logo.jpg" alt="zombie" />
+                    <Link to="/"><img src="/zombie_logo.jpg" alt="zombie" /></Link>
                 </div>
 
                 <div id="gameTitle">Humans vs Zombies</div>
