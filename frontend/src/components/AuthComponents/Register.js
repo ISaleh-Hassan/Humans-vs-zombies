@@ -23,9 +23,6 @@ const Register = ({ history }) => {
     const handleRegister = async event => {
         event.preventDefault();
         let { username, email, password, firstname, lastname } = event.target.elements;
-        if (password.lenght < 6) {
-            alert("Password should be more than 6")
-        }
         try {
             const status = await storeUserDB(username.value, firstname.value, lastname.value, userType, password.value, email.value);
             if (status === 201) {
@@ -39,9 +36,13 @@ const Register = ({ history }) => {
                     });
             } else {
                 alert("Username or email already in use!")
+
             }
         } catch (error) {
-            alert(error);
+            alert("Username or email already in use!");
+            if (password.length < 6) {
+                alert("Password should be more than 6")
+            }
         }
     }
 
