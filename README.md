@@ -7,6 +7,12 @@ https://obscure-lowlands-09633.herokuapp.com/
 ## Made by
 [Beatrice Asplund]( https://github.com/BeatriceAsplund),  [Saleh Hassan]( https://github.com/ISaleh-Hassan), [Hampus Olsson](https://github.com/Heso113) and [Per Christer Vågsäter](https://github.com/PerChrister)
 
+# Installation
+
+1. Clone the repo https://github.com/ISaleh-Hassan/Humans-vs-zombies
+2. Open the project in your preferred IDE
+3. Run the project from the main class
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
