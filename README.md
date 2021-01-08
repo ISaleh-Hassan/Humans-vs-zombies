@@ -17,4 +17,9 @@ https://obscure-lowlands-09633.herokuapp.com/
 6. Write the 'npm start' command to start the react project
 
 # Usage
-  Click [here](https://github.com/ISaleh-Hassan/Humans-vs-zombies/blob/main/API%20Documentation.pdf) to download the user manual that containing instructions for how to perform each action within the system with accompanying screenshots.
+ Click [here](https://github.com/ISaleh-Hassan/Humans-vs-zombies/blob/main/Humans%20VS%20Zombies%20-%20User%20Manual.pdf) to download the user manual that containing instructions for how to perform each action within the system with accompanying screenshots.
+ 
+ Click [here](https://github.com/ISaleh-Hassan/Humans-vs-zombies/blob/main/API%20Documentation.pdf) to download the API Documentation
+
+ 
+ 
