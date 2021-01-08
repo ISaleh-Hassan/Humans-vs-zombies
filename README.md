@@ -16,5 +16,5 @@ https://obscure-lowlands-09633.herokuapp.com/
 5. Write the 'npm install' command to install all the necessary plugins and dependencies
 6. Write the 'npm start' command to start the react project
 
-# Useage
+# Usage
   Click [here](https://docs.google.com/document/d/18VtKGuGBjD10lD66OwGz6DUQ44fgUDXckg3wEvcS13I/edit) to go open the manual that shows how the user should use the system. 
